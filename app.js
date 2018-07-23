@@ -1,7 +1,9 @@
 const Koa = require('koa');
+const csrf = require('koa-csrf');
 const cors = require('@koa/cors');
 const logger = require('koa-logger');
 const Router = require('koa-router');
+const helmet = require("koa-helmet");
 const respond = require('koa-respond');
 const compress = require('koa-compress');
 const bodyParser = require('koa-bodyparser');
@@ -15,25 +17,16 @@ const router_manager = require('./router/manager');
 const app = new Koa();
 const router = new Router();
 
+app.keys = ['a', 'b'];
 app.use(cors());
-app.use(async(ctx, next) => { // x-response-time
-    const start = Date.now();
-    await next();
-    const ms = Date.now() - start;
-    ctx.set('X-Response-Time', `${ms}ms`);
-});
-app.use(async(ctx, next) => { // err-handling
-    try {
-        await next();
-    } catch (error) {
-        debugErr("Err [Response] | ", error);
-        ctx.internalServerError(error);
-    }
-});
+app.use(xResponseTime());
+app.use(helmet())
+app.use(errHandler());
 app.use(logger());
 app.use(respond());
 app.use(compress());
 app.use(bodyParser());
+app.use(new csrf());
 
 router.use('/manager', router_manager.routes(), router_manager.allowedMethods());
 app.use(router.routes());
@@ -54,6 +47,26 @@ var port = normalizePort(process.env.PORT || '3000');
 var server = app.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+function xResponseTime() {
+    return async function xResponseTime(ctx, next) {
+        const start = Date.now();
+        await next();
+        const ms = Date.now() - start;
+        ctx.set('X-Response-Time', `${ms}ms`);
+    };
+}
+
+function errHandler() {
+    return async function errHandler(ctx, next) {
+        try {
+            await next();
+        } catch (error) {
+            debugErr("Err [Response] | ", error);
+            ctx.internalServerError(error);
+        }
+    };
+}
 
 /**
  * Normalize a port into a number, string, or false.
