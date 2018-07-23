@@ -1,0 +1,40 @@
+{
+    "name": "goodtogo_backstage",
+    "version": "0.0.1",
+    "description": "GoodToGo Backstage System",
+    "main": "app.js",
+    "scripts": {
+        "redisDebug": "echo \"Debudding Mode\" & set DEBUG=goodtogo_backstage:* & set NODE_ENV=testing & set NODE_DEBUG=redis & nodemon",
+        "localTest": "echo \"Debudding Mode\" & set DEBUG=goodtogo_backstage:* & set PORT=3040 & set NODE_ENV=\"testing\" & nodemon",
+        "test": "echo \"Debudding Mode\" & set DEBUG=goodtogo_backstage:* & set PORT=3040 & nodemon",
+        "start": "set NODE_ENV=production & nodemon"
+    },
+    "nodemonConfig": {
+        "ignore": [
+            "assets/*",
+            "*.json",
+            "tmp/*"
+        ]
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/BenjaminChenTW/GoodToGo_Backstage.git"
+    },
+    "author": "BenjaminChenTW",
+    "license": "ISC",
+    "dependencies": {
+        "@koa/cors": "^2.2.2",
+        "debug": "^3.1.0",
+        "koa": "^2.5.1",
+        "koa-bodyparser": "^4.2.1",
+        "koa-compress": "^3.0.0",
+        "koa-logger": "^3.2.0",
+        "koa-respond": "^1.0.1",
+        "koa-router": "^7.4.0"
+    },
+    "bugs": {
+        "url": "https://github.com/BenjaminChenTW/GoodToGo_Backstage/issues"
+    },
+    "homepage": "https://github.com/BenjaminChenTW/GoodToGo_Backstage#readme",
+    "devDependencies": {}
+}
