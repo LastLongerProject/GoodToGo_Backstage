@@ -26,7 +26,7 @@ app.use(async(ctx, next) => { // err-handling
     try {
         await next();
     } catch (error) {
-        debugErr("ERR | ", error);
+        debugErr("Err [Response] | ", error);
         ctx.internalServerError(error);
     }
 });
@@ -35,9 +35,12 @@ app.use(respond());
 app.use(compress());
 app.use(bodyParser());
 
-// response
 router.use('/manager', router_manager.routes(), router_manager.allowedMethods());
 app.use(router.routes());
+
+app.on('error', (err, ctx) => {
+    debugErr('Err [Server] | ', err, ctx);
+});
 
 /**
  * Get port from environment.
