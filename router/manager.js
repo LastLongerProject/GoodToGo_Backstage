@@ -1,3 +1,4 @@
+const path = require('path');
 const Router = require('koa-router');
 
 const router = new Router();
@@ -7,9 +8,18 @@ router.get('/', async ctx => {
 });
 
 router.get('/login', async ctx => {
-    console.log(ctx.csrf);
-    ctx.body = ctx.csrf;
-    // ctx.ok(ctx.csrf);
+    ctx.ok(ctx.csrf);
+    await ctx.render('login', {
+        csrf: ctx.csrf
+    });
+});
+
+router.post('/login', async ctx => {
+    ctx.ok();
+});
+
+router.post('/logout', async ctx => {
+    ctx.ok();
 });
 
 module.exports = router;

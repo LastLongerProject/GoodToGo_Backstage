@@ -1,11 +1,15 @@
 const Koa = require('koa');
+const path = require('path');
 const csrf = require('koa-csrf');
 const cors = require('@koa/cors');
+const render = require('koa-ejs');
 const logger = require('koa-logger');
 const Router = require('koa-router');
-const helmet = require("koa-helmet");
+const helmet = require('koa-helmet');
 const respond = require('koa-respond');
+const session = require('koa-session');
 const compress = require('koa-compress');
+const static = require('koa-static-server');
 const bodyParser = require('koa-bodyparser');
 
 const debug = require('debug')('goodtogo_backstage:app');
@@ -17,6 +21,19 @@ const router_manager = require('./router/manager');
 const app = new Koa();
 const router = new Router();
 
+const SESSION_CONFIG = {
+    key: 'sess',
+    maxAge: 1000 * 60 * 60 * 24 * 3,
+    overwrite: false,
+    renew: true
+};
+
+render(app, {
+    root: path.join(__dirname, 'views'),
+    viewExt: 'ejs',
+    cache: false
+});
+
 app.keys = ['a', 'b'];
 app.use(cors());
 app.use(xResponseTime());
@@ -25,14 +42,26 @@ app.use(errHandler());
 app.use(logger());
 app.use(respond());
 app.use(compress());
+app.use(session(SESSION_CONFIG, app));
 app.use(bodyParser());
+// const csrfMid = new csrf();
+// app.use(async(ctx, next) => {
+//     console.log(ctx.session.secret, ctx.request.body, require('csrf')().verify(ctx.session.secret, ctx.request.body._csrf));
+//     await next();
+// });
+// app.use(csrfMid);
 app.use(new csrf());
 
+app.use(static({
+    rootDir: 'assets',
+    rootPath: '/manager/assets'
+}));
 router.use('/manager', router_manager.routes(), router_manager.allowedMethods());
 app.use(router.routes());
 
 app.on('error', (err, ctx) => {
-    debugErr('Err [Server] | ', err, ctx);
+    if (typeof error.status === 'undefined')
+        debugErr('Err [Server] | ', err, ctx);
 });
 
 /**
@@ -62,8 +91,20 @@ function errHandler() {
         try {
             await next();
         } catch (error) {
-            debugErr("Err [Response] | ", error);
-            ctx.internalServerError(error);
+            switch (error.status) {
+                case 400:
+                    ctx.badRequest(error);
+                    break;
+                case 401:
+                    ctx.unauthorized(error);
+                    break;
+                case 403:
+                    ctx.forbidden(error);
+                    break;
+                default:
+                    debugErr("Err [Response] | ", error);
+                    ctx.internalServerError(error);
+            }
         }
     };
 }
