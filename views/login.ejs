@@ -1,2 +1,21 @@
-<input type="text" name="a" value="a">
-<%= csrf %>
+<link rel="stylesheet" href="assets/css/login.css">
+<div class="login">
+    <form action="/manager/login" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <img src="assets/img/logo.png" alt="logo">
+        <div class="form-header">
+            <p>登　入</p>
+        </div>
+        <div>
+            <label for="user">Username:</label>
+            <input type="tel" id="user" name="user" placeholder="請輸入手機號碼" pattern="^09[0-9]{8}" required>
+        </div>
+        <div>
+            <label for="pass">Password:</label>
+            <input type="password" id="pass" name="pass" placeholder="請輸入密碼">
+        </div>
+        <div>
+            <input type="submit" id="submit" value="送出">
+        </div>
+    </form>
+</div>

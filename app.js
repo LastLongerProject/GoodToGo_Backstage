@@ -1,8 +1,8 @@
 const Koa = require('koa');
-const path = require('path');
 const csrf = require('koa-csrf');
 const cors = require('@koa/cors');
 const render = require('koa-ejs');
+const redis = require('koa-redis');
 const logger = require('koa-logger');
 const Router = require('koa-router');
 const helmet = require('koa-helmet');
@@ -12,27 +12,39 @@ const compress = require('koa-compress');
 const static = require('koa-static-server');
 const bodyParser = require('koa-bodyparser');
 
+const path = require('path');
 const debug = require('debug')('goodtogo_backstage:app');
 const debugErr = require('debug')('goodtogo_backstage:err_app');
 debug.log = console.log.bind(console);
 
+const config = require('./config/config');
 const router_manager = require('./router/manager');
 
 const app = new Koa();
 const router = new Router();
 
-const SESSION_CONFIG = {
-    key: 'sess',
-    maxAge: 1000 * 60 * 60 * 24 * 3,
-    overwrite: false,
-    renew: true
-};
+const redisClient = redis({
+    port: 6379,
+    host: config.redisUrl,
+    password: config.redisPass,
+    db: 2
+});
+regisRedisEvent(redisClient);
+app.context.db = redisClient;
 
 render(app, {
     root: path.join(__dirname, 'views'),
     viewExt: 'ejs',
     cache: false
 });
+
+const SESSION_CONFIG = {
+    key: 'sess',
+    maxAge: 1000 * 60 * 60 * 24 * 3,
+    overwrite: false,
+    renew: true,
+    store: redisClient
+};
 
 app.keys = ['a', 'b'];
 app.use(cors());
@@ -91,22 +103,47 @@ function errHandler() {
         try {
             await next();
         } catch (error) {
-            switch (error.status) {
-                case 400:
-                    ctx.badRequest(error);
-                    break;
-                case 401:
-                    ctx.unauthorized(error);
-                    break;
-                case 403:
-                    ctx.forbidden(error);
-                    break;
-                default:
-                    debugErr("Err [Response] | ", error);
-                    ctx.internalServerError(error);
-            }
+            if (ctx.accepts('html')) {
+                debugErr("Err [Response_html] | ", error);
+                await ctx.render('error', {
+                    status: error.status || error.statusCode || 500,
+                    message: error.message || "something wrong"
+                });
+            } else
+                switch (error.status) {
+                    case 400:
+                        ctx.badRequest(error);
+                        break;
+                    case 401:
+                        ctx.unauthorized(error);
+                        break;
+                    case 403:
+                        ctx.forbidden(error);
+                        break;
+                    default:
+                        debugErr("Err [Response_json] | ", error);
+                        ctx.internalServerError(error);
+                }
         }
     };
+}
+
+function regisRedisEvent(redisClient) {
+    redisClient.on('ready', function() {
+        debug('redisDB ready');
+    });
+
+    redisClient.on('connect', function() {
+        debug('redisDB connect');
+    });
+
+    redisClient.on('reconnecting', function(delay, attempt) {
+        debug('redisDB reconnecting');
+    });
+
+    redisClient.on('error', function(err) {
+        debugErr('redisDB err ', err);
+    });
 }
 
 /**
