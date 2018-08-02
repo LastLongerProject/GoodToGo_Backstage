@@ -42,7 +42,7 @@ gulp.task('revreplace', ['css', 'js'], revReplaceCB);
 
 gulp.task('browser-sync', ['css', 'js'], function() {
     browserSync.init({
-        proxy: 'localhost:' + (process.env.PORT || '3040') + '/manager'
+        proxy: 'localhost:' + (process.env.PORT || '3040') + '/manager/dashboard'
     });
 
     gulp.watch(['assets/css/*.css', 'assets/js/*.js', 'views/*.ejs']).on('change', function() {

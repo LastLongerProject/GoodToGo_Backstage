@@ -72,7 +72,7 @@ router.use('/manager', router_manager.routes(), router_manager.allowedMethods())
 app.use(router.routes());
 
 app.on('error', (err, ctx) => {
-    if (typeof error.status === 'undefined')
+    if (error && typeof error.status === 'undefined')
         debugErr('Err [Server] | ', err, ctx);
 });
 

@@ -1,3 +1,7 @@
+* {
+    font-weight: lighter;
+}
+
 body {
     background-color: #40B9D8;
 }
@@ -69,4 +73,5 @@ form div input#submit {
     background-color: #9BD6E4;
     border: none;
     font-weight: normal;
+    cursor: pointer;
 }
