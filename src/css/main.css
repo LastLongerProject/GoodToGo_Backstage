@@ -85,7 +85,12 @@ header.header {
     margin-right: 15px;
 }
 
-.content-block .content-block-data .material-icons.data-percentage {
+.content-block .content-block-data .data-percentage {
+    margin-left: 5px;
+    font-size: 14px !important;
+}
+
+.content-block .content-block-data .data-percentage .material-icons {
     margin-right: 0;
     font-size: 14px;
 }
@@ -111,7 +116,7 @@ header.header {
 .main-content {
     max-width: 1080px;
     display: none;
-    color: #727272;
+    /* color: #727272; */
 }
 
 .main-content.is-active {
@@ -152,7 +157,7 @@ header.header {
 }
 
 .content-block .content-block-data span:last-of-type {
-    color: #9BD6E4;
+    color: #40B9D8;
 }
 
 span.warning,
@@ -175,8 +180,8 @@ td.warning {
 }
 
 .content-block-detail>span>span:nth-of-type(2) {
-    margin-left: 10px;
-    color: #9BD6E4;
+    margin-left: 16px;
+    color: #40B9D8;
 }
 
 .content-block-detail-outer {
@@ -270,7 +275,7 @@ th .material-icons {
 .content-block-detail .mdl-chip {
     border: 1px solid #dedede;
     background-color: white;
-    color: #9BD6E4
+    color: #40B9D8
 }
 
 .content-block-detail p {

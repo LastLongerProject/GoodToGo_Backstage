@@ -11,6 +11,7 @@ window.addEventListener("load", function(window, event) {
         content_nowActive.addClass('is-active');
         $('.mdl-layout__obfuscator.is-visible').click();
     });
+    // window.location.hash.split("/")[0])
     $('.content-block-detail-container .content-block-detail-outer').click(function() {
         if ($(this).parent().hasClass('is-expanded')) {
             $(this).parent().removeClass('is-expanded');
