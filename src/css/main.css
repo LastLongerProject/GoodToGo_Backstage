@@ -16,10 +16,14 @@ body,
     border: none;
 }
 
+.drawer .drawer-header {
+    padding: 0;
+    height: 120px;
+}
+
 .mini-icon {
-    width: 200px;
+    width: 240px;
     height: auto;
-    padding: 0 4px;
 }
 
 .drawer-header {
@@ -76,7 +80,6 @@ header.header {
 }
 
 .content-block .content-block-inline .material-icons,
-.content-block .content-block-data .material-icons,
 .content-block .content-block-inline .goodtogo-icons {
     margin-right: 15px;
 }
@@ -146,7 +149,8 @@ header.header {
     color: #9BD6E4;
 }
 
-span.warning {
+span.warning,
+td.warning {
     color: #FF6161 !important;
 }
 

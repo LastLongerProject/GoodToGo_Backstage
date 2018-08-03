@@ -11,4 +11,13 @@ window.addEventListener("load", function(window, event) {
         content_nowActive.addClass('is-active');
         $('.mdl-layout__obfuscator.is-visible').click();
     });
+    $('.content-block-detail-container .content-block-detail-outer').click(function() {
+        if ($(this).parent().hasClass('is-expanded')) {
+            $(this).parent().removeClass('is-expanded');
+            $(this).find('.material-icons').last().text('expand_more');
+        } else {
+            $(this).parent().addClass('is-expanded');
+            $(this).find('.material-icons').last().text('expand_less');
+        }
+    });
 });
