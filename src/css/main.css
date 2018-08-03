@@ -84,6 +84,10 @@ header.header {
     margin-right: 15px;
 }
 
+.content-block .content-block-data .material-icons {
+    font-size: 14px;
+}
+
 .navigation a {
     cursor: default;
 }
