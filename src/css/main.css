@@ -186,6 +186,8 @@ td.warning {
 
 .content-block-detail-outer {
     display: flex;
+    position: relative;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 .content-block-detail-outer .content-block-detail {
@@ -287,8 +289,26 @@ th .material-icons {
     color: rgba(0, 0, 0, 0.38);
 }
 
+.content-title {
+    padding-top: 10px;
+    margin-bottom: 3px;
+    color: rgba(0, 0, 0, 0.50);
+}
+
 .content-title .content-title-history {
-    padding: 5px 16px 0 16px;
+    padding-left: 2px;
+    line-height: 20px;
+    height: 20px;
+    display: flex;
+}
+
+.content-title .content-title-history span {
+    margin-top: 1px;
+}
+
+.content-title .material-icons {
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.50);
 }
 
 .searchbar-form {

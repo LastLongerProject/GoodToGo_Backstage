@@ -24,7 +24,7 @@ router.post('/login', async ctx => {
         ua: ctx.header['user-agent'],
         ip: ctx.ip
     };
-    ctx.redirect("/manager/dashboard");
+    ctx.redirect("/manager/demo");
 });
 
 router.use(checkIsLogin);
