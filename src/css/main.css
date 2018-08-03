@@ -17,11 +17,9 @@ body,
 }
 
 .mini-icon {
-    height: 72px;
-    width: 72px;
-    border-radius: 48px;
-    padding: 6px;
-    background-color: white;
+    width: 200px;
+    height: auto;
+    padding: 0 4px;
 }
 
 .drawer-header {
