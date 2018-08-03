@@ -80,11 +80,13 @@ header.header {
 }
 
 .content-block .content-block-inline .material-icons,
+.content-block .content-block-data .material-icons,
 .content-block .content-block-inline .goodtogo-icons {
     margin-right: 15px;
 }
 
-.content-block .content-block-data .material-icons {
+.content-block .content-block-data .material-icons.data-percentage {
+    margin-right: 0;
     font-size: 14px;
 }
 
