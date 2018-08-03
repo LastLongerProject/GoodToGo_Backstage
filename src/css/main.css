@@ -72,6 +72,12 @@ header.header {
     margin-right: 16px;
 }
 
+.content-block .content-block-inline .material-icons,
+.content-block .content-block-data .material-icons,
+.content-block .content-block-inline .goodtogo-icons {
+    margin-right: 15px;
+}
+
 .navigation a {
     cursor: default;
 }
@@ -139,11 +145,6 @@ header.header {
 
 span.warning {
     color: #FF6161 !important;
-}
-
-.content-block .content-block-inline .material-icons,
-.content-block .content-block-inline .goodtogo-icons {
-    margin-right: 15px;
 }
 
 .content-block-table {
