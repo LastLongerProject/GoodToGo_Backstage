@@ -52,7 +52,7 @@
     "homepage": "https://github.com/BenjaminChenTW/GoodToGo_Backstage#readme",
     "devDependencies": {
         "browser-sync": "^2.24.6",
-        "gulp": "^3.9.1",
+        "gulp": "^4.0.0",
         "gulp-autoprefixer": "^5.0.0",
         "gulp-concat": "^2.6.1",
         "gulp-csso": "^3.0.1",

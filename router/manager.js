@@ -29,8 +29,16 @@ router.post('/login', async ctx => {
 
 router.use(checkIsLogin);
 
+router.get('/', async ctx => {
+    ctx.redirect("/manager/demo");
+});
+
 router.get('/dashboard', async ctx => {
     await ctx.render('main');
+});
+
+router.get('/demo', async ctx => {
+    await ctx.render('demo');
 });
 
 router.get('/logout', async ctx => {
