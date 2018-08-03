@@ -1,5 +1,6 @@
 const Koa = require('koa');
 const csrf = require('koa-csrf');
+const etag = require('koa-etag');
 const cors = require('@koa/cors');
 const render = require('koa-ejs');
 const redis = require('koa-redis');
@@ -11,6 +12,7 @@ const session = require('koa-session');
 const compress = require('koa-compress');
 const static = require('koa-static-server');
 const bodyParser = require('koa-bodyparser');
+const conditional = require('koa-conditional-get');
 
 const path = require('path');
 const debug = require('debug')('goodtogo_backstage:app');
@@ -56,6 +58,8 @@ app.use(respond());
 app.use(compress());
 app.use(session(SESSION_CONFIG, app));
 app.use(bodyParser());
+app.use(conditional());
+app.use(etag());
 // const csrfMid = new csrf();
 // app.use(async(ctx, next) => {
 //     console.log(ctx.session.secret, ctx.request.body, require('csrf')().verify(ctx.session.secret, ctx.request.body._csrf));
