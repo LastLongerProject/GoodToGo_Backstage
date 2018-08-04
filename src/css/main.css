@@ -226,21 +226,33 @@ td.warning {
     min-width: 610px;
 } */
 
-#shop-detail .content-block-detail-container .content-block-detail-outer {
+
+/* #shop-detail .content-block-detail-container .content-block-detail-outer {
     min-width: 495px;
 }
 
 #shop-detail .content-block-detail-container.is-expanded .content-block-detail-outer,
 #shop-detail .content-block-detail-container.is-expanded .content-block-detail-footer {
     min-width: 535px;
+} */
+
+#shop-detail .content-block-detail-container .content-block-detail-outer,
+#shop-detail .content-block-detail-container .content-block-detail-footer {
+    min-width: 535px;
 }
 
-#user-detail .content-block-detail-container .content-block-detail-outer {
+
+/* #user-detail .content-block-detail-container .content-block-detail-outer {
     min-width: 480px;
 }
 
 #user-detail .content-block-detail-container.is-expanded .content-block-detail-outer,
 #user-detail .content-block-detail-container.is-expanded .content-block-detail-footer {
+    min-width: 590px;
+} */
+
+#user-detail .content-block-detail-container .content-block-detail-outer,
+#user-detail .content-block-detail-container .content-block-detail-footer {
     min-width: 590px;
 }
 
