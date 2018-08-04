@@ -14,7 +14,7 @@ const path = require('path');
 const rimraf = require('rimraf');
 const through = require('through2');
 
-gulp.task('css', function() {
+function css() {
     return gulp.src('src/css/*.css')
         .pipe(plumber())
         .pipe(autoprefixer({
@@ -23,9 +23,9 @@ gulp.task('css', function() {
         }))
         .pipe(minifyCSS())
         .pipe(gulp.dest('assets/css'));
-});
+}
 
-gulp.task('js', function() {
+function js() {
     return gulp.src('src/js/*.js')
         .pipe(plumber())
         .pipe(sourcemaps.init())
@@ -36,11 +36,9 @@ gulp.task('js', function() {
         .pipe(uglify())
         .pipe(sourcemaps.write('source-maps'))
         .pipe(gulp.dest('assets/js'));
-});
+}
 
-gulp.task('revreplace', ['css', 'js'], revReplaceCB);
-
-gulp.task('browser-sync', ['css', 'js'], function() {
+function browser_sync() {
     browserSync.init({
         proxy: 'localhost:' + (process.env.PORT || '3040') + '/manager/dashboard'
     });
@@ -48,17 +46,14 @@ gulp.task('browser-sync', ['css', 'js'], function() {
     gulp.watch(['assets/css/*.css', 'assets/js/*.js', 'views/*.ejs']).on('change', function() {
         browserSync.reload();
     });
-});
+}
 
-gulp.task('default', ['css', 'js', 'browser-sync'], function() {
-    gulp.watch('src/css/*.css', ['css']);
-    gulp.watch('src/js/*.js', ['js']);
-});
+function watch() {
+    gulp.watch('src/css/*.css', css);
+    gulp.watch('src/js/*.js', js);
+}
 
-
-gulp.task('build', ['css', 'js', 'revreplace']);
-
-function revReplaceCB() {
+function revReplace() {
     gulp.src(['assets/css/test.css', 'assets/js/app.min.js'], {
             base: 'assets'
         })
@@ -96,6 +91,12 @@ function revReplaceCB() {
         }))
         .pipe(gulp.dest('build/views'));
 }
+
+const normal = gulp.series(gulp.parallel(js, css), gulp.parallel(browser_sync, watch));
+const build = gulp.series(gulp.parallel(js, css), revReplace);
+
+gulp.task('default', normal);
+gulp.task('build', build);
 
 function cleanerRevDel(keepQuantity) {
     keepQuantity = parseInt(keepQuantity) || 2;
