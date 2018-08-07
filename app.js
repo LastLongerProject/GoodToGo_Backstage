@@ -36,7 +36,7 @@ app.context.db = redisClient;
 
 render(app, {
     root: path.join(__dirname, 'views'),
-    viewExt: 'ejs',
+    viewExt: 'html',
     cache: false
 });
 

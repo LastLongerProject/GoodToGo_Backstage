@@ -39,6 +39,7 @@ config
 
 # IDE
 .vscode
+.jsbeautifyrc
 
 # Developping trash file
 dev/deprecated

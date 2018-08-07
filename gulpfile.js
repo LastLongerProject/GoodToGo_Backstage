@@ -43,7 +43,7 @@ function browser_sync() {
         proxy: 'localhost:' + (process.env.PORT || '3040') + '/manager/dashboard'
     });
 
-    gulp.watch(['assets/css/*.css', 'assets/js/*.js', 'views/*.ejs']).on('change', function() {
+    gulp.watch(['assets/css/*.css', 'assets/js/*.js', 'views/*.html']).on('change', function() {
         browserSync.reload();
     });
 }
@@ -57,7 +57,6 @@ function revReplace() {
     gulp.src(['assets/css/test.css', 'assets/js/app.min.js'], {
             base: 'assets'
         })
-        .pipe(gulp.dest('build/assets'))
         .pipe(rev())
         .pipe(gulp.dest('build/assets'))
         .pipe(rev.manifest())
@@ -78,7 +77,7 @@ function revReplace() {
         .pipe(cleanerRevDel(1))
         .pipe(cleaner());
     let manifest = gulp.src('src/rev-manifest.json');
-    return gulp.src('views/layout.ejs')
+    return gulp.src('views/layout.html')
         .pipe(through.obj(function(file, enc, cb) {
             let contents = file.contents.toString()
             file.contents = Buffer.from(contents.replace(/\-[0-9a-z]+\./, '.'));
@@ -87,7 +86,7 @@ function revReplace() {
         }))
         .pipe(revRewrite({
             manifest: manifest,
-            replaceInExtensions: ['.ejs']
+            replaceInExtensions: ['.html']
         }))
         .pipe(gulp.dest('build/views'));
 }
