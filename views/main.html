@@ -1,9 +1,12 @@
+<div id="loading" class="mdl-color--grey-100">
+   <div class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+</div>
 <div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer mdl-color--grey-100">
    <header class="mdl-layout__header header">
-      <div @click="closeDetail" :class="{'show-navigate_before':detailIsOpen}" class="mdl-layout__header-row">
+      <div :class="{'show-navigate_before':detailIsOpen}" class="mdl-layout__header-row">
          <!-- Title -->
          <!-- <span class="mdl-layout-title">Title</span> -->
-         <div class="header-button">
+         <div @click="closeDetail" class="header-button">
             <i class="material-icons">navigate_before</i>
          </div>
          <div class="mdl-color--white mdl-shadow--2dp searchbar-form">
@@ -22,7 +25,7 @@
          <div class="mdl-layout-spacer"></div>
          <!-- Navigation -->
          <nav class="mdl-navigation mdl-layout--large-screen-only navigation">
-            <a class="mdl-navigation__link" href="#"><i class="material-icons" role="presentation">account_circle</i>0936000111</a>
+            <a class="mdl-navigation__link" href="#"><i class="material-icons" role="presentation">account_circle</i>{{loginUser}}</a>
          </nav>
          <button id="menu-button" class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect">
 				<i class="material-icons">more_vert</i>
@@ -38,6 +41,7 @@
    <div class="mdl-layout__drawer drawer">
       <header class="drawer-header">
          <img src="assets/img/mini_logo.svg" class="mini-icon">
+         <span><i class="material-icons" role="presentation">account_circle</i>{{loginUser}}</span>
       </header>
       <nav class="mdl-navigation navigation">
          <a :class="{'is-active':index.show}" @click="navClickListener" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#index"><i class="material-icons" role="presentation">home</i>首頁</a>
@@ -189,15 +193,15 @@
       <section v-if="shop.show" :class="{'is-display':shopDetail.show}" id="shop-detail">
          <div class="mdl-grid main-content">
             <div class="mdl-cell mdl-cell--12-col mdl-grid content-block-detail-outer-container">
-               <div class="mdl-cell mdl-cell--9-col mdl-shadow--2dp content-block-detail-container is-expanded">
-                  <div class="content-block content-block-detail-outer mdl-color--white">
+               <div :class="{'is-expanded':shopDetail.expand}" class="mdl-cell mdl-cell--9-col mdl-shadow--2dp content-block-detail-container">
+                  <div @click="shopDetail.expand = !shopDetail.expand" class="content-block content-block-detail-outer mdl-color--white mdl-js-button mdl-js-ripple-effect">
                      <span class="content-block-detail">
                            <span class="content-block-inline"><i class="material-icons" role="presentation">store_mall_directory</i>{{shopDetail.data.storeName}}</span>
                      <span><span>可用數量</span><span>{{shopDetail.data.toUsedAmount}}</span></span>
                      <span><span>今日用量</span><span>{{shopDetail.data.todayAmount}}</span></span>
                      <span><span>當週累計</span><span>{{shopDetail.data.weekAmount}}</span></span>
                      </span>
-                     <span><i class="material-icons" role="presentation">expand_more</i></span>
+                     <span><i class="material-icons" role="presentation">{{shopDetail.expand? 'expand_less' : 'expand_more'}}</i></span>
                   </div>
                   <div class="content-block content-block-detail-footer">
                      <div>
@@ -221,7 +225,7 @@
                </div>
             </div>
             <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-               <span class="content-block-data"><span>最近7天使用量</span><span :class="{warning:shopDetail.data.recentAmountPercentage<0}">{{shopDetail.data.recentAmount}}<span class="data-percentage" v-html="numberToPercentage(shopDetail.data.recentAmountPercentage, true)"></span></span>
+               <span class="content-block-data"><span>最近7天使用量</span><span :class="{warning:shopDetail.data.recentAmountPercentage<0}">{{shopDetail.data.recentAmount}}<span class="data-percentage" v-html="numberToPercentage(shopDetail.data.recentAmountPercentage, 'withArrow')"></span></span>
                </span>
             </div>
             <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
@@ -259,16 +263,16 @@
       </section>
       <section v-if="user.show" class="mdl-grid main-content" id="user">
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-            <span class="content-block-data"><span>總會員數</span><span>2500</span></span>
+            <span class="content-block-data"><span>總會員數</span><span>{{user.data.totalUserAmount}}</span></span>
          </div>
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-            <span class="content-block-data"><span>總使用量</span><span>2500</span></span>
+            <span class="content-block-data"><span>總使用量</span><span>{{user.data.totalUsageAmount}}</span></span>
          </div>
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-            <span class="content-block-data"><span>每週平均使用量</span><span>2500</span></span>
+            <span class="content-block-data"><span>每週平均使用量</span><span>{{user.data.weeklyAverageUsage}}</span></span>
          </div>
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-            <span class="content-block-data"><span>遺失率</span><span class="warning">0.02%</span></span>
+            <span class="content-block-data"><span>遺失率</span><span class="warning">{{( user.data.totalLostAmount / user.data.totalUsageAmount) | numberToPercentage('withoutParentheses')}}</span></span>
          </div>
          <div class="mdl-cell mdl-cell--12-col mdl-color--white mdl-shadow--2dp content-block-table">
             <table class="mdl-data-table mdl-js-data-table">
@@ -281,23 +285,11 @@
                   </tr>
                </thead>
                <tbody>
-                  <tr>
-                     <td class="mdl-data-table__cell--non-numeric">Acrylic (Transparent)</td>
-                     <td>25</td>
-                     <td>$2.90</td>
-                     <td>$2.90</td>
-                  </tr>
-                  <tr>
-                     <td class="mdl-data-table__cell--non-numeric">Plywood (Birch)</td>
-                     <td>50</td>
-                     <td>$1.25</td>
-                     <td>$1.90</td>
-                  </tr>
-                  <tr>
-                     <td class="mdl-data-table__cell--non-numeric">Laminate (Gold on Blue)</td>
-                     <td>10</td>
-                     <td>$2.35</td>
-                     <td>$2.90</td>
+                  <tr @click="aRecordClickListener('user', index)" v-for="(aUser, index) in user.data.userList">
+                     <td class="mdl-data-table__cell--non-numeric">{{aUser.phone}}</td>
+                     <td>{{aUser.usingAmount}}</td>
+                     <td>{{aUser.lostAmount}}</td>
+                     <td>{{aUser.totalUsageAmount}}</td>
                   </tr>
                </tbody>
             </table>
@@ -306,45 +298,46 @@
       <section v-if="user.show" :class="{'is-display':userDetail.show}" id="user-detail">
          <div class="mdl-grid main-content">
             <div class="mdl-cell mdl-cell--12-col mdl-grid content-block-detail-outer-container">
-               <div class="mdl-cell mdl-cell--9-col mdl-shadow--2dp content-block-detail-container is-expanded">
-                  <div class="content-block content-block-detail-outer mdl-color--white">
+               <div :class="{'is-expanded':userDetail.expand}" class="mdl-cell mdl-cell--9-col mdl-shadow--2dp content-block-detail-container">
+                  <div @click="userDetail.expand = !userDetail.expand" class="content-block content-block-detail-outer mdl-color--white mdl-js-button mdl-js-ripple-effect">
                      <span class="content-block-detail">
-						<span class="content-block-inline"><i class="material-icons" role="presentation">person</i>0936033091</span>
-                     <span><span>使用中</span><span>3</span></span>
-                     <span><span>遺失</span><span class="warning">23</span></span>
-                     <span><span>累計使用量</span><span>200</span></span>
+						      <span class="content-block-inline"><i class="material-icons" role="presentation">person</i>{{userDetail.data.userPhone}}</span>
+                     <span><span>使用中</span><span>{{userDetail.data.usingAmount}}</span></span>
+                     <span><span>遺失</span><span class="warning">{{userDetail.data.lostAmount}}</span></span>
+                     <span><span>累計使用量</span><span>{{userDetail.data.totalUsageAmount}}</span></span>
                      </span>
-                     <span><i class="material-icons" role="presentation">expand_more</i></span>
+                     <span><i class="material-icons" role="presentation">{{userDetail.expand? 'expand_less' : 'expand_more'}}</i></span>
                   </div>
                   <div class="content-block content-block-detail-footer">
                      <div>
                         <button type="button" class="mdl-chip detail-active-button">
-							<span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
-						</button>
+                           <span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
+                        </button>
                         <span class="mdl-chip">
-							<span class="mdl-chip__text">2017-06-22</span>
+                           <span class="mdl-chip__text">加入日期: {{userDetail.data.joinedDate | dateToString('only_date')}} ({{(Date.now() - userDetail.data.joinedDate) | durationToString}})</span>
                         </span>
                         <span class="mdl-chip">
-							<span class="mdl-chip__text">從哪加入</span>
+                           <span class="mdl-chip__text">管道: {{userDetail.data.joinedMethod}}</span>
                         </span>
                      </div>
                      <button class="mdl-button mdl-js-button mdl-button--raised detail-edit-button">
-						編輯
-					</button>
+						      編輯
+					      </button>
                   </div>
                </div>
             </div>
             <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-               <span class="content-block-data"><span>最近7天使用率</span><span class="warning"><i class="material-icons" role="presentation">arrow_downward</i>3%</span></span>
+               <span class="content-block-data"><span>最近7天使用量</span><span :class="{warning:userDetail.data.recentAmountPercentage<0}">{{userDetail.data.recentAmount}}<span class="data-percentage" v-html="numberToPercentage(userDetail.data.recentAmountPercentage, 'withArrow')"></span></span>
+               </span>
             </div>
             <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-               <span class="content-block-data"><span>每週平均使用量</span><span>12</span></span>
+               <span class="content-block-data"><span>每週平均使用量</span><span>{{userDetail.data.weekAverage}}</span></span>
             </div>
             <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-               <span class="content-block-data"><span>平均占用時間</span><span>20min</span></span>
+               <span class="content-block-data"><span>平均占用時間</span><span>{{userDetail.data.averageUsingDuration | durationToString}}</span></span>
             </div>
             <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-               <span class="content-block-data"><span>A借B還</span><span>43%</span></span>
+               <span class="content-block-data"><span>A借B還</span><span>{{userDetail.data.percentageOfBorrowingFromDiffPlace}}</span></span>
             </div>
             <div class="mdl-cell mdl-cell--12-col mdl-shadow--2dp content-block-table">
                <table class="mdl-data-table mdl-js-data-table">
@@ -357,23 +350,11 @@
                      </tr>
                   </thead>
                   <tbody>
-                     <tr>
-                        <td class="mdl-data-table__cell--non-numeric">Acrylic (Transparent)</td>
-                        <td class="mdl-data-table__cell--non-numeric">25</td>
-                        <td class="mdl-data-table__cell--non-numeric">$2.90</td>
-                        <td class="mdl-data-table__cell--non-numeric">$2.90</td>
-                     </tr>
-                     <tr>
-                        <td class="mdl-data-table__cell--non-numeric">Plywood (Birch)</td>
-                        <td class="mdl-data-table__cell--non-numeric">50</td>
-                        <td class="mdl-data-table__cell--non-numeric">$1.25</td>
-                        <td class="mdl-data-table__cell--non-numeric">$1.90</td>
-                     </tr>
-                     <tr>
-                        <td class="mdl-data-table__cell--non-numeric">Laminate (Gold on Blue)</td>
-                        <td class="mdl-data-table__cell--non-numeric">10</td>
-                        <td class="mdl-data-table__cell--non-numeric">$2.35</td>
-                        <td class="mdl-data-table__cell--non-numeric">$2.90</td>
+                     <tr v-for="aRecord in userDetail.data.history">
+                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.containerType}}<br>{{aRecord.containerID}}</td>
+                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.rentTime}}<br v-if="aRecord.rentTime">{{aRecord.rentPlace}}</td>
+                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.returnTime}}<br v-if="aRecord.returnTime">{{aRecord.returnPlace}}</td>
+                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.usingDuration | durationToString}}</td>
                      </tr>
                   </tbody>
                </table>
@@ -398,7 +379,7 @@
                   </tr>
                </thead>
                <tbody>
-                  <tr v-for="aContainerType in container.data.containerSummary">
+                  <tr @click="aRecordClickListener('container', index)" v-for="(aContainerType, index) in container.data.containerSummary">
                      <td class="mdl-data-table__cell--non-numeric">{{aContainerType.type}}</td>
                      <td>{{aContainerType.totalAmount}}</td>
                      <td>{{aContainerType.toUsedAmount}}</td>
@@ -417,16 +398,17 @@
       <section v-if="container.show" :class="{'is-display':containerDetail.show}" id="container-detail">
          <div class="mdl-grid main-content">
             <div class="mdl-cell mdl-cell--12-col mdl-grid content-block-detail-outer-container">
-               <div class="mdl-cell mdl-cell--9-col mdl-shadow--2dp content-block-detail-container is-expanded">
-                  <div class="content-block content-block-detail-outer mdl-color--white">
+               <div :class="{'is-expanded':containerDetail.expand}" class="mdl-cell mdl-cell--9-col mdl-shadow--2dp content-block-detail-container">
+                  <div @click="containerDetail.expand = !containerDetail.expand" class="content-block content-block-detail-outer mdl-color--white mdl-js-button mdl-js-ripple-effect">
                      <span class="content-block-detail">
-						<span class="content-block-inline"><span class="goodtogo-icons container-1"></span>#017　16oz杯子</span>
+						<span class="content-block-inline"><span :class="'container-' + containerDetail.data.containerType.code" class="goodtogo-icons"></span>{{containerDetail.data.containerID}}　{{containerDetail.data.containerType.txt}}</span>
+                     <span><span>循環次數</span><span>{{containerDetail.data.reuseTime}}</span></span>
                      <span class="mdl-chip">
-							<span class="mdl-chip__text">使用中</span>
+							   <span class="mdl-chip__text">{{containerDetail.data.status}}</span>
                      </span>
-                     <span><span>@</span><span>0921630931</span></span>
+                     <span><span>@</span><span>{{containerDetail.data.bindedUser}}</span></span>
                      </span>
-                     <span><i class="material-icons" role="presentation">expand_more</i></span>
+                     <span><i class="material-icons" role="presentation">{{userDetail.expand? 'expand_less' : 'expand_more'}}</i></span>
                   </div>
                   <div class="content-block content-block-detail-footer">
                      <div>
@@ -434,7 +416,7 @@
 							<span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
 						</button>
                         <span class="mdl-chip">
-							<span class="mdl-chip__text">2017-06-22</span>
+							<span class="mdl-chip__text">啟用日期: {{containerDetail.data.joinedDate | dateToString('only_date')}} ({{(Date.now() - userDetail.data.joinedDate) | durationToString}})</span>
                         </span>
                      </div>
                      <button class="mdl-button mdl-js-button mdl-button--raised detail-edit-button">
@@ -458,26 +440,12 @@
                      </tr>
                   </thead>
                   <tbody>
-                     <tr>
-                        <td class="mdl-data-table__cell--non-numeric">Acrylic (Transparent)</td>
-                        <td class="mdl-data-table__cell--non-numeric">25</td>
-                        <td class="mdl-data-table__cell--non-numeric">$2.90</td>
-                        <td class="mdl-data-table__cell--non-numeric">$2.90</td>
-                        <td class="mdl-data-table__cell--non-numeric">$2.90</td>
-                     </tr>
-                     <tr>
-                        <td class="mdl-data-table__cell--non-numeric">Plywood (Birch)</td>
-                        <td class="mdl-data-table__cell--non-numeric">50</td>
-                        <td class="mdl-data-table__cell--non-numeric">$1.25</td>
-                        <td class="mdl-data-table__cell--non-numeric">$1.90</td>
-                        <td class="mdl-data-table__cell--non-numeric">$2.90</td>
-                     </tr>
-                     <tr>
-                        <td class="mdl-data-table__cell--non-numeric">Laminate (Gold on Blue)</td>
-                        <td class="mdl-data-table__cell--non-numeric">10</td>
-                        <td class="mdl-data-table__cell--non-numeric">$2.35</td>
-                        <td class="mdl-data-table__cell--non-numeric">$2.90</td>
-                        <td class="mdl-data-table__cell--non-numeric">$2.90</td>
+                     <tr v-for="aRecord in containerDetail.data.history">
+                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.tradeTime | dateToString}}</td>
+                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.action}}</td>
+                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.newUser}}</td>
+                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.oriUser}}</td>
+                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.comment}}</td>
                      </tr>
                   </tbody>
                </table>

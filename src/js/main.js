@@ -1,47 +1,31 @@
-// window.addEventListener("load", function() {
-//     console.log(window.location.hash)
-
-function initPage() {
-    $(window.location.hash || "#index").addClass('is-active');
-    $(".mdl-navigation__link[href='" + (window.location.hash || "#index") + "']").addClass('is-active');
-};
-//     initPage();
-//     var navLink_nowActive = $(".mdl-navigation__link.is-active");
-//     var navLinks = $(".mdl-navigation__link");
-//     var content_nowActive = $(".main-content.is-active");
-//     navLinks.click(function navLinkClickListener() {
-//         navLink_nowActive.removeClass('is-active');
-//         $(this).addClass('is-active');
-//         navLink_nowActive = $(this);
-//         content_nowActive.removeClass('is-active');
-//         content_nowActive = $(navLink_nowActive.attr('href'));
-//         content_nowActive.addClass('is-active');
-//         $('.mdl-layout__obfuscator.is-visible').click();
-//     });
-//     $('.content-block-detail-container .content-block-detail-outer').click(function() {
-//         if ($(this).parent().hasClass('is-expanded')) {
-//             $(this).parent().removeClass('is-expanded');
-//             $(this).find('.material-icons').last().text('expand_more');
-//         } else {
-//             $(this).parent().addClass('is-expanded');
-//             $(this).find('.material-icons').last().text('expand_less');
-//         }
-//     });
-// });
-
 function initPage() {
     return window.location.hash || "#index";
 };
 
-$(window).ready(function() {
+$(window).on('load', function() {
+    $('#loading').css('display', 'none');
+    appInit(window);
+});
+
+function appInit(window) {
     var showedDetail = null;
     var nowActiveSection = initPage().replace("#", "");
     var arrowUpward = '<i class="material-icons" role="presentation">arrow_upward</i>';
     var arrowDownward = '<i class="material-icons" role="presentation">arrow_downward</i>';
     var arrowDropDown = '<i class="material-icons" role="presentation">arrow_drop_down</i>';
-    var numberToPercentage = function(number, withArrow) {
-        var arrow = withArrow ? (number > 0 ? arrowUpward : arrowDownward) : "";
-        return "(" + arrow + parseFloat(Math.abs(number) * 100).toFixed(1) + "%)";
+    var numberToPercentage = function(number, option) {
+        switch (option) {
+            case 'withArrow':
+                var arrow = number > 0 ? arrowUpward : arrowDownward;
+                return "(" + arrow + parseFloat(Math.abs(number) * 100).toFixed(1) + "%)";
+                break;
+            case 'withoutParentheses':
+                return parseFloat(number * 100).toFixed(1) + "%";
+                break;
+            default:
+                return "(" + parseFloat(number * 100).toFixed(1) + "%)";
+                break;
+        }
     };
     var app = new Vue({
         el: "#app",
@@ -61,6 +45,9 @@ $(window).ready(function() {
                     case "only_date":
                         return date;
                         break;
+                    default:
+                        return date;
+                        break;
                 }
             }
         },
@@ -75,11 +62,11 @@ $(window).ready(function() {
             },
             aRecordClickListener: function(from, index) {
                 showedDetail = from + "Detail";
-                this[showedDetail].show = true;
+                this[showedDetail || (nowActiveSection + "Detail")].show = true;
                 console.log(index);
             },
             closeDetail: function() {
-                this[showedDetail].show = false;
+                this[showedDetail || (nowActiveSection + "Detail")].show = false;
             },
             numberToPercentage: numberToPercentage
         },
@@ -89,6 +76,7 @@ $(window).ready(function() {
             }
         },
         data: {
+            loginUser: "0936-000-111",
             index: {
                 show: false,
                 data: {
@@ -134,6 +122,7 @@ $(window).ready(function() {
             },
             shopDetail: {
                 show: false,
+                expand: false,
                 data: {
                     storeName: "布萊恩紅茶",
                     toUsedAmount: 24,
@@ -160,11 +149,44 @@ $(window).ready(function() {
             },
             user: {
                 show: false,
-
+                data: {
+                    totalUserAmount: 2500,
+                    totalUsageAmount: 2500,
+                    weeklyAverageUsage: 2500,
+                    totalLostAmount: 12,
+                    userList: [{
+                        phone: "0912345678",
+                        usingAmount: 25,
+                        lostAmount: 1,
+                        totalUsageAmount: 30
+                    }]
+                }
             },
             userDetail: {
                 show: false,
-
+                expand: false,
+                data: {
+                    userPhone: "0936-003-091",
+                    usingAmount: 3,
+                    lostAmount: 23,
+                    totalUsageAmount: 200,
+                    joinedDate: 1234,
+                    joinedMethod: "店鋪 (方糖咖啡)",
+                    recentAmount: 18,
+                    recentAmountPercentage: 0.16,
+                    weekAverage: 10,
+                    averageUsingDuration: 20 * 1000,
+                    percentageOfBorrowingFromDiffPlace: 0.43,
+                    history: [{
+                        containerType: "12oz 玻璃杯",
+                        containerID: "#101",
+                        rentTime: 1234,
+                        rentPlace: "布萊恩紅茶",
+                        returnTime: 1234,
+                        returnPlace: "布萊恩紅茶",
+                        usingDuration: 1234
+                    }]
+                }
             },
             container: {
                 show: false,
@@ -210,7 +232,25 @@ $(window).ready(function() {
             },
             containerDetail: {
                 show: false,
-
+                expand: false,
+                data: {
+                    containerID: "#257",
+                    containerType: {
+                        txt: "16oz 玻璃杯",
+                        code: 1
+                    },
+                    reuseTime: 24,
+                    status: "使用中",
+                    bindedUser: "0921-**-931",
+                    joinedDate: 1234,
+                    history: [{
+                        tradeTime: 1234,
+                        action: "借出",
+                        newUser: "0921-***-931",
+                        oriUser: "特有種商行(小衛)",
+                        comment: ""
+                    }]
+                }
             },
             delivery: {
                 show: false,
@@ -218,8 +258,10 @@ $(window).ready(function() {
             },
             deliveryDetail: {
                 show: false,
+                expand: false,
 
             }
         }
     });
-});
+    window.app = app;
+}
