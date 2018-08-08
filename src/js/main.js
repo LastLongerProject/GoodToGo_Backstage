@@ -3,7 +3,7 @@ function initPage() {
 };
 
 $(window).on('load', function() {
-    $('#loading').css('display', 'none');
+    $('#loading_main').css('display', 'none');
     appInit(window);
 });
 
@@ -53,17 +53,25 @@ function appInit(window) {
         },
         methods: {
             navClickListener: function(event) {
+                var localApp = this;
                 var destination = event.path[1].getAttribute('href').replace("#", "");
-                this[nowActiveSection].show = false;
                 if ((nowActiveSection + "Detail") in this) this[nowActiveSection + "Detail"].show = false;
-                this[destination].show = true;
-                nowActiveSection = destination;
                 $('.mdl-layout__obfuscator.is-visible').click();
+                requestData(destination, function(data) {
+                    localApp[nowActiveSection].show = false;
+                    localApp[destination].show = true;
+                    // localApp[destination].data = data;
+                    nowActiveSection = destination;
+                });
             },
             aRecordClickListener: function(from, index) {
+                var localApp = this;
                 showedDetail = from + "Detail";
-                this[showedDetail || (nowActiveSection + "Detail")].show = true;
-                console.log(index);
+                var toRequest = showedDetail + "/" + this[from].data.list[index].id;
+                requestData(toRequest, function(data) {
+                    localApp[showedDetail].show = true;
+                    // localApp[showedDetail].data = data;
+                });
             },
             closeDetail: function() {
                 this[showedDetail || (nowActiveSection + "Detail")].show = false;
@@ -77,6 +85,10 @@ function appInit(window) {
         },
         data: {
             loginUser: "0936-000-111",
+            loading: {
+                show: false,
+                txt: "載入中..."
+            },
             index: {
                 show: false,
                 data: {
@@ -111,7 +123,8 @@ function appInit(window) {
             shop: {
                 show: false,
                 data: {
-                    summary: [{
+                    list: [{
+                        id: 0,
                         storeName: "布萊恩紅茶",
                         toUsedAmount: 24,
                         todayAmount: 2,
@@ -154,7 +167,8 @@ function appInit(window) {
                     totalUsageAmount: 2500,
                     weeklyAverageUsage: 2500,
                     totalLostAmount: 12,
-                    userList: [{
+                    list: [{
+                        id: 0,
                         phone: "0912345678",
                         usingAmount: 25,
                         lostAmount: 1,
@@ -191,7 +205,8 @@ function appInit(window) {
             container: {
                 show: false,
                 data: {
-                    containerSummary: [{
+                    list: [{
+                            id: 0,
                             type: "16oz 玻璃杯",
                             totalAmount: 286,
                             toUsedAmount: 106,
@@ -204,6 +219,7 @@ function appInit(window) {
                             lostAmount: 161
                         },
                         {
+                            id: 1,
                             type: "12oz 玻璃杯",
                             totalAmount: 393,
                             toUsedAmount: 50,
@@ -216,6 +232,7 @@ function appInit(window) {
                             lostAmount: 170
                         },
                         {
+                            id: 2,
                             type: "16oz 把手杯",
                             totalAmount: 56,
                             toUsedAmount: 1,

@@ -1,6 +1,4 @@
-<div id="loading" class="mdl-color--grey-100">
-   <div class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
-</div>
+<div id="loading_main" class="mdl-color--grey-100"></div>
 <div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-drawer mdl-color--grey-100">
    <header class="mdl-layout__header header">
       <div :class="{'show-navigate_before':detailIsOpen}" class="mdl-layout__header-row">
@@ -53,6 +51,12 @@
       </nav>
    </div>
    <main class="mdl-layout__content content-container">
+      <div id="loading" :class="{'is-loading':loading.show}">
+         <div class="loading-container">
+            <span>{{loading.txt}}</span>
+            <div class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+         </div>
+      </div>
       <section v-if="index.show" class="mdl-grid main-content" id="index">
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
             <span class="content-block-data"><span><i class="material-icons" role="presentation">supervisor_account</i>會員數量</span><span>{{index.data.summary.userAmount | numberWithCommas}}</span></span>
@@ -179,7 +183,7 @@
                   </tr>
                </thead>
                <tbody>
-                  <tr @click="aRecordClickListener('shop', index)" v-for="(aStore, index) in shop.data.summary">
+                  <tr @click="aRecordClickListener('shop', index)" v-for="(aStore, index) in shop.data.list">
                      <td class="mdl-data-table__cell--non-numeric">{{aStore.storeName}}</td>
                      <td>{{aStore.toUsedAmount}}</td>
                      <td>{{aStore.todayAmount}}</td>
@@ -285,7 +289,7 @@
                   </tr>
                </thead>
                <tbody>
-                  <tr @click="aRecordClickListener('user', index)" v-for="(aUser, index) in user.data.userList">
+                  <tr @click="aRecordClickListener('user', index)" v-for="(aUser, index) in user.data.list">
                      <td class="mdl-data-table__cell--non-numeric">{{aUser.phone}}</td>
                      <td>{{aUser.usingAmount}}</td>
                      <td>{{aUser.lostAmount}}</td>
@@ -379,7 +383,7 @@
                   </tr>
                </thead>
                <tbody>
-                  <tr @click="aRecordClickListener('container', index)" v-for="(aContainerType, index) in container.data.containerSummary">
+                  <tr @click="aRecordClickListener('container', index)" v-for="(aContainerType, index) in container.data.list">
                      <td class="mdl-data-table__cell--non-numeric">{{aContainerType.type}}</td>
                      <td>{{aContainerType.totalAmount}}</td>
                      <td>{{aContainerType.toUsedAmount}}</td>
@@ -555,4 +559,8 @@
          </div>
       </section>
    </main>
+   <div id="toast" class="mdl-js-snackbar mdl-snackbar">
+      <div class="mdl-snackbar__text"></div>
+      <button class="mdl-snackbar__action" type="button"></button>
+   </div>
 </div>

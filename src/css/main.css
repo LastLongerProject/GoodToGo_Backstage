@@ -5,18 +5,43 @@ body,
     font-family: 'Roboto', 'Noto Sans TC', sans-serif;
 }
 
-#loading {
+#loading_main {
     position: fixed;
     z-index: 10;
     width: 100vw;
     height: 100vh;
 }
 
-#loading .mdl-progress {
+#loading {
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    visibility: hidden;
+    background-color: rgba(245, 245, 245, 0);
+    transition-property: background-color, visiblity;
+    transition-duration: 0.3s;
+}
+
+#loading.is-loading {
+    visibility: visible;
+    background-color: rgba(245, 245, 245, 0.8);
+}
+
+#loading .loading-container {
     width: 80vw;
     max-width: 200px;
     margin: 0 auto;
-    top: calc(50% - 2px);
+    margin-top: calc(50% - 30px);
+    color: rgb(158, 158, 158);
+    font-size: 40px;
+    font-weight: normal;
+    line-height: 1.15;
+}
+
+#loading .mdl-progress {
+    margin-top: 15px;
+    width: 100%
 }
 
 #loading .mdl-progress .progressbar {
@@ -104,6 +129,10 @@ header.header {
     bottom: 0px;
 }
 
+.navigation a {
+    cursor: pointer;
+}
+
 .navigation .mdl-navigation__link.is-active {
     color: #40B9D8;
 }
@@ -131,10 +160,6 @@ header.header {
 .content-block .content-block-data .data-percentage .material-icons {
     margin-right: 0;
     font-size: 14px;
-}
-
-.navigation a {
-    cursor: default;
 }
 
 .nav-menu a {
@@ -443,6 +468,8 @@ section.disabled {
     line-height: 56px;
     margin: 8px 0;
     z-index: 5;
+    visibility: hidden;
+    transition: visibility 0s;
     transition-property: width, color, margin;
     transition-duration: 0.5s;
 }
@@ -460,6 +487,7 @@ section.disabled {
     color: rgba(255, 255, 255, 1);
     margin: 8px 12px;
     width: 48px;
+    visibility: visible;
 }
 
 @media screen and (max-width: 1024px) {
@@ -470,6 +498,8 @@ section.disabled {
         position: absolute;
         top: 0;
         left: 0;
+    }
+    .show-navigate_before .header-button {
         margin: 4px !important;
     }
 }
