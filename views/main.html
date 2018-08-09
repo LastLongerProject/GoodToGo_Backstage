@@ -57,7 +57,7 @@
             <div class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
          </div>
       </div>
-      <section v-if="index.show" class="mdl-grid main-content" id="index">
+      <section v-show="index.show" class="mdl-grid main-content" id="index">
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
             <span class="content-block-data"><span><i class="material-icons" role="presentation">supervisor_account</i>會員數量</span><span>{{index.data.summary.userAmount | numberWithCommas}}</span></span>
          </div>
@@ -117,7 +117,7 @@
             </span>
          </div>
       </section>
-      <section v-if="search.show" class="mdl-grid main-content" id="search-result">
+      <section v-show="search.show" class="mdl-grid main-content" id="search-result">
          <div class="mdl-cell mdl-cell--12-col content-title">
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect">
 					<i class="material-icons" role="presentation">supervisor_account</i>使用者<i class="material-icons" role="presentation">expand_more</i>
@@ -170,7 +170,7 @@
             <span class="content-block-inline"><i class="material-icons" role="presentation">check_box</i>0936033091</span>
          </div>
       </section>
-      <section v-if="shop.show" class="mdl-grid main-content" id="shop">
+      <section v-show="shop.show" class="mdl-grid main-content" id="shop">
          <div class="mdl-cell mdl-cell--12-col mdl-shadow--2dp content-block-table">
             <table class="mdl-data-table mdl-js-data-table">
                <thead>
@@ -194,7 +194,7 @@
             </table>
          </div>
       </section>
-      <section v-if="shop.show" :class="{'is-display':shopDetail.show}" id="shop-detail">
+      <section v-show="shop.show" :class="{'is-display':shopDetail.show}" id="shop-detail">
          <div class="mdl-grid main-content">
             <div class="mdl-cell mdl-cell--12-col mdl-grid content-block-detail-outer-container">
                <div :class="{'is-expanded':shopDetail.expand}" class="mdl-cell mdl-cell--9-col mdl-shadow--2dp content-block-detail-container">
@@ -262,10 +262,10 @@
             </div>
          </div>
       </section>
-      <section v-if="activity.show" class="mdl-grid main-content disabled" id="activity">
+      <section v-show="activity.show" class="mdl-grid main-content disabled" id="activity">
          <span>尚未開放</span>
       </section>
-      <section v-if="user.show" class="mdl-grid main-content" id="user">
+      <section v-show="user.show" class="mdl-grid main-content" id="user">
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
             <span class="content-block-data"><span>總會員數</span><span>{{user.data.totalUserAmount}}</span></span>
          </div>
@@ -299,7 +299,7 @@
             </table>
          </div>
       </section>
-      <section v-if="user.show" :class="{'is-display':userDetail.show}" id="user-detail">
+      <section v-show="user.show" :class="{'is-display':userDetail.show}" id="user-detail">
          <div class="mdl-grid main-content">
             <div class="mdl-cell mdl-cell--12-col mdl-grid content-block-detail-outer-container">
                <div :class="{'is-expanded':userDetail.expand}" class="mdl-cell mdl-cell--9-col mdl-shadow--2dp content-block-detail-container">
@@ -365,7 +365,7 @@
             </div>
          </div>
       </section>
-      <section v-if="container.show" class="mdl-grid main-content" id="container">
+      <section v-show="container.show" class="mdl-grid main-content" id="container">
          <div class="mdl-cell mdl-cell--12-col mdl-shadow--2dp content-block-table">
             <table class="mdl-data-table mdl-js-data-table">
                <thead>
@@ -399,7 +399,7 @@
             </table>
          </div>
       </section>
-      <section v-if="container.show" :class="{'is-display':containerDetail.show}" id="container-detail">
+      <section v-show="container.show" :class="{'is-display':containerDetail.show}" id="container-detail">
          <div class="mdl-grid main-content">
             <div class="mdl-cell mdl-cell--12-col mdl-grid content-block-detail-outer-container">
                <div :class="{'is-expanded':containerDetail.expand}" class="mdl-cell mdl-cell--9-col mdl-shadow--2dp content-block-detail-container">
@@ -456,7 +456,7 @@
             </div>
          </div>
       </section>
-      <section v-if="delivery.show" class="mdl-grid main-content" id="delivery">
+      <section v-show="delivery.show" class="mdl-grid main-content" id="delivery">
          <div class="mdl-cell mdl-cell--12-col mdl-shadow--2dp content-block-table">
             <table class="mdl-data-table mdl-js-data-table">
                <thead>
@@ -502,7 +502,7 @@
             </table>
          </div>
       </section>
-      <section v-if="delivery.show" :class="{'is-display':deliveryDetail.show}" id="delivery-detail">
+      <section v-show="delivery.show" :class="{'is-display':deliveryDetail.show}" id="delivery-detail">
          <div class="mdl-grid main-content">
             <div class="mdl-cell mdl-cell--12-col mdl-grid content-block-detail-outer-container">
                <div class="mdl-cell mdl-cell--9-col mdl-shadow--2dp content-block-detail-container is-expanded">

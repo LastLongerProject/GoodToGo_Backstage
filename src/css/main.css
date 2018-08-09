@@ -21,6 +21,7 @@ body,
     background-color: rgba(245, 245, 245, 0);
     transition-property: background-color, visiblity;
     transition-duration: 0.3s;
+    transition-timing-function: ease-out;
 }
 
 #loading.is-loading {
@@ -32,7 +33,7 @@ body,
     width: 80vw;
     max-width: 200px;
     margin: 0 auto;
-    margin-top: calc(50% - 30px);
+    margin-top: calc(50vh - 95px);
     color: rgb(158, 158, 158);
     font-size: 40px;
     font-weight: normal;
