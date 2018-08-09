@@ -25,7 +25,7 @@
             pendingReq = null;
             stopLoading();
             cb();
-        }, 1000);
+        }, 500);
     }
 
     function startLoading() {

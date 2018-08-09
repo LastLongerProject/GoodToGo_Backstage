@@ -24,13 +24,13 @@ router.post('/login', async ctx => {
         ua: ctx.header['user-agent'],
         ip: ctx.ip
     };
-    ctx.redirect("/manager/demo");
+    ctx.redirect("/manager/dashboard");
 });
 
 router.use(checkIsLogin);
 
 router.get('/', async ctx => {
-    ctx.redirect("/manager/demo");
+    ctx.redirect("/manager/dashboard");
 });
 
 router.get('/dashboard', async ctx => {

@@ -52,9 +52,8 @@ function appInit(window) {
             }
         },
         methods: {
-            navClickListener: function(event) {
+            navClickListener: function(destination) {
                 var localApp = this;
-                var destination = event.path[1].getAttribute('href').replace("#", "");
                 if ((nowActiveSection + "Detail") in this) this[nowActiveSection + "Detail"].show = false;
                 $('.mdl-layout__obfuscator.is-visible').click();
                 requestData(destination, function(data) {

@@ -42,12 +42,12 @@
          <span><i class="material-icons" role="presentation">account_circle</i>{{loginUser}}</span>
       </header>
       <nav class="mdl-navigation navigation">
-         <a :class="{'is-active':index.show}" @click="navClickListener" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#index"><i class="material-icons" role="presentation">home</i>首頁</a>
-         <a :class="{'is-active':shop.show}" @click="navClickListener" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#shop"><i class="material-icons" role="presentation">store_mall_directory</i>店鋪</a>
-         <a :class="{'is-active':activity.show}" @click="navClickListener" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#activity"><i class="material-icons" role="presentation">event</i>活動</a>
-         <a :class="{'is-active':user.show}" @click="navClickListener" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#user"><i class="material-icons" role="presentation">supervisor_account</i>使用者</a>
-         <a :class="{'is-active':container.show}" @click="navClickListener" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#container"><i class="material-icons" role="presentation">local_drink</i>容器</a>
-         <a :class="{'is-active':delivery.show}" @click="navClickListener" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#delivery"><i class="material-icons" role="presentation">local_shipping</i>配送</a>
+         <a :class="{'is-active':index.show}" @click="navClickListener('index')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#index"><i class="material-icons" role="presentation">home</i>首頁</a>
+         <a :class="{'is-active':shop.show}" @click="navClickListener('shop')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#shop"><i class="material-icons" role="presentation">store_mall_directory</i>店鋪</a>
+         <a :class="{'is-active':activity.show}" @click="navClickListener('activity')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#activity"><i class="material-icons" role="presentation">event</i>活動</a>
+         <a :class="{'is-active':user.show}" @click="navClickListener('user')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#user"><i class="material-icons" role="presentation">supervisor_account</i>使用者</a>
+         <a :class="{'is-active':container.show}" @click="navClickListener('container')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#container"><i class="material-icons" role="presentation">local_drink</i>容器</a>
+         <a :class="{'is-active':delivery.show}" @click="navClickListener('delivery')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#delivery"><i class="material-icons" role="presentation">local_shipping</i>配送</a>
       </nav>
    </div>
    <main class="mdl-layout__content content-container">
