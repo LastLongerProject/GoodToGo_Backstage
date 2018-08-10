@@ -4,8 +4,10 @@ const restAPI = require('../models/restAPI');
 const checkIsLogin = require('../models/middleware').checkIsLogin;
 
 const router = new Router();
+const LANDING_PAGE_URL = "/manager/demo";
 
 router.get('/login', async ctx => {
+    if (ctx.session.user) return ctx.redirect(LANDING_PAGE_URL);
     await ctx.render('login', {
         csrf: ctx.csrf
     });
@@ -24,13 +26,13 @@ router.post('/login', async ctx => {
         ua: ctx.header['user-agent'],
         ip: ctx.ip
     };
-    ctx.redirect("/manager/dashboard");
+    ctx.redirect(LANDING_PAGE_URL);
 });
 
 router.use(checkIsLogin);
 
 router.get('/', async ctx => {
-    ctx.redirect("/manager/dashboard");
+    ctx.redirect(LANDING_PAGE_URL);
 });
 
 router.get('/dashboard', async ctx => {
@@ -38,7 +40,9 @@ router.get('/dashboard', async ctx => {
 });
 
 router.get('/demo', async ctx => {
-    await ctx.render('demo');
+    await ctx.render('space4m', {
+        demo: true
+    });
 });
 
 router.get('/logout', async ctx => {

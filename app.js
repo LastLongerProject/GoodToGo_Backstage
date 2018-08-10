@@ -61,10 +61,11 @@ app.use(bodyParser());
 app.use(conditional());
 app.use(etag());
 // const csrfMid = new csrf();
-// app.use(async(ctx, next) => {
-//     console.log(ctx.session.secret, ctx.request.body, require('csrf')().verify(ctx.session.secret, ctx.request.body._csrf));
-//     await next();
-// });
+app.use(async (ctx, next) => {
+    // console.log(ctx.session.secret, ctx.request.body, require('csrf')().verify(ctx.session.secret, ctx.request.body._csrf));
+    ctx.state.demo = false;
+    await next();
+});
 // app.use(csrfMid);
 app.use(new csrf());
 
