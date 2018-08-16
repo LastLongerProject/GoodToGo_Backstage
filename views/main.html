@@ -23,7 +23,7 @@
          <div class="mdl-layout-spacer"></div>
          <!-- Navigation -->
          <nav class="mdl-navigation mdl-layout--large-screen-only navigation">
-            <a class="mdl-navigation__link" href="#"><i class="material-icons" role="presentation">account_circle</i>{{loginUser}}</a>
+            <a class="mdl-navigation__link" href="#"><i class="material-icons" role="presentation">account_circle</i><%- user.name %></a>
          </nav>
          <button id="menu-button" class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect">
 				<i class="material-icons">more_vert</i>
@@ -39,7 +39,7 @@
    <div class="mdl-layout__drawer drawer">
       <header class="drawer-header">
          <img src="assets/img/mini_logo.svg" class="mini-icon">
-         <span><i class="material-icons" role="presentation">account_circle</i>{{loginUser}}</span>
+         <span><i class="material-icons" role="presentation">account_circle</i><%- user.neme %></span>
       </header>
       <nav class="mdl-navigation navigation">
          <a :class="{'is-active':index.show}" @click="navClickListener('index')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#index"><i class="material-icons" role="presentation">home</i>首頁</a>
@@ -170,7 +170,7 @@
             <span class="content-block-inline"><i class="material-icons" role="presentation">check_box</i>0936033091</span>
          </div>
       </section>
-      <section v-show="shop.show" class="mdl-grid main-content" id="shop">
+      <section v-show="shop.show" :class="{'is-hide':shopDetail.show}" class="mdl-grid main-content" id="shop">
          <div class="mdl-cell mdl-cell--12-col mdl-shadow--2dp content-block-table">
             <table class="mdl-data-table mdl-js-data-table">
                <thead>
@@ -200,7 +200,7 @@
                <div :class="{'is-expanded':shopDetail.expand}" class="mdl-cell mdl-cell--9-col mdl-shadow--2dp content-block-detail-container">
                   <div @click="shopDetail.expand = !shopDetail.expand" class="content-block content-block-detail-outer mdl-color--white mdl-js-button mdl-js-ripple-effect">
                      <span class="content-block-detail">
-                           <span class="content-block-inline"><i class="material-icons" role="presentation">store_mall_directory</i>{{shopDetail.data.storeName}}</span>
+				   <span class="content-block-inline"><i class="material-icons" role="presentation">store_mall_directory</i>{{shopDetail.data.storeName}}</span>
                      <span><span>可用數量</span><span>{{shopDetail.data.toUsedAmount}}</span></span>
                      <span><span>今日用量</span><span>{{shopDetail.data.todayAmount}}</span></span>
                      <span><span>當週累計</span><span>{{shopDetail.data.weekAmount}}</span></span>
@@ -210,21 +210,21 @@
                   <div class="content-block content-block-detail-footer">
                      <div>
                         <button type="button" class="mdl-chip detail-active-button">
-                              <span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
-                           </button>
+					<span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
+				   </button>
                         <span class="mdl-chip">
-                              <span class="mdl-chip__text">{{shopDetail.data.joinedDate | dateToString('only_date')}}</span>
+					<span class="mdl-chip__text">{{shopDetail.data.joinedDate | dateToString('only_date')}}</span>
                         </span>
                         <span class="mdl-chip">
-                              <span class="mdl-chip__text">聯絡人: {{shopDetail.data.contactNickname}}</span>
+					<span class="mdl-chip__text">聯絡人: {{shopDetail.data.contactNickname}}</span>
                         </span>
                         <span class="mdl-chip">
-                              <span class="mdl-chip__text">{{shopDetail.data.contactPhone}}</span>
+					<span class="mdl-chip__text">{{shopDetail.data.contactPhone}}</span>
                         </span>
                      </div>
                      <button class="mdl-button mdl-js-button mdl-button--raised detail-edit-button">
-                           編輯
-                        </button>
+				   編輯
+				</button>
                   </div>
                </div>
             </div>
@@ -251,7 +251,7 @@
                   </thead>
                   <tbody>
                      <tr v-for="aRecord in shopDetail.data.history">
-                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.time}}</td>
+                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.time | dateToString}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.serial}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.action}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.owner}}</td>
@@ -262,10 +262,10 @@
             </div>
          </div>
       </section>
-      <section v-show="activity.show" class="mdl-grid main-content disabled" id="activity">
+      <section v-show="activity.show" :class="{'is-hide':activityDetail.show}" class="mdl-grid main-content disabled" id="activity">
          <span>尚未開放</span>
       </section>
-      <section v-show="user.show" class="mdl-grid main-content" id="user">
+      <section v-show="user.show" :class="{'is-hide':userDetail.show}" class="mdl-grid main-content" id="user">
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
             <span class="content-block-data"><span>總會員數</span><span>{{user.data.totalUserAmount}}</span></span>
          </div>
@@ -305,7 +305,7 @@
                <div :class="{'is-expanded':userDetail.expand}" class="mdl-cell mdl-cell--9-col mdl-shadow--2dp content-block-detail-container">
                   <div @click="userDetail.expand = !userDetail.expand" class="content-block content-block-detail-outer mdl-color--white mdl-js-button mdl-js-ripple-effect">
                      <span class="content-block-detail">
-						      <span class="content-block-inline"><i class="material-icons" role="presentation">person</i>{{userDetail.data.userPhone}}</span>
+							<span class="content-block-inline"><i class="material-icons" role="presentation">person</i>{{userDetail.data.userPhone}}</span>
                      <span><span>使用中</span><span>{{userDetail.data.usingAmount}}</span></span>
                      <span><span>遺失</span><span class="warning">{{userDetail.data.lostAmount}}</span></span>
                      <span><span>累計使用量</span><span>{{userDetail.data.totalUsageAmount}}</span></span>
@@ -315,18 +315,18 @@
                   <div class="content-block content-block-detail-footer">
                      <div>
                         <button type="button" class="mdl-chip detail-active-button">
-                           <span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
-                        </button>
+				   <span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
+				</button>
                         <span class="mdl-chip">
-                           <span class="mdl-chip__text">加入日期: {{userDetail.data.joinedDate | dateToString('only_date')}} ({{(Date.now() - userDetail.data.joinedDate) | durationToString}})</span>
+				   <span class="mdl-chip__text">加入日期: {{userDetail.data.joinedDate | dateToString('only_date')}} ({{(Date.now() - userDetail.data.joinedDate) | durationToString}})</span>
                         </span>
                         <span class="mdl-chip">
-                           <span class="mdl-chip__text">管道: {{userDetail.data.joinedMethod}}</span>
+				   <span class="mdl-chip__text">管道: {{userDetail.data.joinedMethod}}</span>
                         </span>
                      </div>
                      <button class="mdl-button mdl-js-button mdl-button--raised detail-edit-button">
-						      編輯
-					      </button>
+							編輯
+						</button>
                   </div>
                </div>
             </div>
@@ -356,8 +356,8 @@
                   <tbody>
                      <tr v-for="aRecord in userDetail.data.history">
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.containerType}}<br>{{aRecord.containerID}}</td>
-                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.rentTime}}<br v-if="aRecord.rentTime">{{aRecord.rentPlace}}</td>
-                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.returnTime}}<br v-if="aRecord.returnTime">{{aRecord.returnPlace}}</td>
+                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.rentTime | dateToString}}<br v-if="aRecord.rentTime">{{aRecord.rentPlace}}</td>
+                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.returnTime | dateToString}}<br v-if="aRecord.returnTime">{{aRecord.returnPlace}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.usingDuration | durationToString}}</td>
                      </tr>
                   </tbody>
@@ -365,7 +365,7 @@
             </div>
          </div>
       </section>
-      <section v-show="container.show" class="mdl-grid main-content" id="container">
+      <section v-show="container.show" :class="{'is-hide':containerDetail.show}" class="mdl-grid main-content" id="container">
          <div class="mdl-cell mdl-cell--12-col mdl-shadow--2dp content-block-table">
             <table class="mdl-data-table mdl-js-data-table">
                <thead>
@@ -456,7 +456,7 @@
             </div>
          </div>
       </section>
-      <section v-show="delivery.show" class="mdl-grid main-content" id="delivery">
+      <section v-show="delivery.show" :class="{'is-hide':containerDetail.show}" class="mdl-grid main-content" id="delivery">
          <div class="mdl-cell mdl-cell--12-col mdl-shadow--2dp content-block-table">
             <table class="mdl-data-table mdl-js-data-table">
                <thead>

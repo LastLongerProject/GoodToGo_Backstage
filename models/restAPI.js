@@ -11,6 +11,13 @@ module.exports = {
         return request(await reqWrapper('/users/login', 'POST', {
             body: reqBody
         }));
+    },
+    data: async function data(uri, method, reqBody, userRole) {
+        return request(await reqWrapper('/manage/' + uri, method, {
+            authType: 'JWT',
+            userRole,
+            body: reqBody
+        }));
     }
 }
 
@@ -29,7 +36,7 @@ async function reqWrapper(uri, method, options) {
                     jti: 'manager',
                     iat: Date.now(),
                     exp: new Date().setDate(new Date().getDate() + 3)
-                }, jwtKey)
+                }, userRole.secretKey)
             };
             break;
         default:

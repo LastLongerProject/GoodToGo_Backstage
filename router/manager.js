@@ -4,10 +4,19 @@ const restAPI = require('../models/restAPI');
 const checkIsLogin = require('../models/middleware').checkIsLogin;
 
 const router = new Router();
-const LANDING_PAGE_URL = "/manager/demo";
+const LANDING_PAGE_URL_DEMO = "/manager/demo";
+const LANDING_PAGE_URL_LIVE = "/manager/dashboard";
+
+function redirect(ctx) {
+    var user = ctx.session.user;
+    if (user.phone === "0911111111")
+        return ctx.redirect(LANDING_PAGE_URL_DEMO);
+    else
+        return ctx.redirect(LANDING_PAGE_URL_LIVE);
+}
 
 router.get('/login', async ctx => {
-    if (ctx.session.user) return ctx.redirect(LANDING_PAGE_URL);
+    if (ctx) return redirect(ctx);
     await ctx.render('login', {
         csrf: ctx.csrf
     });
@@ -26,13 +35,13 @@ router.post('/login', async ctx => {
         ua: ctx.header['user-agent'],
         ip: ctx.ip
     };
-    ctx.redirect(LANDING_PAGE_URL);
+    redirect(ctx);
 });
 
 router.use(checkIsLogin);
 
 router.get('/', async ctx => {
-    ctx.redirect(LANDING_PAGE_URL);
+    redirect(ctx);
 });
 
 router.get('/dashboard', async ctx => {
@@ -48,6 +57,22 @@ router.get('/demo', async ctx => {
 router.get('/logout', async ctx => {
     ctx.session = null;
     ctx.redirect("/manager/login");
+});
+
+router.all("/data/:uri", async ctx => {
+    const uri = ctx.params.uri;
+    const id = ctx.query.id;
+    const method = ctx.method;
+    const reqBody = ctx.request.body;
+    let serverRes;
+    try {
+        serverRes = await restAPI.data(uri + (id ? ("/" + id) : ""), method, reqBody, ctx.session.user.roles.admin);
+        ctx.ok(serverRes.body);
+    } catch (err) {
+        if (err.name !== "StatusCodeError")
+            throw err;
+        ctx.forbidden(err.error.message);
+    }
 });
 
 module.exports = router;

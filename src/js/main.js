@@ -16,7 +16,7 @@ function appInit(window) {
     var numberToPercentage = function(number, option) {
         switch (option) {
             case 'withArrow':
-                var arrow = number > 0 ? arrowUpward : arrowDownward;
+                var arrow = number >= 0 ? arrowUpward : arrowDownward;
                 return "(" + arrow + parseFloat(Math.abs(number) * 100).toFixed(1) + "%)";
                 break;
             case 'withoutParentheses':
@@ -43,10 +43,10 @@ function appInit(window) {
             dateToString: function(date, mode) {
                 switch (mode) {
                     case "only_date":
-                        return date;
+                        return moment(date).format("YYYY-MM-DD");
                         break;
                     default:
-                        return date;
+                        return moment(date).format("YYYY-MM-DD HH:mm");
                         break;
                 }
             }
@@ -59,17 +59,19 @@ function appInit(window) {
                 requestData(destination, function(data) {
                     localApp[nowActiveSection].show = false;
                     localApp[destination].show = true;
-                    // localApp[destination].data = data;
+                    localApp[destination].data = data;
                     nowActiveSection = destination;
+                    $('main').scrollTop(0);
                 });
             },
             aRecordClickListener: function(from, index) {
                 var localApp = this;
                 showedDetail = from + "Detail";
-                var toRequest = showedDetail + "/" + this[from].data.list[index].id;
+                var toRequest = showedDetail + "?id=" + this[from].data.list[index].id;
                 requestData(toRequest, function(data) {
                     localApp[showedDetail].show = true;
-                    // localApp[showedDetail].data = data;
+                    localApp[showedDetail].data = data;
+                    $('main').scrollTop(0);
                 });
             },
             closeDetail: function() {
@@ -83,7 +85,6 @@ function appInit(window) {
             }
         },
         data: {
-            loginUser: "0936-000-111",
             loading: {
                 show: false,
                 txt: "載入中..."
@@ -280,4 +281,5 @@ function appInit(window) {
         }
     });
     window.app = app;
+    app.navClickListener(nowActiveSection);
 }
