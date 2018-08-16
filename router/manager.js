@@ -16,7 +16,7 @@ function redirect(ctx) {
 }
 
 router.get('/login', async ctx => {
-    if (ctx) return redirect(ctx);
+    if (ctx.session.user) return redirect(ctx);
     await ctx.render('login', {
         csrf: ctx.csrf
     });
