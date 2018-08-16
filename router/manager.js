@@ -9,7 +9,7 @@ const LANDING_PAGE_URL_LIVE = "/manager/dashboard";
 
 function redirect(ctx) {
     var user = ctx.session.user;
-    if (user.phone === "0911111111")
+    if (user && user.phone === "0911111111")
         return ctx.redirect(LANDING_PAGE_URL_DEMO);
     else
         return ctx.redirect(LANDING_PAGE_URL_LIVE);
