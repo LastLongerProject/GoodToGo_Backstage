@@ -76,6 +76,7 @@ function appInit(window) {
             },
             closeDetail: function() {
                 this[showedDetail || (nowActiveSection + "Detail")].show = false;
+                this[showedDetail || (nowActiveSection + "Detail")].data.history = [];
             },
             numberToPercentage: numberToPercentage
         },
