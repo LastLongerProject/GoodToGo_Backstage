@@ -2,6 +2,38 @@ function initPage() {
     return window.location.hash || "#index";
 };
 
+function durationToString(duration) {
+    var ctr = 0;
+    var result = "";
+    var addString = function(num, txt) {
+        ctr++;
+        result += num + " " + txt + (ctr === 1 ? " " : "");
+    };
+    if (duration.get("Y") !== 0) {
+        addString(duration.get("Y"), "年");
+    }
+    if (duration.get("M") !== 0) {
+        addString(duration.get("M"), "個月");
+    }
+    if (ctr == 2) return result;
+    if (duration.get("d") !== 0) {
+        addString(duration.get("d"), "天");
+    }
+    if (ctr == 2) return result;
+    if (duration.get("h") !== 0) {
+        addString(duration.get("h"), "小時");
+    }
+    if (ctr == 2) return result;
+    if (duration.get("m") !== 0) {
+        addString(duration.get("m"), "分");
+    }
+    if (ctr == 2) return result;
+    if (duration.get("s") !== 0) {
+        addString(duration.get("s"), "秒");
+    }
+    return result;
+}
+
 $(window).on('load', function() {
     $('#loading_main').css('display', 'none');
     appInit(window);
@@ -38,16 +70,14 @@ function appInit(window) {
             },
             numberToPercentage: numberToPercentage,
             durationToString: function(millisecond) {
-                return millisecond;
+                return durationToString(moment.duration(millisecond));
             },
             dateToString: function(date, mode) {
                 switch (mode) {
                     case "only_date":
                         return moment(date).format("YYYY-MM-DD");
-                        break;
                     default:
                         return moment(date).format("YYYY-MM-DD HH:mm");
-                        break;
                 }
             }
         },
@@ -106,13 +136,13 @@ function appInit(window) {
                     shopHistorySummary: {
                         usedAmount: 6487,
                         lostAmount: 248,
-                        totalDuration: 12314,
+                        totalDuration: 57563433659,
                         quantityOfBorrowingFromDiffPlace: 796
                     },
                     shopRecentHistorySummary: {
                         usedAmount: 87,
                         lostAmount: 3,
-                        totalDuration: 12314,
+                        totalDuration: 111013967,
                         quantityOfBorrowingFromDiffPlace: 23
                     }
                 }

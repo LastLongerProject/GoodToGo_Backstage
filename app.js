@@ -49,6 +49,7 @@ const SESSION_CONFIG = {
 };
 
 app.keys = ['a', 'b'];
+app.proxy = true;
 app.use(cors());
 app.use(xResponseTime());
 app.use(helmet())
@@ -78,7 +79,7 @@ app.use(router.routes());
 
 app.on('error', (error, ctx) => {
     if (error && typeof error.status === 'undefined')
-        debugErr('Err [Server] | ', error, ctx);
+        debugErr('Err [Server] | ', error, JSON.stringify(ctx));
 });
 
 /**

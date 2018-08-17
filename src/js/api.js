@@ -11,7 +11,7 @@
                     Accept: "application/json; charset=utf-8"
                 },
                 dataType: "json",
-                timeout: 30 * 1000
+                // timeout: 30 * 1000
             })
             .done(function(data, textStatus, jqXHR) {
                 stopLoading();
