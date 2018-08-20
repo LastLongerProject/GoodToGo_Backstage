@@ -56,6 +56,6 @@
         });
     }
 
-    window.requestData = requestData;
-    // window.requestData = requestDataDemo;
+    window.requestData = requestDataDemo;
+    if (!test) window.requestData = requestData;
 }(window));

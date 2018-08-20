@@ -7,7 +7,7 @@ function durationToString(duration) {
     var result = "";
     var addString = function(num, txt) {
         ctr++;
-        result += num + " " + txt + (ctr === 1 ? " " : "");
+        result += (ctr === 2 ? " " : "") + num + " " + txt;
     };
     if (duration.get("Y") !== 0) {
         addString(duration.get("Y"), "年");
@@ -25,12 +25,9 @@ function durationToString(duration) {
     }
     if (ctr == 2) return result;
     if (duration.get("m") !== 0) {
-        addString(duration.get("m"), "分");
+        addString(duration.get("m"), "分鐘");
     }
-    if (ctr == 2) return result;
-    if (duration.get("s") !== 0) {
-        addString(duration.get("s"), "秒");
-    }
+    if (result === "") result += "0";
     return result;
 }
 
@@ -39,7 +36,10 @@ $(window).on('load', function() {
     appInit(window);
 });
 
+var test = false;
+
 function appInit(window) {
+    var needUpdate = false;
     var showedDetail = null;
     var nowActiveSection = initPage().replace("#", "");
     var arrowUpward = '<i class="material-icons" role="presentation">arrow_upward</i>';
@@ -76,9 +76,17 @@ function appInit(window) {
                 switch (mode) {
                     case "only_date":
                         return moment(date).format("YYYY-MM-DD");
+                    case "with_day":
+                        return moment(date).format("YYYY-MM-DD (ddd) HH:mm");
                     default:
                         return moment(date).format("YYYY-MM-DD HH:mm");
                 }
+            }
+        },
+        updated: function() {
+            if (needUpdate) {
+                componentHandler.upgradeDom();
+                needUpdate = false;
             }
         },
         methods: {
@@ -89,8 +97,9 @@ function appInit(window) {
                 requestData(destination, function(data) {
                     localApp[nowActiveSection].show = false;
                     localApp[destination].show = true;
-                    localApp[destination].data = data;
+                    if (!test) localApp[destination].data = data;
                     nowActiveSection = destination;
+                    needUpdate = true;
                     $('main').scrollTop(0);
                 });
             },
@@ -100,7 +109,7 @@ function appInit(window) {
                 var toRequest = showedDetail + "?id=" + this[from].data.list[index].id;
                 requestData(toRequest, function(data) {
                     localApp[showedDetail].show = true;
-                    localApp[showedDetail].data = data;
+                    if (!test) localApp[showedDetail].data = data;
                     $('main').scrollTop(0);
                 });
             },
