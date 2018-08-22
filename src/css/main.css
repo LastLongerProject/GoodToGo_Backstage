@@ -428,7 +428,7 @@ th .material-icons {
     }
 }
 
-section:not([id$="-detail"]) tbody tr:hover {
+section:not([id$="-detail"]):not([id="container"]) tbody tr:hover {
     cursor: pointer;
 }
 

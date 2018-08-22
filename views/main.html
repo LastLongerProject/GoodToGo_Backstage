@@ -292,7 +292,7 @@
                   <tr @click="aRecordClickListener('user', index)" v-for="(aUser, index) in user.data.list">
                      <td class="mdl-data-table__cell--non-numeric">{{aUser.phone}}</td>
                      <td>{{aUser.usingAmount}}</td>
-                     <td>{{aUser.lostAmount}}</td>
+                     <td :class="{warning:aUser.lostAmount>0}">{{aUser.lostAmount}}</td>
                      <td>{{aUser.totalUsageAmount}}</td>
                   </tr>
                </tbody>
@@ -383,7 +383,7 @@
                   </tr>
                </thead>
                <tbody>
-                  <tr @click="aRecordClickListener('container', index)" v-for="(aContainerType, index) in container.data.list">
+                  <tr v-for="(aContainerType, index) in container.data.list">
                      <td class="mdl-data-table__cell--non-numeric">{{aContainerType.type}}</td>
                      <td>{{aContainerType.totalAmount}}</td>
                      <td>{{aContainerType.toUsedAmount}}</td>
@@ -393,7 +393,7 @@
                      <td>{{aContainerType.toDeliveryAmount}}</td>
                      <td>{{aContainerType.toSignAmount}}</td>
                      <td>{{aContainerType.inStorageAmount}}</td>
-                     <td>{{aContainerType.lostAmount}}</td>
+                     <td :class="{warning:aContainerType.lostAmount > 0}">{{aContainerType.lostAmount}}</td>
                   </tr>
                </tbody>
             </table>

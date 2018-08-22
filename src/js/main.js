@@ -36,8 +36,6 @@ $(window).on('load', function() {
     appInit(window);
 });
 
-var test = false;
-
 function appInit(window) {
     var needUpdate = false;
     var showedDetail = null;

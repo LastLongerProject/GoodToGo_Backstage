@@ -59,20 +59,20 @@ router.get('/logout', async ctx => {
     ctx.redirect("/manager/login");
 });
 
-router.all("/data/:uri", async ctx => {
-    const uri = ctx.params.uri;
-    const id = ctx.query.id;
-    const method = ctx.method;
-    const reqBody = ctx.request.body;
-    let serverRes;
-    try {
-        serverRes = await restAPI.data(uri + (id ? ("/" + id) : ""), method, reqBody, ctx.session.user.roles.admin);
-        ctx.ok(serverRes.body);
-    } catch (err) {
-        if (err.name !== "StatusCodeError")
-            throw err;
-        ctx.forbidden(err.error.message);
-    }
-});
+// router.all("/data/:uri", async ctx => {
+//     const uri = ctx.params.uri;
+//     const id = ctx.query.id;
+//     const method = ctx.method;
+//     const reqBody = ctx.request.body;
+//     let serverRes;
+//     try {
+//         serverRes = await restAPI.data(uri + (id ? ("/" + id) : ""), method, reqBody, ctx.session.user.roles.admin);
+//         ctx.ok(serverRes.body);
+//     } catch (err) {
+//         if (err.name !== "StatusCodeError")
+//             throw err;
+//         ctx.forbidden(err.error.message);
+//     }
+// });
 
 module.exports = router;

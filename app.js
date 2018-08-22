@@ -4,6 +4,7 @@ const etag = require('koa-etag');
 const cors = require('@koa/cors');
 const render = require('koa-ejs');
 const redis = require('koa-redis');
+const proxy = require('koa-proxies');
 const logger = require('koa-logger');
 const Router = require('koa-router');
 const helmet = require('koa-helmet');
@@ -20,6 +21,7 @@ const debugErr = require('debug')('goodtogo_backstage:err_app');
 debug.log = console.log.bind(console);
 
 const config = require('./config/config');
+const JWT = require('jsonwebtoken');
 const router_manager = require('./router/manager');
 
 const app = new Koa();
@@ -31,25 +33,43 @@ const redisClient = redis({
     password: config.redisPass,
     db: 2
 });
-regisRedisEvent(redisClient);
-app.context.db = redisClient;
-
-render(app, {
-    root: path.join(__dirname, 'views'),
-    viewExt: 'html',
-    cache: false
-});
 
 const SESSION_CONFIG = {
-    key: 'sess',
+    key: config.sessionKey,
     maxAge: 1000 * 60 * 60 * 24 * 3,
     overwrite: false,
     renew: true,
     store: redisClient
 };
 
-app.keys = ['a', 'b'];
+const proxyMid = proxy('/manager/data', {
+    target: config.server_host,
+    changeOrigin: true,
+    rewrite: path => path.replace(/^\/manager\/data/, '/manage'),
+    logs: true,
+    events: {
+        proxyReq(proxyReq, req, res) {
+            const userRole = req.session.user.roles.admin;
+            proxyReq.setHeader('ApiKey', userRole.apiKey);
+            proxyReq.setHeader('Authorization', JWT.sign({
+                jti: 'manager',
+                iat: Date.now(),
+                exp: new Date().setDate(new Date().getDate() + 3)
+            }, userRole.secretKey));
+        }
+    }
+});
+
+render(app, {
+    root: path.join(__dirname, 'views'),
+    viewExt: 'html',
+    cache: false
+});
+regisRedisEvent(redisClient);
+
 app.proxy = true;
+app.keys = config.appKeys;
+app.context.db = redisClient;
 app.use(cors());
 app.use(xResponseTime());
 app.use(helmet())
@@ -70,6 +90,11 @@ app.use(async (ctx, next) => {
 // app.use(csrfMid);
 app.use(new csrf());
 
+app.use(async (ctx, next) => {
+    if (!ctx.session.user) return next();
+    ctx.req.session = ctx.session;
+    return proxyMid(ctx, next);
+});
 app.use(static({
     rootDir: 'assets',
     rootPath: '/manager/assets'
