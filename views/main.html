@@ -183,7 +183,7 @@
                   </tr>
                </thead>
                <tbody>
-                  <tr @click="aRecordClickListener('shop', index)" v-for="(aStore, index) in shop.data.list">
+                  <tr @click="aRecordClickListener('shop', index)" v-for="(aStore, index) in shop.data.list.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
                      <td class="mdl-data-table__cell--non-numeric">{{aStore.storeName}}</td>
                      <td>{{aStore.toUsedAmount}}</td>
                      <td>{{aStore.todayAmount}}</td>
@@ -192,6 +192,13 @@
                   </tr>
                </tbody>
             </table>
+         </div>
+         <div :class="{'is-display':dynamicLoading.rawCapacity < shop.data.list.length}" class="mdl-cell mdl-cell--12-col table-page-switcher">
+            <div class="table-page-switcher-container">
+               <span :class="{disabled: dynamicLoading.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
+               <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(shop.data.list.length / dynamicLoading.rawCapacity)}}</span>
+               <span :class="{disabled: dynamicLoading.baseIndex === Math.ceil(shop.data.list.length / dynamicLoading.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
+            </div>
          </div>
       </section>
       <section v-if="shop.show" :class="{'is-display':shopDetail.show}" id="shop-detail">
@@ -250,7 +257,7 @@
                      </tr>
                   </thead>
                   <tbody>
-                     <tr v-for="aRecord in shopDetail.data.history">
+                     <tr v-for="aRecord in shopDetail.data.history.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.time | dateToString}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.serial}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.action}}</td>
@@ -259,6 +266,13 @@
                      </tr>
                   </tbody>
                </table>
+            </div>
+            <div :class="{'is-display':dynamicLoading.rawCapacity < shopDetail.data.history.length}" class="mdl-cell mdl-cell--12-col table-page-switcher">
+               <div class="table-page-switcher-container">
+                  <span :class="{disabled: dynamicLoading.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
+                  <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(shopDetail.data.history.length / dynamicLoading.rawCapacity)}}</span>
+                  <span :class="{disabled: dynamicLoading.baseIndex === Math.ceil(shopDetail.data.history.length / dynamicLoading.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
+               </div>
             </div>
          </div>
       </section>
@@ -289,7 +303,7 @@
                   </tr>
                </thead>
                <tbody>
-                  <tr @click="aRecordClickListener('user', index)" v-for="(aUser, index) in user.data.list">
+                  <tr @click="aRecordClickListener('user', index)" v-for="(aUser, index) in user.data.list.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
                      <td class="mdl-data-table__cell--non-numeric">{{aUser.phone}}</td>
                      <td>{{aUser.usingAmount}}</td>
                      <td :class="{warning:aUser.lostAmount>0}">{{aUser.lostAmount}}</td>
@@ -297,6 +311,13 @@
                   </tr>
                </tbody>
             </table>
+         </div>
+         <div :class="{'is-display':dynamicLoading.rawCapacity < user.data.list.length}" class="mdl-cell mdl-cell--12-col table-page-switcher">
+            <div class="table-page-switcher-container">
+               <span :class="{disabled: dynamicLoading.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
+               <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(user.data.list.length / dynamicLoading.rawCapacity)}}</span>
+               <span :class="{disabled: dynamicLoading.baseIndex === Math.ceil(user.data.list.length / dynamicLoading.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
+            </div>
          </div>
       </section>
       <section v-if="user.show" :class="{'is-display':userDetail.show}" id="user-detail">
@@ -354,7 +375,7 @@
                      </tr>
                   </thead>
                   <tbody>
-                     <tr v-for="aRecord in userDetail.data.history">
+                     <tr v-for="aRecord in userDetail.data.history.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.containerType}}<br>{{aRecord.containerID}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.rentTime | dateToString("with_day")}}<br v-if="aRecord.rentTime">{{aRecord.rentPlace}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.returnTime | dateToString("with_day")}}<br v-if="aRecord.returnTime">{{aRecord.returnPlace}}</td>
@@ -362,6 +383,13 @@
                      </tr>
                   </tbody>
                </table>
+            </div>
+            <div :class="{'is-display':dynamicLoading.rawCapacity < userDetail.data.history.length}" class="mdl-cell mdl-cell--12-col table-page-switcher">
+               <div class="table-page-switcher-container">
+                  <span :class="{disabled: dynamicLoading.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
+                  <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(userDetail.data.history.length / dynamicLoading.rawCapacity)}}</span>
+                  <span :class="{disabled: dynamicLoading.baseIndex === Math.ceil(userDetail.data.history.length / dynamicLoading.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
+               </div>
             </div>
          </div>
       </section>
@@ -383,7 +411,7 @@
                   </tr>
                </thead>
                <tbody>
-                  <tr v-for="(aContainerType, index) in container.data.list">
+                  <tr v-for="(aContainerType, index) in container.data.list.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
                      <td class="mdl-data-table__cell--non-numeric">{{aContainerType.type}}</td>
                      <td>{{aContainerType.totalAmount}}</td>
                      <td>{{aContainerType.toUsedAmount}}</td>
@@ -397,6 +425,13 @@
                   </tr>
                </tbody>
             </table>
+         </div>
+         <div :class="{'is-display':dynamicLoading.rawCapacity < container.data.list.length}" class="mdl-cell mdl-cell--12-col table-page-switcher">
+            <div class="table-page-switcher-container">
+               <span :class="{disabled: dynamicLoading.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
+               <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(container.data.list.length / dynamicLoading.rawCapacity)}}</span>
+               <span :class="{disabled: dynamicLoading.baseIndex === Math.ceil(container.data.list.length / dynamicLoading.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
+            </div>
          </div>
       </section>
       <section v-if="container.show" :class="{'is-display':containerDetail.show}" id="container-detail">
@@ -444,7 +479,7 @@
                      </tr>
                   </thead>
                   <tbody>
-                     <tr v-for="aRecord in containerDetail.data.history">
+                     <tr v-for="aRecord in containerDetail.data.history.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.tradeTime | dateToString}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.action}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.newUser}}</td>
@@ -453,6 +488,13 @@
                      </tr>
                   </tbody>
                </table>
+            </div>
+            <div :class="{'is-display':dynamicLoading.rawCapacity < containerDetail.data.history.length}" class="mdl-cell mdl-cell--12-col table-page-switcher">
+               <div class="table-page-switcher-container">
+                  <span :class="{disabled: dynamicLoading.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
+                  <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(containerDetail.data.history.length / dynamicLoading.rawCapacity)}}</span>
+                  <span :class="{disabled: dynamicLoading.baseIndex === Math.ceil(containerDetail.data.history.length / dynamicLoading.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
+               </div>
             </div>
          </div>
       </section>

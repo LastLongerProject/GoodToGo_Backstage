@@ -32,8 +32,10 @@ function durationToString(duration) {
 }
 
 $(window).on('load', function() {
-    $('#loading_main').css('display', 'none');
-    appInit(window);
+    if (window.location.pathname !== "/manager/login") {
+        $('#loading_main').css('display', 'none');
+        appInit(window);
+    }
 });
 
 function appInit(window) {
@@ -86,6 +88,7 @@ function appInit(window) {
                 componentHandler.upgradeDom();
                 needUpdate = false;
             }
+            this.dynamicLoading.rawCapacity = rawCapacityCount(nowActiveSection + (this.detailIsOpen ? "-detail" : ""));
         },
         methods: {
             navClickListener: function(destination) {
@@ -96,6 +99,7 @@ function appInit(window) {
                     localApp[nowActiveSection].show = false;
                     localApp[destination].show = true;
                     if (!test) localApp[destination].data = data;
+                    localApp.dynamicLoading.baseIndex = 1;
                     nowActiveSection = destination;
                     needUpdate = true;
                     $('main').scrollTop(0);
@@ -108,12 +112,31 @@ function appInit(window) {
                 requestData(toRequest, function(data) {
                     localApp[showedDetail].show = true;
                     if (!test) localApp[showedDetail].data = data;
+                    localApp.dynamicLoading.baseIndex = 1;
                     $('main').scrollTop(0);
                 });
             },
             closeDetail: function() {
                 this[showedDetail || (nowActiveSection + "Detail")].show = false;
                 this[showedDetail || (nowActiveSection + "Detail")].data.history = [];
+                this.dynamicLoading.baseIndex = 1;
+            },
+            flipPage: function(to) {
+                var dataLength;
+                if (!this.detailIsOpen) {
+                    dataLength = this[nowActiveSection].data.list.length;
+                } else {
+                    dataLength = this[nowActiveSection + "Detail"].data.history.length;
+                }
+                var maxIndex = Math.ceil(dataLength / this.dynamicLoading.rawCapacity);
+                switch (to) {
+                    case "next":
+                        this.dynamicLoading.baseIndex = Math.min((this.dynamicLoading.baseIndex + 1), maxIndex);
+                        break;
+                    case "last":
+                        this.dynamicLoading.baseIndex = Math.max((this.dynamicLoading.baseIndex - 1), 1);
+                        break;
+                }
             },
             numberToPercentage: numberToPercentage
         },
@@ -126,6 +149,10 @@ function appInit(window) {
             loading: {
                 show: false,
                 txt: "載入中..."
+            },
+            dynamicLoading: {
+                baseIndex: 1,
+                rawCapacity: 0
             },
             index: {
                 show: false,
@@ -320,4 +347,13 @@ function appInit(window) {
     });
     window.app = app;
     app.navClickListener(nowActiveSection);
+}
+
+function rawCapacityCount(nowActiveSection) {
+    var table = $("#" + nowActiveSection).find('tbody').get(0);
+    if (!table) return;
+    var table_box = table.getBoundingClientRect();
+    var rawHeight = (nowActiveSection !== "user-detail" ? 48 : 56);
+    var rawCapacity = Math.floor((window.innerHeight - table_box.top - 28) / rawHeight);
+    return rawCapacity > 5 ? rawCapacity : 5;
 }

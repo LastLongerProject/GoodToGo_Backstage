@@ -42,7 +42,8 @@ async function reqWrapper(uri, method, options) {
         default:
             headers = {
                 reqID: 'manager',
-                reqTime: Date.now()
+                reqTime: Date.now(),
+                'User-Agent': "BackStage"
             };
             break;
     }
