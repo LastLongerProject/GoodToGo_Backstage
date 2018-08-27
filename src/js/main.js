@@ -42,6 +42,8 @@ function appInit(window) {
     var needUpdate = false;
     var showedDetail = null;
     var nowActiveSection = initPage().replace("#", "");
+    if (!$("#" + nowActiveSection).get(0)) nowActiveSection = index;
+    var tmpDynamicLoadingBaseIndex = null;
     var arrowUpward = '<i class="material-icons" role="presentation">arrow_upward</i>';
     var arrowDownward = '<i class="material-icons" role="presentation">arrow_downward</i>';
     var arrowDropDown = '<i class="material-icons" role="presentation">arrow_drop_down</i>';
@@ -70,16 +72,20 @@ function appInit(window) {
             },
             numberToPercentage: numberToPercentage,
             durationToString: function(millisecond) {
+                if (isNaN(millisecond)) return millisecond;
                 return durationToString(moment.duration(millisecond));
             },
             dateToString: function(date, mode) {
+                if (date === "尚未歸還") return date;
+                var thisMoment = moment(date);
+                if (!thisMoment.isValid()) return date;
                 switch (mode) {
                     case "only_date":
-                        return moment(date).format("YYYY-MM-DD");
+                        return thisMoment.format("YYYY-MM-DD");
                     case "with_day":
-                        return moment(date).format("YYYY-MM-DD (ddd) HH:mm");
+                        return thisMoment.format("YYYY-MM-DD (ddd) HH:mm");
                     default:
-                        return moment(date).format("YYYY-MM-DD HH:mm");
+                        return thisMoment.format("YYYY-MM-DD HH:mm");
                 }
             }
         },
@@ -99,6 +105,7 @@ function appInit(window) {
                     localApp[nowActiveSection].show = false;
                     localApp[destination].show = true;
                     if (!test) localApp[destination].data = data;
+                    tmpDynamicLoadingBaseIndex = null;
                     localApp.dynamicLoading.baseIndex = 1;
                     nowActiveSection = destination;
                     needUpdate = true;
@@ -112,6 +119,7 @@ function appInit(window) {
                 requestData(toRequest, function(data) {
                     localApp[showedDetail].show = true;
                     if (!test) localApp[showedDetail].data = data;
+                    tmpDynamicLoadingBaseIndex = localApp.dynamicLoading.baseIndex;
                     localApp.dynamicLoading.baseIndex = 1;
                     $('main').scrollTop(0);
                 });
@@ -119,7 +127,7 @@ function appInit(window) {
             closeDetail: function() {
                 this[showedDetail || (nowActiveSection + "Detail")].show = false;
                 this[showedDetail || (nowActiveSection + "Detail")].data.history = [];
-                this.dynamicLoading.baseIndex = 1;
+                this.dynamicLoading.baseIndex = tmpDynamicLoadingBaseIndex || 1;
             },
             flipPage: function(to) {
                 var dataLength;
@@ -254,8 +262,8 @@ function appInit(window) {
                     recentAmount: 18,
                     recentAmountPercentage: 0.16,
                     weekAverage: 10,
-                    averageUsingDuration: 20 * 1000,
-                    percentageOfBorrowingFromDiffPlace: 0.43,
+                    averageUsingDuration: 20 * 60 * 1000,
+                    amountOfBorrowingFromDiffPlace: 43,
                     history: [{
                         containerType: "12oz 玻璃杯",
                         containerID: "#101",
@@ -353,7 +361,7 @@ function rawCapacityCount(nowActiveSection) {
     var table = $("#" + nowActiveSection).find('tbody').get(0);
     if (!table) return;
     var table_box = table.getBoundingClientRect();
-    var rawHeight = (nowActiveSection !== "user-detail" ? 48 : 56);
+    var rawHeight = (nowActiveSection !== "user-detail" ? 48 : 65);
     var rawCapacity = Math.floor((window.innerHeight - table_box.top - 28) / rawHeight);
     return rawCapacity > 5 ? rawCapacity : 5;
 }

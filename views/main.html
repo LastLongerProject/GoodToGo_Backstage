@@ -303,7 +303,7 @@
                   </tr>
                </thead>
                <tbody>
-                  <tr @click="aRecordClickListener('user', index)" v-for="(aUser, index) in user.data.list.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
+                  <tr @click="aRecordClickListener('user', index + (dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity)" v-for="(aUser, index) in user.data.list.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
                      <td class="mdl-data-table__cell--non-numeric">{{aUser.phone}}</td>
                      <td>{{aUser.usingAmount}}</td>
                      <td :class="{warning:aUser.lostAmount>0}">{{aUser.lostAmount}}</td>
@@ -362,7 +362,8 @@
                <span class="content-block-data"><span>平均占用時間</span><span>{{userDetail.data.averageUsingDuration | durationToString}}</span></span>
             </div>
             <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-               <span class="content-block-data"><span>A借B還</span><span>{{userDetail.data.percentageOfBorrowingFromDiffPlace}}</span></span>
+               <span class="content-block-data"><span>A借B還</span><span>{{userDetail.data.amountOfBorrowingFromDiffPlace}}<span class="data-percentage">{{(userDetail.data.amountOfBorrowingFromDiffPlace / userDetail.data.totalUsageAmount) | numberToPercentage}}</span></span>
+               </span>
             </div>
             <div class="mdl-cell mdl-cell--12-col mdl-shadow--2dp content-block-table">
                <table class="mdl-data-table mdl-js-data-table">
@@ -377,8 +378,8 @@
                   <tbody>
                      <tr v-for="aRecord in userDetail.data.history.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.containerType}}<br>{{aRecord.containerID}}</td>
-                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.rentTime | dateToString("with_day")}}<br v-if="aRecord.rentTime">{{aRecord.rentPlace}}</td>
-                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.returnTime | dateToString("with_day")}}<br v-if="aRecord.returnTime">{{aRecord.returnPlace}}</td>
+                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.rentTime | dateToString("with_day")}}<br>{{aRecord.rentPlace}}</td>
+                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.returnTime | dateToString("with_day")}}<br v-if="aRecord.returnPlace">{{aRecord.returnPlace}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.usingDuration | durationToString}}</td>
                      </tr>
                   </tbody>
