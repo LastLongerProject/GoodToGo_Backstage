@@ -1,7 +1,7 @@
 module.exports = {
     checkIsLogin: async function checkUser(ctx, next) {
         if (!ctx.session.user) return ctx.redirect("/manager/login");
-        if (ctx.session.user.ua !== ctx.header['user-agent'] || ctx.session.user.ip !== ctx.ip) {
+        if (ctx.session.user.ua !== ctx.header['user-agent'] || ctx.session.user.ip !== ctx.ip || ctx.session.user.host !== ctx.header['host']) {
             ctx.session = null;
             return ctx.redirect("/manager/login");
         }

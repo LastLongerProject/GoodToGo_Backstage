@@ -56,7 +56,7 @@
         });
     }
 
-    window.test = false;
+    window.test = true;
     window.requestData = function(page, cb) {
         if (!window.test) return requestData(page, cb);
         else return requestDataDemo(page, cb);

@@ -33,6 +33,7 @@ router.post('/login', async ctx => {
         phone: reqBody.user,
         roles: decoded.roles,
         ua: ctx.header['user-agent'],
+        host: ctx.header['host'],
         ip: ctx.ip
     };
     redirect(ctx);

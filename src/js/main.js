@@ -38,12 +38,22 @@ $(window).on('load', function() {
     }
 });
 
+function cleanSearchBar() {
+    $('.searchbar-field .mdl-textfield__input').val('').parent().removeClass('is-focused').removeClass('is-dirty');
+    app.search.txt = "";
+}
+
 function appInit(window) {
     var needUpdate = false;
     var showedDetail = null;
     var nowActiveSection = initPage().replace("#", "");
     if (!$("#" + nowActiveSection).get(0)) nowActiveSection = index;
     var tmpDynamicLoadingBaseIndex = null;
+    var placeholderTxtDict = {
+        shop: "店鋪",
+        user: "使用者",
+        container: "容器"
+    };
     var arrowUpward = '<i class="material-icons" role="presentation">arrow_upward</i>';
     var arrowDownward = '<i class="material-icons" role="presentation">arrow_downward</i>';
     var arrowDropDown = '<i class="material-icons" role="presentation">arrow_drop_down</i>';
@@ -52,13 +62,10 @@ function appInit(window) {
             case 'withArrow':
                 var arrow = number >= 0 ? arrowUpward : arrowDownward;
                 return "(" + arrow + parseFloat(Math.abs(number) * 100).toFixed(1) + "%)";
-                break;
             case 'withoutParentheses':
                 return parseFloat(number * 100).toFixed(1) + "%";
-                break;
             default:
                 return "(" + parseFloat(number * 100).toFixed(1) + "%)";
-                break;
         }
     };
     var app = new Vue({
@@ -109,6 +116,8 @@ function appInit(window) {
                     localApp.dynamicLoading.baseIndex = 1;
                     nowActiveSection = destination;
                     needUpdate = true;
+                    cleanSearchBar();
+                    localApp.search.placeholder = (placeholderTxtDict[nowActiveSection] ? "在「" + placeholderTxtDict[nowActiveSection] + "」中搜尋" : "搜尋");
                     $('main').scrollTop(0);
                 });
             },
@@ -121,6 +130,7 @@ function appInit(window) {
                     if (!test) localApp[showedDetail].data = data;
                     tmpDynamicLoadingBaseIndex = localApp.dynamicLoading.baseIndex;
                     localApp.dynamicLoading.baseIndex = 1;
+                    cleanSearchBar();
                     $('main').scrollTop(0);
                 });
             },
@@ -146,11 +156,76 @@ function appInit(window) {
                         break;
                 }
             },
+            searchData: function() {
+                var localApp = this;
+                showedDetail = "search";
+                var txt = this.search.txt;
+                if (txt.length < 1) return;
+                var toRequest = showedDetail + "?txt=" + txt;
+                if (nowActiveSection === 'index') {
+                    toRequest += "&fields=shop,user,container"
+                } else if (nowActiveSection === 'container') {
+                    toRequest += "&fields=container"
+                } else {
+                    return;
+                }
+                requestData(toRequest, function(data) {
+                    localApp[showedDetail].show = true;
+                    if (!test) localApp[showedDetail].data = data;
+                    cleanSearchBar();
+                    $('main').scrollTop(0);
+                });
+            },
+            dataFilter: function(aData) {
+                if (this.searchRegExp) {
+                    if (nowActiveSection === "user")
+                        return aData.id.match(this.searchRegExp);
+                    else if (nowActiveSection === "shop")
+                        return aData.storeName.match(this.searchRegExp);
+                } else {
+                    return aData;
+                }
+            },
+            listMatchCtx: function(data) {
+                if (this.searchRegExp) {
+                    return data.replace(this.searchRegExp, "<strong>$&</strong>");
+                } else {
+                    return data;
+                }
+            },
             numberToPercentage: numberToPercentage
         },
         computed: {
             detailIsOpen: function() {
-                return this.shopDetail.show || this.userDetail.show || this.containerDetail.show || this.deliveryDetail.show;
+                return this.search.show || this.shopDetail.show || this.userDetail.show || this.containerDetail.show || this.deliveryDetail.show;
+            },
+            searchRegExp: function() {
+                if (this.search.txt.length > 0) {
+                    var txtArr = this.search.txt.split(" ").filter(
+                        function(ele) {
+                            return ele !== "";
+                        }
+                    );
+                    if (nowActiveSection === "user")
+                        txtArr.forEach(function(ele, index, arr) {
+                            if (ele.length > 1)
+                                arr[index] = ele.split("").join("-*");
+                        });
+                    var regExpTxt = txtArr.join("|");
+                    try {
+                        return new RegExp(regExpTxt, 'gi');
+                    } catch (error) {
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+            },
+            shopList: function() {
+                return this.shop.data.list.filter(this.dataFilter);
+            },
+            userList: function() {
+                return this.user.data.list.filter(this.dataFilter);
             }
         },
         data: {
@@ -191,18 +266,47 @@ function appInit(window) {
             },
             search: {
                 show: false,
-
+                txt: "",
+                placeholder: "搜尋",
+                data: {
+                    user: {
+                        show: true,
+                        list: [{
+                            id: "0936033091",
+                            phone: "0936-033-091"
+                        }]
+                    },
+                    container: {
+                        show: true,
+                        list: [{
+                            id: 17,
+                            name: "#017　16oz 杯子",
+                            type: 0
+                        }]
+                    },
+                    shop: {
+                        show: true,
+                        list: [{
+                            id: 0,
+                            name: "布萊恩紅茶"
+                        }]
+                    },
+                    delivery: {
+                        show: true,
+                        list: []
+                    }
+                }
             },
             shop: {
                 show: false,
                 data: {
                     list: [{
                         id: 0,
-                        storeName: "布萊恩紅茶",
-                        toUsedAmount: 24,
-                        todayAmount: 2,
-                        weekAmount: 18,
-                        weekAverage: 10
+                        storeName: "店名",
+                        toUsedAmount: 0,
+                        todayAmount: 0,
+                        weekAmount: 0,
+                        weekAverage: 0
                     }]
                 }
             },
@@ -236,16 +340,16 @@ function appInit(window) {
             user: {
                 show: false,
                 data: {
-                    totalUserAmount: 2500,
-                    totalUsageAmount: 2500,
-                    weeklyAverageUsage: 2500,
-                    totalLostAmount: 12,
+                    totalUserAmount: 0,
+                    totalUsageAmount: 0,
+                    weeklyAverageUsage: 0,
+                    totalLostAmount: 0,
                     list: [{
-                        id: 0,
-                        phone: "0912345678",
-                        usingAmount: 25,
-                        lostAmount: 1,
-                        totalUsageAmount: 30
+                        id: "",
+                        phone: "0912-345-678",
+                        usingAmount: 0,
+                        lostAmount: 0,
+                        totalUsageAmount: 0
                     }]
                 }
             },
@@ -279,45 +383,18 @@ function appInit(window) {
                 show: false,
                 data: {
                     list: [{
-                            id: 0,
-                            type: "16oz 玻璃杯",
-                            totalAmount: 286,
-                            toUsedAmount: 106,
-                            usingAmount: 20,
-                            returnedAmount: 19,
-                            toCleanAmount: 41,
-                            toDeliveryAmount: 24,
-                            toSignAmount: 0,
-                            inStorageAmount: 15,
-                            lostAmount: 161
-                        },
-                        {
-                            id: 1,
-                            type: "12oz 玻璃杯",
-                            totalAmount: 393,
-                            toUsedAmount: 50,
-                            usingAmount: 23,
-                            returnedAmount: 17,
-                            toCleanAmount: 22,
-                            toDeliveryAmount: 0,
-                            toSignAmount: 0,
-                            inStorageAmount: 111,
-                            lostAmount: 170
-                        },
-                        {
-                            id: 2,
-                            type: "16oz 把手杯",
-                            totalAmount: 56,
-                            toUsedAmount: 1,
-                            usingAmount: 0,
-                            returnedAmount: 0,
-                            toCleanAmount: 2,
-                            toDeliveryAmount: 0,
-                            toSignAmount: 0,
-                            inStorageAmount: 49,
-                            lostAmount: 4
-                        }
-                    ]
+                        id: 0,
+                        type: "類別",
+                        totalAmount: 0,
+                        toUsedAmount: 0,
+                        usingAmount: 0,
+                        returnedAmount: 0,
+                        toCleanAmount: 0,
+                        toDeliveryAmount: 0,
+                        toSignAmount: 0,
+                        inStorageAmount: 0,
+                        lostAmount: 0
+                    }]
                 }
             },
             containerDetail: {

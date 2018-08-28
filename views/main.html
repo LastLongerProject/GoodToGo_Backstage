@@ -7,16 +7,14 @@
          <div @click="closeDetail" class="header-button">
             <i class="material-icons">navigate_before</i>
          </div>
-         <div class="mdl-color--white mdl-shadow--2dp searchbar-form">
-            <form action="#">
-               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label searchbar-field">
-                  <input class="mdl-textfield__input" type="text" id="searchbar">
-                  <label class="mdl-textfield__label" for="searchbar">搜尋</label>
-               </div>
-               <label class="mdl-button mdl-js-button mdl-button--icon">
+         <div :class="{'is-hide':detailIsOpen}" class="mdl-color--white mdl-shadow--2dp searchbar-form">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label searchbar-field">
+               <input @keyup.enter="searchData" class="mdl-textfield__input" type="text" id="searchbar" v-model="search.txt">
+               <label class="mdl-textfield__label" for="searchbar">{{search.placeholder}}</label>
+            </div>
+            <label @click="searchData" class="mdl-button mdl-js-button mdl-button--icon">
 						<i class="material-icons">search</i>
 					</label>
-            </form>
          </div>
 
          <!-- Add spacer, to align navigation to the right -->
@@ -29,10 +27,7 @@
 				<i class="material-icons">more_vert</i>
 			</button>
          <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="menu-button">
-            <li class="mdl-menu__item">Some Action</li>
-            <li class="mdl-menu__item">Another Action</li>
-            <li disabled class="mdl-menu__item">Disabled Action</li>
-            <li class="mdl-menu__item nav-menu"><a href="logout">logout</a></li>
+            <li class="mdl-menu__item nav-menu"><a href="logout">登出</a></li>
          </ul>
       </div>
    </header>
@@ -44,10 +39,10 @@
       <nav class="mdl-navigation navigation">
          <a :class="{'is-active':index.show}" @click="navClickListener('index')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#index"><i class="material-icons" role="presentation">home</i>首頁</a>
          <a :class="{'is-active':shop.show}" @click="navClickListener('shop')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#shop"><i class="material-icons" role="presentation">store_mall_directory</i>店鋪</a>
-         <a :class="{'is-active':activity.show}" @click="navClickListener('activity')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#activity"><i class="material-icons" role="presentation">event</i>活動</a>
+         <!-- <a :class="{'is-active':activity.show}" @click="navClickListener('activity')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#activity"><i class="material-icons" role="presentation">event</i>活動</a> -->
          <a :class="{'is-active':user.show}" @click="navClickListener('user')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#user"><i class="material-icons" role="presentation">supervisor_account</i>使用者</a>
          <a :class="{'is-active':container.show}" @click="navClickListener('container')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#container"><i class="material-icons" role="presentation">local_drink</i>容器</a>
-         <a :class="{'is-active':delivery.show}" @click="navClickListener('delivery')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#delivery"><i class="material-icons" role="presentation">local_shipping</i>配送</a>
+         <!-- <a :class="{'is-active':delivery.show}" @click="navClickListener('delivery')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#delivery"><i class="material-icons" role="presentation">local_shipping</i>配送</a> -->
       </nav>
    </div>
    <main class="mdl-layout__content content-container">
@@ -117,57 +112,40 @@
             </span>
          </div>
       </section>
-      <section v-if="search.show" class="mdl-grid main-content" id="search-result">
-         <div class="mdl-cell mdl-cell--12-col content-title">
-            <button class="mdl-button mdl-js-button mdl-js-ripple-effect">
-					<i class="material-icons" role="presentation">supervisor_account</i>使用者<i class="material-icons" role="presentation">expand_more</i>
-				</button>
-         </div>
-         <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
-            <span class="content-block-inline"><i class="material-icons" role="presentation">person</i>0936033091</span>
-         </div>
-         <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
-            <span class="content-block-inline"><i class="material-icons" role="presentation">person</i>0936033091</span>
-         </div>
-         <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
-            <span class="content-block-inline"><i class="material-icons" role="presentation">person</i>0936033091</span>
-         </div>
-         <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
-            <span class="content-block-inline"><i class="material-icons" role="presentation">person</i>0936033091</span>
-         </div>
-         <div class="mdl-cell mdl-cell--12-col content-title">
-            <button class="mdl-button mdl-js-button mdl-js-ripple-effect">
-					<i class="material-icons" role="presentation">local_drink</i>容器<i class="material-icons" role="presentation">expand_more</i>
-				</button>
-         </div>
-         <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
-            <span class="content-block-inline"><span class="goodtogo-icons container-0"></span>#017　16oz 杯子</span>
-         </div>
-         <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
-            <span class="content-block-inline"><span class="goodtogo-icons container-1"></span>#017　16oz 杯子</span>
-         </div>
-         <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
-            <span class="content-block-inline"><span class="goodtogo-icons container-2"></span>#017　16oz 杯子</span>
-         </div>
-         <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
-            <span class="content-block-inline"><span class="goodtogo-icons container-3"></span>#017　16oz 杯子</span>
-         </div>
-         <div class="mdl-cell mdl-cell--12-col content-title">
-            <button class="mdl-button mdl-js-button mdl-js-ripple-effect">
-					<i class="material-icons" role="presentation">local_shipping</i>配送<i class="material-icons" role="presentation">expand_more</i>
-				</button>
-         </div>
-         <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
-            <span class="content-block-inline"><i class="material-icons" role="presentation">check_box_outline_blank</i>0936033091</span>
-         </div>
-         <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
-            <span class="content-block-inline"><i class="material-icons" role="presentation">check_box_outline_blank</i>0936033091</span>
-         </div>
-         <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
-            <span class="content-block-inline"><i class="material-icons" role="presentation">check_box</i>0936033091</span>
-         </div>
-         <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
-            <span class="content-block-inline"><i class="material-icons" role="presentation">check_box</i>0936033091</span>
+      <section :class="{'is-display':search.show}" id="search-detail">
+         <div class="mdl-grid main-content">
+            <div v-show="search.data.shop.list.length > 0" class="mdl-cell mdl-cell--12-col content-title">
+               <button @click="search.data.shop.show = !search.data.shop.show" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+                  <i class="material-icons" role="presentation">store_mall_directory</i>店鋪<i class="material-icons" role="presentation">{{search.data.shop.show? 'expand_less' : 'expand_more'}}</i>
+               </button>
+            </div>
+            <div v-show="search.data.shop.show" v-for="aShop in search.data.shop.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
+               <span class="content-block-inline"><i class="material-icons" role="presentation">store_mall_directory</i>{{aShop.name}}</span>
+            </div>
+            <div v-show="search.data.user.list.length > 0" class="mdl-cell mdl-cell--12-col content-title">
+               <button @click="search.data.user.show = !search.data.user.show" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+                  <i class="material-icons" role="presentation">supervisor_account</i>使用者<i class="material-icons" role="presentation">{{search.data.user.show? 'expand_less' : 'expand_more'}}</i>
+               </button>
+            </div>
+            <div v-show="search.data.user.show" v-for="aUser in search.data.user.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
+               <span class="content-block-inline"><i class="material-icons" role="presentation">person</i>{{aUser.phone}}</span>
+            </div>
+            <div v-show="search.data.container.list.length > 0" class="mdl-cell mdl-cell--12-col content-title">
+               <button @click="search.data.container.show = !search.data.container.show" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+                  <i class="material-icons" role="presentation">local_drink</i>容器<i class="material-icons" role="presentation">{{search.data.container.show? 'expand_less' : 'expand_more'}}</i>
+                </button>
+            </div>
+            <div v-show="search.data.container.show" v-for="aContainer in search.data.container.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
+               <span class="content-block-inline"><span :class="'container-' + aContainer.type" class="goodtogo-icons container-0"></span>{{aContainer.name}}</span>
+            </div>
+            <div v-show="search.data.delivery.list.length > 0" class="mdl-cell mdl-cell--12-col content-title">
+               <button @click="search.data.delivery.show = !search.data.delivery.show" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+                  <i class="material-icons" role="presentation">local_shipping</i>配送<i class="material-icons" role="presentation">{{search.data.delivery.show? 'expand_less' : 'expand_more'}}</i>
+               </button>
+            </div>
+            <div v-show="search.data.delivery.show" v-for="aDelivery in search.data.delivery.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
+               <span class="content-block-inline"><i class="material-icons" role="presentation">check_box_outline_blank</i>0936033091</span>
+            </div>
          </div>
       </section>
       <section v-if="shop.show" :class="{'is-hide':shopDetail.show}" class="mdl-grid main-content" id="shop">
@@ -183,8 +161,8 @@
                   </tr>
                </thead>
                <tbody>
-                  <tr @click="aRecordClickListener('shop', index)" v-for="(aStore, index) in shop.data.list.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
-                     <td class="mdl-data-table__cell--non-numeric">{{aStore.storeName}}</td>
+                  <tr @click="aRecordClickListener('shop', index + (dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity)" v-for="(aStore, index) in shopList.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
+                     <td class="mdl-data-table__cell--non-numeric" v-html="listMatchCtx(aStore.storeName)"></td>
                      <td>{{aStore.toUsedAmount}}</td>
                      <td>{{aStore.todayAmount}}</td>
                      <td>{{aStore.weekAmount}}</td>
@@ -193,11 +171,11 @@
                </tbody>
             </table>
          </div>
-         <div :class="{'is-display':dynamicLoading.rawCapacity < shop.data.list.length}" class="mdl-cell mdl-cell--12-col table-page-switcher">
+         <div :class="{'is-display':dynamicLoading.rawCapacity < shopList.length}" class="mdl-cell mdl-cell--12-col table-page-switcher">
             <div class="table-page-switcher-container">
                <span :class="{disabled: dynamicLoading.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
-               <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(shop.data.list.length / dynamicLoading.rawCapacity)}}</span>
-               <span :class="{disabled: dynamicLoading.baseIndex === Math.ceil(shop.data.list.length / dynamicLoading.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
+               <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(shopList.length / dynamicLoading.rawCapacity)}}</span>
+               <span :class="{disabled: dynamicLoading.baseIndex === Math.ceil(shopList.length / dynamicLoading.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
             </div>
          </div>
       </section>
@@ -303,8 +281,8 @@
                   </tr>
                </thead>
                <tbody>
-                  <tr @click="aRecordClickListener('user', index + (dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity)" v-for="(aUser, index) in user.data.list.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
-                     <td class="mdl-data-table__cell--non-numeric">{{aUser.phone}}</td>
+                  <tr @click="aRecordClickListener('user', index + (dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity)" v-for="(aUser, index) in userList.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
+                     <td class="mdl-data-table__cell--non-numeric" v-html="listMatchCtx(aUser.phone)"></td>
                      <td>{{aUser.usingAmount}}</td>
                      <td :class="{warning:aUser.lostAmount>0}">{{aUser.lostAmount}}</td>
                      <td>{{aUser.totalUsageAmount}}</td>
@@ -312,11 +290,11 @@
                </tbody>
             </table>
          </div>
-         <div :class="{'is-display':dynamicLoading.rawCapacity < user.data.list.length}" class="mdl-cell mdl-cell--12-col table-page-switcher">
+         <div :class="{'is-display':dynamicLoading.rawCapacity < userList.length}" class="mdl-cell mdl-cell--12-col table-page-switcher">
             <div class="table-page-switcher-container">
                <span :class="{disabled: dynamicLoading.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
-               <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(user.data.list.length / dynamicLoading.rawCapacity)}}</span>
-               <span :class="{disabled: dynamicLoading.baseIndex === Math.ceil(user.data.list.length / dynamicLoading.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
+               <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(userList.length / dynamicLoading.rawCapacity)}}</span>
+               <span :class="{disabled: dynamicLoading.baseIndex === Math.ceil(userList.length / dynamicLoading.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
             </div>
          </div>
       </section>
@@ -328,7 +306,7 @@
                      <span class="content-block-detail">
 							<span class="content-block-inline"><i class="material-icons" role="presentation">person</i>{{userDetail.data.userPhone}}</span>
                      <span><span>使用中</span><span>{{userDetail.data.usingAmount}}</span></span>
-                     <span><span>遺失</span><span class="warning">{{userDetail.data.lostAmount}}</span></span>
+                     <span><span>遺失</span><span :class="{warning:userDetail.data.lostAmount>0}">{{userDetail.data.lostAmount}}</span></span>
                      <span><span>累計使用量</span><span>{{userDetail.data.totalUsageAmount}}</span></span>
                      </span>
                      <span><i class="material-icons" role="presentation">{{userDetail.expand? 'expand_less' : 'expand_more'}}</i></span>
@@ -379,8 +357,8 @@
                      <tr v-for="aRecord in userDetail.data.history.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.containerType}}<br>{{aRecord.containerID}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.rentTime | dateToString("with_day")}}<br>{{aRecord.rentPlace}}</td>
-                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.returnTime | dateToString("with_day")}}<br v-if="aRecord.returnPlace">{{aRecord.returnPlace}}</td>
-                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.usingDuration | durationToString}}</td>
+                        <td :class="{warning:aRecord.returnTime=='尚未歸還'}" class="mdl-data-table__cell--non-numeric">{{aRecord.returnTime | dateToString("with_day")}}<br v-if="aRecord.returnPlace">{{aRecord.returnPlace}}</td>
+                        <td :class="{warning:aRecord.returnTime=='尚未歸還'}" class="mdl-data-table__cell--non-numeric">{{aRecord.usingDuration | durationToString}}</td>
                      </tr>
                   </tbody>
                </table>

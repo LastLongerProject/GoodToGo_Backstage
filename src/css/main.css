@@ -111,7 +111,15 @@ header.header {
 .searchbar-form {
     height: 80%;
     padding: 10px;
+    width: calc(100% - 48px);
+    max-width: 360px;
+    z-index: 5;
     box-sizing: border-box;
+    transition: transform 0.5s;
+}
+
+.searchbar-form.is-hide {
+    transform: translateX(-500px);
 }
 
 .searchbar-form .material-icons {
@@ -121,6 +129,8 @@ header.header {
 .searchbar-field {
     padding: 0px;
     color: #727272;
+    width: calc(100% - 36px);
+    max-width: 300px;
 }
 
 .searchbar-field .mdl-textfield__label {
@@ -130,10 +140,25 @@ header.header {
 .searchbar-field.is-focused .mdl-textfield__label,
 .searchbar-field.is-dirty .mdl-textfield__label {
     top: -14px;
+    color: rgba(96, 125, 139, 0.7);
 }
 
 .searchbar-field .mdl-textfield__label:after {
     bottom: 0px;
+}
+
+@media (max-width: 1024px) {
+    .searchbar-form {
+        padding: 6px 10px;
+    }
+    .searchbar-field .mdl-textfield__label {
+        transition-duration: 0s;
+        transition-timing-function: unset;
+    }
+    .searchbar-field.is-focused .mdl-textfield__label,
+    .searchbar-field.is-dirty .mdl-textfield__label {
+        visibility: hidden;
+    }
 }
 
 .navigation a {
@@ -280,6 +305,7 @@ td.warning {
     background-color: #F1F1F1;
     margin: 0;
     padding: 0;
+    user-select: none;
 }
 
 @media (max-width: 479px) {
@@ -404,30 +430,6 @@ th .material-icons {
     color: rgba(0, 0, 0, 0.50);
 }
 
-.searchbar-form {
-    width: calc(100% - 48px);
-    max-width: 360px;
-}
-
-.searchbar-field {
-    width: calc(100% - 36px);
-    max-width: 300px;
-}
-
-@media (max-width: 1024px) {
-    .searchbar-form {
-        padding: 6px 10px;
-    }
-    .searchbar-field .mdl-textfield__label {
-        transition-duration: 0s;
-        transition-timing-function: unset;
-    }
-    .searchbar-field.is-focused .mdl-textfield__label,
-    .searchbar-field.is-dirty .mdl-textfield__label {
-        visibility: hidden;
-    }
-}
-
 section:not([id$="-detail"]):not([id="container"]) tbody tr:hover {
     cursor: pointer;
 }
@@ -530,6 +532,7 @@ section.disabled {
     display: none;
     margin-top: 0;
     margin-bottom: 0;
+    user-select: none;
 }
 
 .table-page-switcher.is-display {
@@ -564,4 +567,8 @@ section.disabled {
 
 .table-page-switcher-container span.disabled i {
     color: rgba(0, 0, 0, .3);
+}
+
+td strong {
+    color: #40B9D8;
 }
