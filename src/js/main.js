@@ -106,7 +106,8 @@ function appInit(window) {
         methods: {
             navClickListener: function(destination) {
                 var localApp = this;
-                if ((nowActiveSection + "Detail") in this) this[nowActiveSection + "Detail"].show = false;
+                if (showedDetail || (nowActiveSection + "Detail") in this) this[showedDetail || (nowActiveSection + "Detail")].show = false;
+                cleanSearchBar();
                 $('.mdl-layout__obfuscator.is-visible').click();
                 requestData(destination, function(data) {
                     localApp[nowActiveSection].show = false;
@@ -116,7 +117,6 @@ function appInit(window) {
                     localApp.dynamicLoading.baseIndex = 1;
                     nowActiveSection = destination;
                     needUpdate = true;
-                    cleanSearchBar();
                     localApp.search.placeholder = (placeholderTxtDict[nowActiveSection] ? "在「" + placeholderTxtDict[nowActiveSection] + "」中搜尋" : "搜尋");
                     $('main').scrollTop(0);
                 });
@@ -135,6 +135,7 @@ function appInit(window) {
                 });
             },
             closeDetail: function() {
+                cleanSearchBar();
                 this[showedDetail || (nowActiveSection + "Detail")].show = false;
                 this[showedDetail || (nowActiveSection + "Detail")].data.history = [];
                 this.dynamicLoading.baseIndex = tmpDynamicLoadingBaseIndex || 1;
@@ -172,7 +173,6 @@ function appInit(window) {
                 requestData(toRequest, function(data) {
                     localApp[showedDetail].show = true;
                     if (!test) localApp[showedDetail].data = data;
-                    cleanSearchBar();
                     $('main').scrollTop(0);
                 });
             },
@@ -206,11 +206,10 @@ function appInit(window) {
                             return ele !== "";
                         }
                     );
-                    if (nowActiveSection === "user")
-                        txtArr.forEach(function(ele, index, arr) {
-                            if (ele.length > 1)
-                                arr[index] = ele.split("").join("-*");
-                        });
+                    txtArr.forEach(function(ele, index, arr) {
+                        if (ele.length > 1)
+                            arr[index] = ele.split("").join("-*");
+                    });
                     var regExpTxt = txtArr.join("|");
                     try {
                         return new RegExp(regExpTxt, 'gi');
@@ -439,6 +438,6 @@ function rawCapacityCount(nowActiveSection) {
     if (!table) return;
     var table_box = table.getBoundingClientRect();
     var rawHeight = (nowActiveSection !== "user-detail" ? 48 : 65);
-    var rawCapacity = Math.floor((window.innerHeight - table_box.top - 28) / rawHeight);
+    var rawCapacity = Math.floor((window.innerHeight - table_box.top - 36) / rawHeight);
     return rawCapacity > 5 ? rawCapacity : 5;
 }

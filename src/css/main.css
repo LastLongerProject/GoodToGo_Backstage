@@ -569,6 +569,7 @@ section.disabled {
     color: rgba(0, 0, 0, .3);
 }
 
-td strong {
+td strong,
+span strong {
     color: #40B9D8;
 }

@@ -62,7 +62,7 @@
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
             <span class="content-block-data"><span><i class="material-icons" role="presentation">event</i>活動數量</span><span>{{index.data.summary.activityAmount | numberWithCommas}}</span></span>
          </div>
-         <div class="mdl-cell mdl-cell--12-col content-title">
+         <!-- <div class="mdl-cell mdl-cell--12-col content-title">
             <span class="content-title-history"><i class="material-icons" role="presentation">update</i><span>活動總紀錄</span></span>
          </div>
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
@@ -74,7 +74,7 @@
          </div>
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
             <span class="content-block-data"><span>使用時間</span><span>{{index.data.activityHistorySummary.totalDuration | durationToString}}</span></span>
-         </div>
+         </div> -->
          <div class="mdl-cell mdl-cell--12-col content-title">
             <span class="content-title-history"><i class="material-icons" role="presentation">update</i><span>店鋪總紀錄</span></span>
          </div>
@@ -120,7 +120,7 @@
                </button>
             </div>
             <div v-show="search.data.shop.show" v-for="aShop in search.data.shop.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
-               <span class="content-block-inline"><i class="material-icons" role="presentation">store_mall_directory</i>{{aShop.name}}</span>
+               <span class="content-block-inline"><i class="material-icons" role="presentation">store_mall_directory</i><span v-html="listMatchCtx(aShop.name)"></span></span>
             </div>
             <div v-show="search.data.user.list.length > 0" class="mdl-cell mdl-cell--12-col content-title">
                <button @click="search.data.user.show = !search.data.user.show" class="mdl-button mdl-js-button mdl-js-ripple-effect">
@@ -128,7 +128,7 @@
                </button>
             </div>
             <div v-show="search.data.user.show" v-for="aUser in search.data.user.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
-               <span class="content-block-inline"><i class="material-icons" role="presentation">person</i>{{aUser.phone}}</span>
+               <span class="content-block-inline"><i class="material-icons" role="presentation">person</i><span v-html="listMatchCtx(aUser.phone)"></span></span>
             </div>
             <div v-show="search.data.container.list.length > 0" class="mdl-cell mdl-cell--12-col content-title">
                <button @click="search.data.container.show = !search.data.container.show" class="mdl-button mdl-js-button mdl-js-ripple-effect">
@@ -136,7 +136,7 @@
                 </button>
             </div>
             <div v-show="search.data.container.show" v-for="aContainer in search.data.container.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
-               <span class="content-block-inline"><span :class="'container-' + aContainer.type" class="goodtogo-icons container-0"></span>{{aContainer.name}}</span>
+               <span class="content-block-inline"><span :class="'container-' + aContainer.type" class="goodtogo-icons container-0"></span><span v-html="listMatchCtx(aContainer.name)"></span></span>
             </div>
             <div v-show="search.data.delivery.list.length > 0" class="mdl-cell mdl-cell--12-col content-title">
                <button @click="search.data.delivery.show = !search.data.delivery.show" class="mdl-button mdl-js-button mdl-js-ripple-effect">
