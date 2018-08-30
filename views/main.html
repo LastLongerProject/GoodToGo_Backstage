@@ -13,28 +13,30 @@
                <label class="mdl-textfield__label" for="searchbar">{{search.placeholder}}</label>
             </div>
             <label @click="searchData" class="mdl-button mdl-js-button mdl-button--icon">
-						<i class="material-icons">search</i>
-					</label>
+               <i class="material-icons">search</i>
+            </label>
          </div>
 
          <!-- Add spacer, to align navigation to the right -->
          <div class="mdl-layout-spacer"></div>
          <!-- Navigation -->
          <nav class="mdl-navigation mdl-layout--large-screen-only navigation">
-            <a class="mdl-navigation__link" href="#"><i class="material-icons" role="presentation">account_circle</i><%- user.name %></a>
+            <a class="mdl-navigation__link" href="#"><i class="material-icons" role="presentation">account_circle</i>
+               <%- user.name %></a>
          </nav>
          <button id="menu-button" class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect">
-				<i class="material-icons">more_vert</i>
-			</button>
+            <i class="material-icons">more_vert</i>
+         </button>
          <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="menu-button">
-            <li class="mdl-menu__item nav-menu"><a href="logout">登出</a></li>
+            <li class="mdl-menu__item nav-menu"><a href="logout" id="logout">登出</a></li>
          </ul>
       </div>
    </header>
    <div class="mdl-layout__drawer drawer">
       <header class="drawer-header">
          <img src="assets/img/mini_logo.svg" class="mini-icon">
-         <span><i class="material-icons" role="presentation">account_circle</i><%- user.name %></span>
+         <span><i class="material-icons" role="presentation">account_circle</i>
+            <%- user.name %></span>
       </header>
       <nav class="mdl-navigation navigation">
          <a :class="{'is-active':index.show}" @click="navClickListener('index')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#index"><i class="material-icons" role="presentation">home</i>首頁</a>
@@ -82,14 +84,16 @@
             <span class="content-block-data"><span>使用量</span><span>{{index.data.shopHistorySummary.usedAmount | numberWithCommas}}</span></span>
          </div>
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-            <span class="content-block-data"><span>遺失數量</span><span>{{index.data.shopHistorySummary.lostAmount | numberWithCommas}}<span class="data-percentage">{{index.data.shopHistorySummary.lostAmount / index.data.shopHistorySummary.usedAmount | numberToPercentage}}</span></span>
+            <span class="content-block-data"><span>遺失數量</span><span>{{index.data.shopHistorySummary.lostAmount | numberWithCommas}}<span class="data-percentage">{{index.data.shopHistorySummary.lostAmount / index.data.shopHistorySummary.usedAmount |
+                     numberToPercentage}}</span></span>
             </span>
          </div>
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
             <span class="content-block-data"><span>使用時間</span><span>{{index.data.shopHistorySummary.totalDuration | durationToString}}</span></span>
          </div>
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-            <span class="content-block-data"><span>A借B還</span><span>{{index.data.shopHistorySummary.quantityOfBorrowingFromDiffPlace | numberWithCommas}}<span class="data-percentage">{{index.data.shopHistorySummary.quantityOfBorrowingFromDiffPlace / index.data.shopHistorySummary.usedAmount | numberToPercentage}}</span></span>
+            <span class="content-block-data"><span>A借B還</span><span>{{index.data.shopHistorySummary.quantityOfBorrowingFromDiffPlace | numberWithCommas}}<span class="data-percentage">{{index.data.shopHistorySummary.quantityOfBorrowingFromDiffPlace /
+                     index.data.shopHistorySummary.usedAmount | numberToPercentage}}</span></span>
             </span>
             </span>
          </div>
@@ -100,15 +104,16 @@
             <span class="content-block-data"><span>使用量</span><span>{{index.data.shopRecentHistorySummary.usedAmount | numberWithCommas}}</span></span>
          </div>
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-            <span class="content-block-data"><span>遺失數量</span><span>{{index.data.shopRecentHistorySummary.lostAmount | numberWithCommas}}<span class="data-percentage">{{index.data.shopRecentHistorySummary.lostAmount / index.data.shopRecentHistorySummary.usedAmount | numberToPercentage}}</span></span>
+            <span class="content-block-data"><span>遺失數量</span><span>{{index.data.shopRecentHistorySummary.lostAmount | numberWithCommas}}
+                  <span class="data-percentage">{{index.data.shopRecentHistorySummary.lostAmount / index.data.shopRecentHistorySummary.usedAmount | numberToPercentage}}</span></span>
             </span>
          </div>
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
             <span class="content-block-data"><span>使用時間</span><span>{{index.data.shopRecentHistorySummary.totalDuration | durationToString}}</span></span>
          </div>
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-            <span class="content-block-data"><span>A借B還</span><span>{{index.data.shopRecentHistorySummary.quantityOfBorrowingFromDiffPlace | numberWithCommas}}<span class="data-percentage">{{index.data.shopRecentHistorySummary.quantityOfBorrowingFromDiffPlace / index.data.shopRecentHistorySummary.usedAmount | numberToPercentage}}</span></span>
-            </span>
+            <span class="content-block-data"><span>A借B還</span><span>{{index.data.shopRecentHistorySummary.quantityOfBorrowingFromDiffPlace | numberWithCommas}}
+                  <span class="data-percentage">{{index.data.shopRecentHistorySummary.quantityOfBorrowingFromDiffPlace / index.data.shopRecentHistorySummary.usedAmount | numberToPercentage}}</span></span>
             </span>
          </div>
       </section>
@@ -119,7 +124,7 @@
                   <i class="material-icons" role="presentation">store_mall_directory</i>店鋪<i class="material-icons" role="presentation">{{search.data.shop.show? 'expand_less' : 'expand_more'}}</i>
                </button>
             </div>
-            <div v-show="search.data.shop.show" v-for="aShop in search.data.shop.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
+            <div v-show="search.data.shop.show" @click="aSearchResultClickListener('shop', index)" v-for="(aShop, index) in search.data.shop.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
                <span class="content-block-inline"><i class="material-icons" role="presentation">store_mall_directory</i><span v-html="listMatchCtx(aShop.name)"></span></span>
             </div>
             <div v-show="search.data.user.list.length > 0" class="mdl-cell mdl-cell--12-col content-title">
@@ -127,23 +132,23 @@
                   <i class="material-icons" role="presentation">supervisor_account</i>使用者<i class="material-icons" role="presentation">{{search.data.user.show? 'expand_less' : 'expand_more'}}</i>
                </button>
             </div>
-            <div v-show="search.data.user.show" v-for="aUser in search.data.user.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
-               <span class="content-block-inline"><i class="material-icons" role="presentation">person</i><span v-html="listMatchCtx(aUser.phone)"></span></span>
+            <div v-show="search.data.user.show" @click="aSearchResultClickListener('user', index)" v-for="(aUser, index) in search.data.user.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
+               <span class="content-block-inline"><i class="material-icons" role="presentation">person</i><span v-html="listMatchCtx(aUser.name)"></span></span>
             </div>
             <div v-show="search.data.container.list.length > 0" class="mdl-cell mdl-cell--12-col content-title">
                <button @click="search.data.container.show = !search.data.container.show" class="mdl-button mdl-js-button mdl-js-ripple-effect">
                   <i class="material-icons" role="presentation">local_drink</i>容器<i class="material-icons" role="presentation">{{search.data.container.show? 'expand_less' : 'expand_more'}}</i>
-                </button>
+               </button>
             </div>
-            <div v-show="search.data.container.show" v-for="aContainer in search.data.container.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
-               <span class="content-block-inline"><span :class="'container-' + aContainer.type" class="goodtogo-icons container-0"></span><span v-html="listMatchCtx(aContainer.name)"></span></span>
+            <div v-show="search.data.container.show" @click="aSearchResultClickListener('container', index)" v-for="(aContainer, index) in search.data.container.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
+               <span class="content-block-inline"><span :class="'container-' + aContainer.type" class="goodtogo-icons"></span><span v-html="listMatchCtx(aContainer.name)"></span></span>
             </div>
             <div v-show="search.data.delivery.list.length > 0" class="mdl-cell mdl-cell--12-col content-title">
                <button @click="search.data.delivery.show = !search.data.delivery.show" class="mdl-button mdl-js-button mdl-js-ripple-effect">
                   <i class="material-icons" role="presentation">local_shipping</i>配送<i class="material-icons" role="presentation">{{search.data.delivery.show? 'expand_less' : 'expand_more'}}</i>
                </button>
             </div>
-            <div v-show="search.data.delivery.show" v-for="aDelivery in search.data.delivery.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block is-show">
+            <div v-show="search.data.delivery.show" v-for="aDelivery in search.data.delivery.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
                <span class="content-block-inline"><i class="material-icons" role="presentation">check_box_outline_blank</i>0936033091</span>
             </div>
          </div>
@@ -160,7 +165,12 @@
                      <th>每週平均</th>
                   </tr>
                </thead>
-               <tbody>
+               <tbody v-if="shopList.length === 0">
+                  <tr>
+                     <td colspan="5" class="table-no-data">尚無資料</td>
+                  </tr>
+               </tbody>
+               <tbody v-else>
                   <tr @click="aRecordClickListener('shop', index + (dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity)" v-for="(aStore, index) in shopList.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
                      <td class="mdl-data-table__cell--non-numeric" v-html="listMatchCtx(aStore.storeName)"></td>
                      <td>{{aStore.toUsedAmount}}</td>
@@ -185,31 +195,31 @@
                <div :class="{'is-expanded':shopDetail.expand}" class="mdl-cell mdl-cell--9-col mdl-shadow--2dp content-block-detail-container">
                   <div @click="shopDetail.expand = !shopDetail.expand" class="content-block content-block-detail-outer mdl-color--white mdl-js-button mdl-js-ripple-effect">
                      <span class="content-block-detail">
-				   <span class="content-block-inline"><i class="material-icons" role="presentation">store_mall_directory</i>{{shopDetail.data.storeName}}</span>
-                     <span><span>可用數量</span><span>{{shopDetail.data.toUsedAmount}}</span></span>
-                     <span><span>今日用量</span><span>{{shopDetail.data.todayAmount}}</span></span>
-                     <span><span>當週累計</span><span>{{shopDetail.data.weekAmount}}</span></span>
+                        <span class="content-block-inline"><i class="material-icons" role="presentation">store_mall_directory</i>{{shopDetail.data.storeName}}</span>
+                        <span><span>可用數量</span><span>{{shopDetail.data.toUsedAmount}}</span></span>
+                        <span><span>今日用量</span><span>{{shopDetail.data.todayAmount}}</span></span>
+                        <span><span>當週累計</span><span>{{shopDetail.data.weekAmount}}</span></span>
                      </span>
                      <span><i class="material-icons" role="presentation">{{shopDetail.expand? 'expand_less' : 'expand_more'}}</i></span>
                   </div>
                   <div class="content-block content-block-detail-footer">
                      <div>
                         <button type="button" class="mdl-chip detail-active-button">
-					<span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
-				   </button>
+                           <span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
+                        </button>
                         <span class="mdl-chip">
-					<span class="mdl-chip__text">{{shopDetail.data.joinedDate | dateToString('only_date')}}</span>
+                           <span class="mdl-chip__text">{{shopDetail.data.joinedDate | dateToString('only_date')}}</span>
                         </span>
                         <span class="mdl-chip">
-					<span class="mdl-chip__text">聯絡人: {{shopDetail.data.contactNickname}}</span>
+                           <span class="mdl-chip__text">聯絡人: {{shopDetail.data.contactNickname}}</span>
                         </span>
                         <span class="mdl-chip">
-					<span class="mdl-chip__text">{{shopDetail.data.contactPhone}}</span>
+                           <span class="mdl-chip__text">{{shopDetail.data.contactPhone}}</span>
                         </span>
                      </div>
                      <button class="mdl-button mdl-js-button mdl-button--raised detail-edit-button">
-				   編輯
-				</button>
+                        編輯
+                     </button>
                   </div>
                </div>
             </div>
@@ -234,7 +244,12 @@
                         <th class="mdl-data-table__cell--non-numeric">經手人</th>
                      </tr>
                   </thead>
-                  <tbody>
+                  <tbody v-if="shopDetail.data.history.length === 0">
+                     <tr>
+                        <td colspan="5" class="table-no-data">尚無資料</td>
+                     </tr>
+                  </tbody>
+                  <tbody v-else>
                      <tr v-for="aRecord in shopDetail.data.history.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.time | dateToString}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.serial}}</td>
@@ -280,7 +295,12 @@
                      <th>累計</th>
                   </tr>
                </thead>
-               <tbody>
+               <tbody v-if="userList.length === 0">
+                  <tr>
+                     <td colspan="4" class="table-no-data">尚無資料</td>
+                  </tr>
+               </tbody>
+               <tbody v-else>
                   <tr @click="aRecordClickListener('user', index + (dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity)" v-for="(aUser, index) in userList.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
                      <td class="mdl-data-table__cell--non-numeric" v-html="listMatchCtx(aUser.phone)"></td>
                      <td>{{aUser.usingAmount}}</td>
@@ -304,28 +324,28 @@
                <div :class="{'is-expanded':userDetail.expand}" class="mdl-cell mdl-cell--9-col mdl-shadow--2dp content-block-detail-container">
                   <div @click="userDetail.expand = !userDetail.expand" class="content-block content-block-detail-outer mdl-color--white mdl-js-button mdl-js-ripple-effect">
                      <span class="content-block-detail">
-							<span class="content-block-inline"><i class="material-icons" role="presentation">person</i>{{userDetail.data.userPhone}}</span>
-                     <span><span>使用中</span><span>{{userDetail.data.usingAmount}}</span></span>
-                     <span><span>遺失</span><span :class="{warning:userDetail.data.lostAmount>0}">{{userDetail.data.lostAmount}}</span></span>
-                     <span><span>累計使用量</span><span>{{userDetail.data.totalUsageAmount}}</span></span>
+                        <span class="content-block-inline"><i class="material-icons" role="presentation">person</i>{{userDetail.data.userPhone}}</span>
+                        <span><span>使用中</span><span>{{userDetail.data.usingAmount}}</span></span>
+                        <span><span>遺失</span><span :class="{warning:userDetail.data.lostAmount>0}">{{userDetail.data.lostAmount}}</span></span>
+                        <span><span>累計使用量</span><span>{{userDetail.data.totalUsageAmount}}</span></span>
                      </span>
                      <span><i class="material-icons" role="presentation">{{userDetail.expand? 'expand_less' : 'expand_more'}}</i></span>
                   </div>
                   <div class="content-block content-block-detail-footer">
                      <div>
                         <button type="button" class="mdl-chip detail-active-button">
-				   <span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
-				</button>
+                           <span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
+                        </button>
                         <span class="mdl-chip">
-				   <span class="mdl-chip__text">加入日期: {{userDetail.data.joinedDate | dateToString('only_date')}} ({{(Date.now() - userDetail.data.joinedDate) | durationToString}})</span>
+                           <span class="mdl-chip__text">加入日期: {{userDetail.data.joinedDate | dateToString('only_date')}} ({{(Date.now() - userDetail.data.joinedDate) | durationToString}})</span>
                         </span>
                         <span class="mdl-chip">
-				   <span class="mdl-chip__text">管道: {{userDetail.data.joinedMethod}}</span>
+                           <span class="mdl-chip__text">管道: {{userDetail.data.joinedMethod}}</span>
                         </span>
                      </div>
                      <button class="mdl-button mdl-js-button mdl-button--raised detail-edit-button">
-							編輯
-						</button>
+                        編輯
+                     </button>
                   </div>
                </div>
             </div>
@@ -340,7 +360,8 @@
                <span class="content-block-data"><span>平均占用時間</span><span>{{userDetail.data.averageUsingDuration | durationToString}}</span></span>
             </div>
             <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-               <span class="content-block-data"><span>A借B還</span><span>{{userDetail.data.amountOfBorrowingFromDiffPlace}}<span class="data-percentage">{{(userDetail.data.amountOfBorrowingFromDiffPlace / userDetail.data.totalUsageAmount) | numberToPercentage}}</span></span>
+               <span class="content-block-data"><span>A借B還</span><span>{{userDetail.data.amountOfBorrowingFromDiffPlace}}<span class="data-percentage">{{(userDetail.data.amountOfBorrowingFromDiffPlace / userDetail.data.totalUsageAmount) |
+                        numberToPercentage}}</span></span>
                </span>
             </div>
             <div class="mdl-cell mdl-cell--12-col mdl-shadow--2dp content-block-table">
@@ -353,7 +374,12 @@
                         <th class="mdl-data-table__cell--non-numeric">佔用時間</th>
                      </tr>
                   </thead>
-                  <tbody>
+                  <tbody v-if="userDetail.data.history.length === 0">
+                     <tr>
+                        <td colspan="4" class="table-no-data">尚無資料</td>
+                     </tr>
+                  </tbody>
+                  <tbody v-else>
                      <tr v-for="aRecord in userDetail.data.history.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.containerType}}<br>{{aRecord.containerID}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.rentTime | dateToString("with_day")}}<br>{{aRecord.rentPlace}}</td>
@@ -382,21 +408,26 @@
                      <th>待使用</th>
                      <th>使用中</th>
                      <th>已歸還</th>
-                     <th>待清洗</th>
+                     <!-- <th>待清洗</th> -->
                      <th>待配送</th>
                      <th>待簽收</th>
                      <th>庫存</th>
                      <th>遺失</th>
                   </tr>
                </thead>
-               <tbody>
+               <tbody v-if="container.data.list.length === 0">
+                  <tr>
+                     <td colspan="9" class="table-no-data">尚無資料</td>
+                  </tr>
+               </tbody>
+               <tbody v-else>
                   <tr v-for="(aContainerType, index) in container.data.list.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
                      <td class="mdl-data-table__cell--non-numeric">{{aContainerType.type}}</td>
                      <td>{{aContainerType.totalAmount}}</td>
                      <td>{{aContainerType.toUsedAmount}}</td>
                      <td>{{aContainerType.usingAmount}}</td>
                      <td>{{aContainerType.returnedAmount}}</td>
-                     <td>{{aContainerType.toCleanAmount}}</td>
+                     <!-- <td>{{aContainerType.toCleanAmount}}</td> -->
                      <td>{{aContainerType.toDeliveryAmount}}</td>
                      <td>{{aContainerType.toSignAmount}}</td>
                      <td>{{aContainerType.inStorageAmount}}</td>
@@ -419,27 +450,27 @@
                <div :class="{'is-expanded':containerDetail.expand}" class="mdl-cell mdl-cell--9-col mdl-shadow--2dp content-block-detail-container">
                   <div @click="containerDetail.expand = !containerDetail.expand" class="content-block content-block-detail-outer mdl-color--white mdl-js-button mdl-js-ripple-effect">
                      <span class="content-block-detail">
-						<span class="content-block-inline"><span :class="'container-' + containerDetail.data.containerType.code" class="goodtogo-icons"></span>{{containerDetail.data.containerID}}　{{containerDetail.data.containerType.txt}}</span>
-                     <span><span>循環次數</span><span>{{containerDetail.data.reuseTime}}</span></span>
-                     <span class="mdl-chip">
-							   <span class="mdl-chip__text">{{containerDetail.data.status}}</span>
-                     </span>
-                     <span><span>@</span><span>{{containerDetail.data.bindedUser}}</span></span>
+                        <span class="content-block-inline"><span :class="'container-' + containerDetail.data.containerType.code" class="goodtogo-icons"></span>{{containerDetail.data.containerID}}　{{containerDetail.data.containerType.txt}}</span>
+                        <span><span>循環次數</span><span>{{containerDetail.data.reuseTime}}</span></span>
+                        <span class="mdl-chip">
+                           <span class="mdl-chip__text">{{containerDetail.data.status}}</span>
+                        </span>
+                        <span><span>@</span><span>{{containerDetail.data.bindedUser}}</span></span>
                      </span>
                      <span><i class="material-icons" role="presentation">{{userDetail.expand? 'expand_less' : 'expand_more'}}</i></span>
                   </div>
                   <div class="content-block content-block-detail-footer">
                      <div>
                         <button type="button" class="mdl-chip detail-active-button">
-							<span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
-						</button>
+                           <span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
+                        </button>
                         <span class="mdl-chip">
-							<span class="mdl-chip__text">啟用日期: {{containerDetail.data.joinedDate | dateToString('only_date')}} ({{(Date.now() - userDetail.data.joinedDate) | durationToString}})</span>
+                           <span class="mdl-chip__text">啟用日期: {{containerDetail.data.joinedDate | dateToString('only_date')}} ({{(Date.now() - userDetail.data.joinedDate) | durationToString}})</span>
                         </span>
                      </div>
                      <button class="mdl-button mdl-js-button mdl-button--raised detail-edit-button">
-						<span class="mdl-chip__text">編輯</span>
-					</button>
+                        <span class="mdl-chip__text">編輯</span>
+                     </button>
                   </div>
                </div>
             </div>
@@ -457,7 +488,12 @@
                         <th class="mdl-data-table__cell--non-numeric">備註</th>
                      </tr>
                   </thead>
-                  <tbody>
+                  <tbody v-if="containerDetail.data.history.length === 0">
+                     <tr>
+                        <td colspan="5" class="table-no-data">尚無資料</td>
+                     </tr>
+                  </tbody>
+                  <tbody v-else>
                      <tr v-for="aRecord in containerDetail.data.history.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.tradeTime | dateToString}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.action}}</td>
@@ -529,11 +565,11 @@
                <div class="mdl-cell mdl-cell--9-col mdl-shadow--2dp content-block-detail-container is-expanded">
                   <div class="content-block content-block-detail-outer mdl-color--white">
                      <span class="content-block-detail">
-						<span class="content-block-inline"><span class="goodtogo-icons container-1"></span>#017　16oz杯子</span>
-                     <span class="mdl-chip">
-							<span class="mdl-chip__text">使用中</span>
-                     </span>
-                     <p>2018-07-02 上午 10:00</br>由 0921630931 建立</p>
+                        <span class="content-block-inline"><span class="goodtogo-icons container-1"></span>#017　16oz杯子</span>
+                        <span class="mdl-chip">
+                           <span class="mdl-chip__text">使用中</span>
+                        </span>
+                        <p>2018-07-02 上午 10:00</br>由 0921630931 建立</p>
                      </span>
                   </div>
                </div>

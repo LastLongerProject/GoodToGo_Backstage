@@ -1,36 +1,3 @@
-function initPage() {
-    return window.location.hash || "#index";
-};
-
-function durationToString(duration) {
-    var ctr = 0;
-    var result = "";
-    var addString = function(num, txt) {
-        ctr++;
-        result += (ctr === 2 ? " " : "") + num + " " + txt;
-    };
-    if (duration.get("Y") !== 0) {
-        addString(duration.get("Y"), "年");
-    }
-    if (duration.get("M") !== 0) {
-        addString(duration.get("M"), "個月");
-    }
-    if (ctr == 2) return result;
-    if (duration.get("d") !== 0) {
-        addString(duration.get("d"), "天");
-    }
-    if (ctr == 2) return result;
-    if (duration.get("h") !== 0) {
-        addString(duration.get("h"), "小時");
-    }
-    if (ctr == 2) return result;
-    if (duration.get("m") !== 0) {
-        addString(duration.get("m"), "分鐘");
-    }
-    if (result === "") result += "0";
-    return result;
-}
-
 $(window).on('load', function() {
     if (window.location.pathname !== "/manager/login") {
         $('#loading_main').css('display', 'none');
@@ -38,15 +5,10 @@ $(window).on('load', function() {
     }
 });
 
-function cleanSearchBar() {
-    $('.searchbar-field .mdl-textfield__input').val('').parent().removeClass('is-focused').removeClass('is-dirty');
-    app.search.txt = "";
-}
-
 function appInit(window) {
     var needUpdate = false;
     var showedDetail = null;
-    var nowActiveSection = initPage().replace("#", "");
+    var nowActiveSection = (window.location.hash || "#index").replace("#", "");
     if (!$("#" + nowActiveSection).get(0)) nowActiveSection = index;
     var tmpDynamicLoadingBaseIndex = null;
     var placeholderTxtDict = {
@@ -58,6 +20,7 @@ function appInit(window) {
     var arrowDownward = '<i class="material-icons" role="presentation">arrow_downward</i>';
     var arrowDropDown = '<i class="material-icons" role="presentation">arrow_drop_down</i>';
     var numberToPercentage = function(number, option) {
+        if (isNaN(number)) number = 0;
         switch (option) {
             case 'withArrow':
                 var arrow = number >= 0 ? arrowUpward : arrowDownward;
@@ -67,6 +30,56 @@ function appInit(window) {
             default:
                 return "(" + parseFloat(number * 100).toFixed(1) + "%)";
         }
+    };
+    var rawCapacityCount = function(realActiveSection) {
+        var table = $("#" + realActiveSection).find('tbody').get(0);
+        if (!table) return;
+        var table_box = table.getBoundingClientRect();
+        var rawHeight = (realActiveSection !== "user-detail" ? 48 : 65);
+        var rawCapacity = Math.floor((window.innerHeight - table_box.top - 36) / rawHeight);
+        return rawCapacity > 5 ? rawCapacity : 5;
+    };
+    var dataFilter = function(aData) {
+        if (app.searchRegExp) {
+            if (nowActiveSection === "user")
+                return aData.id.match(app.searchRegExp);
+            else if (nowActiveSection === "shop")
+                return aData.storeName.match(app.searchRegExp);
+        } else {
+            return aData;
+        }
+    };
+    var cleanSearchBar = function() {
+        $('.searchbar-field .mdl-textfield__input').val('').parent().removeClass('is-focused').removeClass('is-dirty').blur();
+        app.search.txt = "";
+    };
+    var durationToString = function(duration) {
+        var ctr = 0;
+        var result = "";
+        var addString = function(num, txt) {
+            ctr++;
+            result += (ctr === 2 ? " " : "") + num + " " + txt;
+        };
+        if (duration.get("Y") !== 0) {
+            addString(duration.get("Y"), "年");
+        }
+        if (duration.get("M") !== 0) {
+            addString(duration.get("M"), "個月");
+        }
+        if (ctr == 2) return result;
+        if (duration.get("d") !== 0) {
+            addString(duration.get("d"), "天");
+        }
+        if (ctr == 2) return result;
+        if (duration.get("h") !== 0) {
+            addString(duration.get("h"), "小時");
+        }
+        if (ctr == 2) return result;
+        if (duration.get("m") !== 0) {
+            addString(duration.get("m"), "分鐘");
+        }
+        if (result === "") result += "0";
+        return result;
     };
     var app = new Vue({
         el: "#app",
@@ -123,10 +136,12 @@ function appInit(window) {
             },
             aRecordClickListener: function(from, index) {
                 var localApp = this;
-                showedDetail = from + "Detail";
-                var toRequest = showedDetail + "?id=" + this[from].data.list[index].id;
+                var detailToShow = from + "Detail";
+                var toRequest = detailToShow + "?id=" + this[from + "List"][index].id;
                 requestData(toRequest, function(data) {
-                    localApp[showedDetail].show = true;
+                    if (showedDetail) localApp[showedDetail].show = false;
+                    localApp[detailToShow].show = true;
+                    showedDetail = detailToShow;
                     if (!test) localApp[showedDetail].data = data;
                     tmpDynamicLoadingBaseIndex = localApp.dynamicLoading.baseIndex;
                     localApp.dynamicLoading.baseIndex = 1;
@@ -138,6 +153,7 @@ function appInit(window) {
                 cleanSearchBar();
                 this[showedDetail || (nowActiveSection + "Detail")].show = false;
                 this[showedDetail || (nowActiveSection + "Detail")].data.history = [];
+                showedDetail = null;
                 this.dynamicLoading.baseIndex = tmpDynamicLoadingBaseIndex || 1;
             },
             flipPage: function(to) {
@@ -159,10 +175,9 @@ function appInit(window) {
             },
             searchData: function() {
                 var localApp = this;
-                showedDetail = "search";
                 var txt = this.search.txt;
                 if (txt.length < 1) return;
-                var toRequest = showedDetail + "?txt=" + txt;
+                var toRequest = "search?txt=" + txt;
                 if (nowActiveSection === 'index') {
                     toRequest += "&fields=shop,user,container"
                 } else if (nowActiveSection === 'container') {
@@ -171,20 +186,39 @@ function appInit(window) {
                     return;
                 }
                 requestData(toRequest, function(data) {
+                    showedDetail = "search";
                     localApp[showedDetail].show = true;
                     if (!test) localApp[showedDetail].data = data;
                     $('main').scrollTop(0);
                 });
             },
-            dataFilter: function(aData) {
-                if (this.searchRegExp) {
-                    if (nowActiveSection === "user")
-                        return aData.id.match(this.searchRegExp);
-                    else if (nowActiveSection === "shop")
-                        return aData.storeName.match(this.searchRegExp);
-                } else {
-                    return aData;
-                }
+            aSearchResultClickListener: function(category, index) {
+                var localApp = this;
+                var detailToShow = category + "Detail";
+                var id = this.search.data[category].list[index].id;
+                if (id === -1) return;
+                var toRequest = detailToShow + "?id=" + id;
+                requestData(toRequest, function(data) {
+                    if (showedDetail) localApp[showedDetail].show = false;
+                    localApp[nowActiveSection].show = false;
+                    localApp[category].show = true;
+                    nowActiveSection = category;
+                    tmpDynamicLoadingBaseIndex = null;
+                    localApp.dynamicLoading.baseIndex = 1;
+                    needUpdate = true;
+                    localApp.search.placeholder = (placeholderTxtDict[nowActiveSection] ? "在「" + placeholderTxtDict[nowActiveSection] + "」中搜尋" : "搜尋");
+                    localApp[detailToShow].show = true;
+                    showedDetail = detailToShow;
+                    if (!test) localApp[showedDetail].data = data;
+                    cleanSearchBar();
+                    $('main').scrollTop(0);
+                    if (!test)
+                        requestData(category, function(data) {
+                            localApp[category].data = data;
+                        }, {
+                            daemon: true
+                        });
+                });
             },
             listMatchCtx: function(data) {
                 if (this.searchRegExp) {
@@ -201,6 +235,7 @@ function appInit(window) {
             },
             searchRegExp: function() {
                 if (this.search.txt.length > 0) {
+                    this.dynamicLoading.baseIndex = 1;
                     var txtArr = this.search.txt.split(" ").filter(
                         function(ele) {
                             return ele !== "";
@@ -221,10 +256,10 @@ function appInit(window) {
                 }
             },
             shopList: function() {
-                return this.shop.data.list.filter(this.dataFilter);
+                return this.shop.data.list.filter(dataFilter);
             },
             userList: function() {
-                return this.user.data.list.filter(this.dataFilter);
+                return this.user.data.list.filter(dataFilter);
             }
         },
         data: {
@@ -272,7 +307,7 @@ function appInit(window) {
                         show: true,
                         list: [{
                             id: "0936033091",
-                            phone: "0936-033-091"
+                            name: "0936-033-091"
                         }]
                     },
                     container: {
@@ -431,13 +466,4 @@ function appInit(window) {
     });
     window.app = app;
     app.navClickListener(nowActiveSection);
-}
-
-function rawCapacityCount(nowActiveSection) {
-    var table = $("#" + nowActiveSection).find('tbody').get(0);
-    if (!table) return;
-    var table_box = table.getBoundingClientRect();
-    var rawHeight = (nowActiveSection !== "user-detail" ? 48 : 65);
-    var rawCapacity = Math.floor((window.innerHeight - table_box.top - 36) / rawHeight);
-    return rawCapacity > 5 ? rawCapacity : 5;
 }

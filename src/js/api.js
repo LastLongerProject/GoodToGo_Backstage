@@ -1,9 +1,11 @@
 (function(window) {
     var pendingReq = null;
 
-    function requestData(page, cb) {
+    function requestData(page, cb, option) {
         if (pendingReq) pendingReq.abort();
-        startLoading();
+        if (!option) option = {};
+        var daemon = option.daemon || false;
+        if (!daemon) startLoading();
         var requestUrl = "/manager/data/" + page;
         console.log(requestUrl);
         pendingReq = $.ajax(requestUrl, {
@@ -14,20 +16,24 @@
                 // timeout: 30 * 1000
             })
             .done(function(data, textStatus, jqXHR) {
-                stopLoading();
+                if (!daemon) stopLoading();
                 cb(data);
             })
             .fail(function(jqXHR, textStatus, errorThrown) {
-                stopLoading();
-                if (jqXHR.statusText !== "abort")
-                    showErr("[" + jqXHR.status + "]: " + (jqXHR.responseJSON ? jqXHR.responseJSON.message : jqXHR.statusText || "Unknown ERR"));
+                if (!daemon) stopLoading();
+                if (jqXHR.statusText !== "abort") {
+                    if (jqXHR.responseJSON && jqXHR.responseJSON.code === "B005")
+                        window.location.href = $("#logout").attr('href');
+                    else
+                        showErr("[" + jqXHR.status + "]: " + (jqXHR.responseJSON ? jqXHR.responseJSON.message : jqXHR.statusText || "Unknown ERR"));
+                }
             })
             .always(function() {
                 pendingReq = null;
             });
     }
 
-    function requestDataDemo(page, cb) {
+    function requestDataDemo(page, cb, option) {
         if (pendingReq) clearTimeout(pendingReq);
         startLoading();
         var requestUrl = "/manager/data/" + page;
@@ -57,8 +63,8 @@
     }
 
     window.test = false;
-    window.requestData = function(page, cb) {
-        if (!window.test) return requestData(page, cb);
-        else return requestDataDemo(page, cb);
+    window.requestData = function(page, cb, option) {
+        if (!window.test) return requestData(page, cb, option);
+        else return requestDataDemo(page, cb, option);
     };
 }(window));
