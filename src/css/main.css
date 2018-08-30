@@ -531,9 +531,12 @@ section.disabled {
 
 .table-page-switcher {
     display: none;
-    margin-top: 0;
-    margin-bottom: 0;
+    margin: 0;
     user-select: none;
+    position: absolute;
+    width: 100%;
+    bottom: 16px;
+    left: 0;
 }
 
 .table-page-switcher.is-display {
@@ -541,7 +544,7 @@ section.disabled {
 }
 
 .table-page-switcher-container {
-    width: 100px;
+    width: 150px;
     margin: 0 auto;
     display: flex;
     vertical-align: middle;

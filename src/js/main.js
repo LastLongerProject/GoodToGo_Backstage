@@ -36,7 +36,7 @@ function appInit(window) {
         if (!table) return;
         var table_box = table.getBoundingClientRect();
         var rawHeight = (realActiveSection !== "user-detail" ? 48 : 65);
-        var rawCapacity = Math.floor((window.innerHeight - table_box.top - 36) / rawHeight);
+        var rawCapacity = Math.floor((window.innerHeight - table_box.top - 44) / rawHeight);
         return rawCapacity > 5 ? rawCapacity : 5;
     };
     var dataFilter = function(aData) {
@@ -134,10 +134,10 @@ function appInit(window) {
                     $('main').scrollTop(0);
                 });
             },
-            aRecordClickListener: function(from, index) {
+            aRecordClickListener: function(from, id) {
                 var localApp = this;
                 var detailToShow = from + "Detail";
-                var toRequest = detailToShow + "?id=" + this[from + "List"][index].id;
+                var toRequest = detailToShow + "?id=" + id;
                 requestData(toRequest, function(data) {
                     if (showedDetail) localApp[showedDetail].show = false;
                     localApp[detailToShow].show = true;
@@ -192,10 +192,9 @@ function appInit(window) {
                     $('main').scrollTop(0);
                 });
             },
-            aSearchResultClickListener: function(category, index) {
+            aSearchResultClickListener: function(category, id) {
                 var localApp = this;
                 var detailToShow = category + "Detail";
-                var id = this.search.data[category].list[index].id;
                 if (id === -1) return;
                 var toRequest = detailToShow + "?id=" + id;
                 requestData(toRequest, function(data) {

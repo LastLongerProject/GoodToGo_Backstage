@@ -124,7 +124,7 @@
                   <i class="material-icons" role="presentation">store_mall_directory</i>店鋪<i class="material-icons" role="presentation">{{search.data.shop.show? 'expand_less' : 'expand_more'}}</i>
                </button>
             </div>
-            <div v-show="search.data.shop.show" @click="aSearchResultClickListener('shop', index)" v-for="(aShop, index) in search.data.shop.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
+            <div v-show="search.data.shop.show" @click="aSearchResultClickListener('shop', aShop.id)" v-for="aShop in search.data.shop.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
                <span class="content-block-inline"><i class="material-icons" role="presentation">store_mall_directory</i><span v-html="listMatchCtx(aShop.name)"></span></span>
             </div>
             <div v-show="search.data.user.list.length > 0" class="mdl-cell mdl-cell--12-col content-title">
@@ -132,7 +132,7 @@
                   <i class="material-icons" role="presentation">supervisor_account</i>使用者<i class="material-icons" role="presentation">{{search.data.user.show? 'expand_less' : 'expand_more'}}</i>
                </button>
             </div>
-            <div v-show="search.data.user.show" @click="aSearchResultClickListener('user', index)" v-for="(aUser, index) in search.data.user.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
+            <div v-show="search.data.user.show" @click="aSearchResultClickListener('user', aUser.id)" v-for="aUser in search.data.user.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
                <span class="content-block-inline"><i class="material-icons" role="presentation">person</i><span v-html="listMatchCtx(aUser.name)"></span></span>
             </div>
             <div v-show="search.data.container.list.length > 0" class="mdl-cell mdl-cell--12-col content-title">
@@ -140,7 +140,7 @@
                   <i class="material-icons" role="presentation">local_drink</i>容器<i class="material-icons" role="presentation">{{search.data.container.show? 'expand_less' : 'expand_more'}}</i>
                </button>
             </div>
-            <div v-show="search.data.container.show" @click="aSearchResultClickListener('container', index)" v-for="(aContainer, index) in search.data.container.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
+            <div v-show="search.data.container.show" @click="aSearchResultClickListener('container', aContainer.id)" v-for="aContainer in search.data.container.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
                <span class="content-block-inline"><span :class="'container-' + aContainer.type" class="goodtogo-icons"></span><span v-html="listMatchCtx(aContainer.name)"></span></span>
             </div>
             <div v-show="search.data.delivery.list.length > 0" class="mdl-cell mdl-cell--12-col content-title">
@@ -171,7 +171,7 @@
                   </tr>
                </tbody>
                <tbody v-else>
-                  <tr @click="aRecordClickListener('shop', index + (dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity)" v-for="(aStore, index) in shopList.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
+                  <tr @click="aRecordClickListener('shop', aStore.id)" v-for="aStore in shopList.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
                      <td class="mdl-data-table__cell--non-numeric" v-html="listMatchCtx(aStore.storeName)"></td>
                      <td>{{aStore.toUsedAmount}}</td>
                      <td>{{aStore.todayAmount}}</td>
@@ -181,7 +181,7 @@
                </tbody>
             </table>
          </div>
-         <div :class="{'is-display':dynamicLoading.rawCapacity < shopList.length}" class="mdl-cell mdl-cell--12-col table-page-switcher">
+         <div :class="{'is-display':dynamicLoading.rawCapacity < shopList.length}" class="table-page-switcher">
             <div class="table-page-switcher-container">
                <span :class="{disabled: dynamicLoading.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
                <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(shopList.length / dynamicLoading.rawCapacity)}}</span>
@@ -260,7 +260,7 @@
                   </tbody>
                </table>
             </div>
-            <div :class="{'is-display':dynamicLoading.rawCapacity < shopDetail.data.history.length}" class="mdl-cell mdl-cell--12-col table-page-switcher">
+            <div :class="{'is-display':dynamicLoading.rawCapacity < shopDetail.data.history.length}" class="table-page-switcher">
                <div class="table-page-switcher-container">
                   <span :class="{disabled: dynamicLoading.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
                   <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(shopDetail.data.history.length / dynamicLoading.rawCapacity)}}</span>
@@ -301,7 +301,7 @@
                   </tr>
                </tbody>
                <tbody v-else>
-                  <tr @click="aRecordClickListener('user', index + (dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity)" v-for="(aUser, index) in userList.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
+                  <tr @click="aRecordClickListener('user', aUser.id)" v-for="aUser in userList.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
                      <td class="mdl-data-table__cell--non-numeric" v-html="listMatchCtx(aUser.phone)"></td>
                      <td>{{aUser.usingAmount}}</td>
                      <td :class="{warning:aUser.lostAmount>0}">{{aUser.lostAmount}}</td>
@@ -310,7 +310,7 @@
                </tbody>
             </table>
          </div>
-         <div :class="{'is-display':dynamicLoading.rawCapacity < userList.length}" class="mdl-cell mdl-cell--12-col table-page-switcher">
+         <div :class="{'is-display':dynamicLoading.rawCapacity < userList.length}" class="table-page-switcher">
             <div class="table-page-switcher-container">
                <span :class="{disabled: dynamicLoading.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
                <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(userList.length / dynamicLoading.rawCapacity)}}</span>
@@ -337,7 +337,7 @@
                            <span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
                         </button>
                         <span class="mdl-chip">
-                           <span class="mdl-chip__text">加入日期: {{userDetail.data.joinedDate | dateToString('only_date')}} ({{(Date.now() - userDetail.data.joinedDate) | durationToString}})</span>
+                           <span class="mdl-chip__text">加入日期: {{userDetail.data.joinedDate | dateToString('only_date')}} ({{(Date.now() - new Date(userDetail.data.joinedDate).valueOf()) | durationToString}})</span>
                         </span>
                         <span class="mdl-chip">
                            <span class="mdl-chip__text">管道: {{userDetail.data.joinedMethod}}</span>
@@ -389,7 +389,7 @@
                   </tbody>
                </table>
             </div>
-            <div :class="{'is-display':dynamicLoading.rawCapacity < userDetail.data.history.length}" class="mdl-cell mdl-cell--12-col table-page-switcher">
+            <div :class="{'is-display':dynamicLoading.rawCapacity < userDetail.data.history.length}" class="table-page-switcher">
                <div class="table-page-switcher-container">
                   <span :class="{disabled: dynamicLoading.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
                   <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(userDetail.data.history.length / dynamicLoading.rawCapacity)}}</span>
@@ -436,7 +436,7 @@
                </tbody>
             </table>
          </div>
-         <div :class="{'is-display':dynamicLoading.rawCapacity < container.data.list.length}" class="mdl-cell mdl-cell--12-col table-page-switcher">
+         <div :class="{'is-display':dynamicLoading.rawCapacity < container.data.list.length}" class="table-page-switcher">
             <div class="table-page-switcher-container">
                <span :class="{disabled: dynamicLoading.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
                <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(container.data.list.length / dynamicLoading.rawCapacity)}}</span>
@@ -465,7 +465,7 @@
                            <span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
                         </button>
                         <span class="mdl-chip">
-                           <span class="mdl-chip__text">啟用日期: {{containerDetail.data.joinedDate | dateToString('only_date')}} ({{(Date.now() - userDetail.data.joinedDate) | durationToString}})</span>
+                           <span class="mdl-chip__text">啟用日期: {{containerDetail.data.joinedDate | dateToString('only_date')}} ({{(Date.now() - new Date(containerDetail.data.joinedDate).valueOf()) | durationToString}})</span>
                         </span>
                      </div>
                      <button class="mdl-button mdl-js-button mdl-button--raised detail-edit-button">
@@ -504,7 +504,7 @@
                   </tbody>
                </table>
             </div>
-            <div :class="{'is-display':dynamicLoading.rawCapacity < containerDetail.data.history.length}" class="mdl-cell mdl-cell--12-col table-page-switcher">
+            <div :class="{'is-display':dynamicLoading.rawCapacity < containerDetail.data.history.length}" class="table-page-switcher">
                <div class="table-page-switcher-container">
                   <span :class="{disabled: dynamicLoading.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
                   <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(containerDetail.data.history.length / dynamicLoading.rawCapacity)}}</span>
