@@ -8,7 +8,7 @@
             <i class="material-icons">navigate_before</i>
          </div>
          <div :class="{'is-hide':detailIsOpen}" class="mdl-color--white mdl-shadow--2dp searchbar-form">
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label searchbar-field">
+            <div class="mdl-textfield mdl-js-textfield searchbar-field">
                <input @keyup.enter="searchData" class="mdl-textfield__input" type="text" id="searchbar" v-model="search.txt">
                <label class="mdl-textfield__label" for="searchbar">{{search.placeholder}}</label>
             </div>
@@ -119,12 +119,13 @@
       </section>
       <section :class="{'is-display':search.show}" id="search-detail">
          <div class="mdl-grid main-content">
+            <div v-show="search.data.shop.list.length == 0 && search.data.user.list.length == 0 && search.data.container.list.length == 0" class="mdl-cell mdl-cell--12-col mdl-color--white mdl-shadow--2dp content-block">找不到資料 (╥﹏╥)</div>
             <div v-show="search.data.shop.list.length > 0" class="mdl-cell mdl-cell--12-col content-title">
                <button @click="search.data.shop.show = !search.data.shop.show" class="mdl-button mdl-js-button mdl-js-ripple-effect">
                   <i class="material-icons" role="presentation">store_mall_directory</i>店鋪<i class="material-icons" role="presentation">{{search.data.shop.show? 'expand_less' : 'expand_more'}}</i>
                </button>
             </div>
-            <div v-show="search.data.shop.show" @click="aSearchResultClickListener('shop', aShop.id)" v-for="aShop in search.data.shop.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
+            <div v-show="search.data.shop.show" @click="aSearchResultClickListener('shop', aShop.id)" v-for="aShop in search.data.shop.list" :class="{'more-result':aShop.id===-1}" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
                <span class="content-block-inline"><i class="material-icons" role="presentation">store_mall_directory</i><span v-html="listMatchCtx(aShop.name)"></span></span>
             </div>
             <div v-show="search.data.user.list.length > 0" class="mdl-cell mdl-cell--12-col content-title">
@@ -132,7 +133,7 @@
                   <i class="material-icons" role="presentation">supervisor_account</i>使用者<i class="material-icons" role="presentation">{{search.data.user.show? 'expand_less' : 'expand_more'}}</i>
                </button>
             </div>
-            <div v-show="search.data.user.show" @click="aSearchResultClickListener('user', aUser.id)" v-for="aUser in search.data.user.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
+            <div v-show="search.data.user.show" @click="aSearchResultClickListener('user', aUser.id)" v-for="aUser in search.data.user.list" :class="{'more-result':aUser.id===-1}" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
                <span class="content-block-inline"><i class="material-icons" role="presentation">person</i><span v-html="listMatchCtx(aUser.name)"></span></span>
             </div>
             <div v-show="search.data.container.list.length > 0" class="mdl-cell mdl-cell--12-col content-title">
@@ -140,7 +141,7 @@
                   <i class="material-icons" role="presentation">local_drink</i>容器<i class="material-icons" role="presentation">{{search.data.container.show? 'expand_less' : 'expand_more'}}</i>
                </button>
             </div>
-            <div v-show="search.data.container.show" @click="aSearchResultClickListener('container', aContainer.id)" v-for="aContainer in search.data.container.list" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
+            <div v-show="search.data.container.show" @click="aSearchResultClickListener('container', aContainer.id)" v-for="aContainer in search.data.container.list" :class="{'more-result':aContainer.id===-1}" class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
                <span class="content-block-inline"><span :class="'container-' + aContainer.type" class="goodtogo-icons"></span><span v-html="listMatchCtx(aContainer.name)"></span></span>
             </div>
             <div v-show="search.data.delivery.list.length > 0" class="mdl-cell mdl-cell--12-col content-title">

@@ -137,29 +137,13 @@ header.header {
     top: 4px;
 }
 
-.searchbar-field.is-focused .mdl-textfield__label,
-.searchbar-field.is-dirty .mdl-textfield__label {
-    top: -14px;
-    color: rgba(96, 125, 139, 0.7);
-}
-
 .searchbar-field .mdl-textfield__label:after {
-    bottom: 0px;
+    bottom: 0;
 }
 
 @media (max-width: 1024px) {
     .searchbar-form {
         padding: 6px 10px;
-    }
-
-    .searchbar-field .mdl-textfield__label {
-        transition-duration: 0s;
-        transition-timing-function: unset;
-    }
-
-    .searchbar-field.is-focused .mdl-textfield__label,
-    .searchbar-field.is-dirty .mdl-textfield__label {
-        visibility: hidden;
     }
 }
 
@@ -236,6 +220,10 @@ header.header {
 #search-detail .content-block {
     cursor: pointer;
     font-weight: normal;
+}
+
+#search-detail .content-block.more-result {
+    cursor: context-menu;
 }
 
 .content-block .content-block-inline,

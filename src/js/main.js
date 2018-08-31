@@ -49,6 +49,19 @@ function appInit(window) {
             return aData;
         }
     };
+    var bindKeyUpEvent = function(destination) {
+        if ($("#" + destination).find('.table-page-switcher').length) {
+            $(window).keyup(function(event) {
+                if (event.key === "ArrowLeft") {
+                    app.flipPage("last");
+                } else if (event.key === "ArrowRight") {
+                    app.flipPage("next");
+                }
+            });
+        } else {
+            $(window).off("keyup");
+        }
+    };
     var cleanSearchBar = function() {
         $('.searchbar-field .mdl-textfield__input').val('').parent().removeClass('is-focused').removeClass('is-dirty').blur();
         app.search.txt = "";
@@ -131,6 +144,7 @@ function appInit(window) {
                     nowActiveSection = destination;
                     needUpdate = true;
                     localApp.search.placeholder = (placeholderTxtDict[nowActiveSection] ? "在「" + placeholderTxtDict[nowActiveSection] + "」中搜尋" : "搜尋");
+                    bindKeyUpEvent(destination);
                     $('main').scrollTop(0);
                 });
             },
@@ -198,7 +212,10 @@ function appInit(window) {
                 if (id === -1) return;
                 var toRequest = detailToShow + "?id=" + id;
                 requestData(toRequest, function(data) {
-                    if (showedDetail) localApp[showedDetail].show = false;
+                    localApp.search.show = false;
+                    for (var aCategory in localApp.search.data) {
+                        localApp.search.data[aCategory].list = [];
+                    }
                     localApp[nowActiveSection].show = false;
                     localApp[category].show = true;
                     nowActiveSection = category;
