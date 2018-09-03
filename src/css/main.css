@@ -250,6 +250,11 @@ td.warning {
     width: 100%;
 }
 
+.content-block-table thead th {
+    cursor: pointer;
+    user-select: none;
+}
+
 .content-block-detail,
 .content-block-data {
     display: flex;
@@ -568,4 +573,8 @@ span strong {
 
 td.table-no-data {
     text-align: center;
+}
+
+div:focus {
+    outline: none;
 }

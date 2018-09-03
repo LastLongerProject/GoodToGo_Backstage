@@ -5,8 +5,20 @@ $(window).on('load', function() {
     }
 });
 
+function debounce(func, delay) {
+    var timer = null;
+    return function() {
+        var context = this;
+        var args = arguments;
+        clearTimeout(timer);
+        timer = setTimeout(function() {
+            func.apply(context, args)
+        }, delay);
+    }
+}
+
 function appInit(window) {
-    var needUpdate = false;
+    var domHasUpdated = false;
     var showedDetail = null;
     var nowActiveSection = (window.location.hash || "#index").replace("#", "");
     if (!$("#" + nowActiveSection).get(0)) nowActiveSection = index;
@@ -16,9 +28,11 @@ function appInit(window) {
         user: "使用者",
         container: "容器"
     };
+    var sortType = null;
     var arrowUpward = '<i class="material-icons" role="presentation">arrow_upward</i>';
     var arrowDownward = '<i class="material-icons" role="presentation">arrow_downward</i>';
     var arrowDropDown = '<i class="material-icons" role="presentation">arrow_drop_down</i>';
+    var arrowDropUp = '<i class="material-icons" role="presentation">arrow_drop_up</i>';
     var numberToPercentage = function(number, option) {
         if (isNaN(number)) number = 0;
         switch (option) {
@@ -49,22 +63,76 @@ function appInit(window) {
             return aData;
         }
     };
+    var dataSorter = {
+        get: function(key) {
+            if (this[key]) return this[key];
+            else return this.number;
+        },
+        string: function(dataA, dataB) {
+            dataA = dataA[app.listRendering.keyToSort].toLowerCase();
+            dataB = dataB[app.listRendering.keyToSort].toLowerCase();
+            if (app.listRendering.sortDir) {
+                if (dataA < dataB) return 1;
+                if (dataA > dataB) return -1;
+            } else {
+                if (dataA < dataB) return -1;
+                if (dataA > dataB) return 1;
+            }
+            return 0;
+        },
+        number: function(dataA, dataB) {
+            if (app.listRendering.sortDir) return dataB[app.listRendering.keyToSort] - dataA[app.listRendering.keyToSort];
+            else return dataA[app.listRendering.keyToSort] - dataB[app.listRendering.keyToSort];
+        },
+        numberString: function(dataA, dataB) {
+            try {
+                dataA = parseInt(dataA[app.listRendering.keyToSort]);
+                dataB = parseInt(dataB[app.listRendering.keyToSort]);
+                if (app.listRendering.sortDir) return dataB - dataA;
+                else return dataA - dataB;
+            } catch (error) {
+                return 1;
+            }
+        },
+        serial: function(dataA, dataB) {
+            dataA = parseInt(dataA[app.listRendering.keyToSort].slice(1));
+            dataB = parseInt(dataB[app.listRendering.keyToSort].slice(1));
+            if (app.listRendering.sortDir) return dataB - dataA;
+            else return dataA - dataB;
+        },
+        time: function(dataA, dataB) {
+            dataA = new Date(dataA[app.listRendering.keyToSort]);
+            dataB = new Date(dataB[app.listRendering.keyToSort]);
+            if (app.listRendering.sortDir) return dataB - dataA;
+            else return dataA - dataB;
+        }
+    };
     var bindKeyUpEvent = function(destination) {
-        if ($("#" + destination).find('.table-page-switcher').length) {
-            $(window).keyup(function(event) {
-                if (event.key === "ArrowLeft") {
-                    app.flipPage("last");
-                } else if (event.key === "ArrowRight") {
-                    app.flipPage("next");
-                }
+        var tablePageSwitcher = $("#" + destination).find('.table-page-switcher');
+        if (tablePageSwitcher.length) {
+            tablePageSwitcher.get(0).focus();
+            tablePageSwitcher.each(function() {
+                $(this).keyup(function(event) {
+                    if (event.key === "ArrowLeft") {
+                        app.flipPage("last");
+                    } else if (event.key === "ArrowRight") {
+                        app.flipPage("next");
+                    }
+                });
             });
         } else {
-            $(window).off("keyup");
+            $(window).off("resize");
         }
     };
     var cleanSearchBar = function() {
-        $('.searchbar-field .mdl-textfield__input').val('').parent().removeClass('is-focused').removeClass('is-dirty').blur();
+        $('.searchbar-field .mdl-textfield__input').val('').blur().parent().removeClass('is-focused').removeClass('is-dirty');
         app.search.txt = "";
+    };
+    var listRenderingParamInit = function(app) {
+        app.listRendering.baseIndex = 1;
+        app.listRendering.sortDir = null;
+        app.listRendering.keyToSort = null;
+        sortType = null;
     };
     var durationToString = function(duration) {
         var ctr = 0;
@@ -98,6 +166,12 @@ function appInit(window) {
         el: "#app",
         mounted: function() {
             this[nowActiveSection].show = true;
+            var localApp = this;
+            $(window).resize(debounce(function() {
+                console.log("resize")
+                if ($("#" + nowActiveSection).find('.table-page-switcher').length)
+                    localApp.listRendering.rawCapacity = rawCapacityCount(nowActiveSection + (localApp.detailIsOpen ? "-detail" : ""));
+            }, 500));
         },
         filters: {
             numberWithCommas: function(number) {
@@ -123,11 +197,12 @@ function appInit(window) {
             }
         },
         updated: function() {
-            if (needUpdate) {
+            if (domHasUpdated) {
                 componentHandler.upgradeDom();
-                needUpdate = false;
+                bindKeyUpEvent(nowActiveSection);
+                domHasUpdated = false;
             }
-            this.dynamicLoading.rawCapacity = rawCapacityCount(nowActiveSection + (this.detailIsOpen ? "-detail" : ""));
+            this.listRendering.rawCapacity = rawCapacityCount(nowActiveSection + (this.detailIsOpen ? "-detail" : ""));
         },
         methods: {
             navClickListener: function(destination) {
@@ -140,11 +215,10 @@ function appInit(window) {
                     localApp[destination].show = true;
                     if (!test) localApp[destination].data = data;
                     tmpDynamicLoadingBaseIndex = null;
-                    localApp.dynamicLoading.baseIndex = 1;
+                    listRenderingParamInit(localApp);
                     nowActiveSection = destination;
-                    needUpdate = true;
+                    domHasUpdated = true;
                     localApp.search.placeholder = (placeholderTxtDict[nowActiveSection] ? "在「" + placeholderTxtDict[nowActiveSection] + "」中搜尋" : "搜尋");
-                    bindKeyUpEvent(destination);
                     $('main').scrollTop(0);
                 });
             },
@@ -157,8 +231,8 @@ function appInit(window) {
                     localApp[detailToShow].show = true;
                     showedDetail = detailToShow;
                     if (!test) localApp[showedDetail].data = data;
-                    tmpDynamicLoadingBaseIndex = localApp.dynamicLoading.baseIndex;
-                    localApp.dynamicLoading.baseIndex = 1;
+                    tmpDynamicLoadingBaseIndex = localApp.listRendering.baseIndex;
+                    listRenderingParamInit(localApp);
                     cleanSearchBar();
                     $('main').scrollTop(0);
                 });
@@ -168,22 +242,36 @@ function appInit(window) {
                 this[showedDetail || (nowActiveSection + "Detail")].show = false;
                 this[showedDetail || (nowActiveSection + "Detail")].data.history = [];
                 showedDetail = null;
-                this.dynamicLoading.baseIndex = tmpDynamicLoadingBaseIndex || 1;
+                this.listRendering.baseIndex = tmpDynamicLoadingBaseIndex || 1;
+            },
+            sortList: function(by, type) {
+                cleanSearchBar();
+                if (this.listRendering.sortDir == null) this.listRendering.sortDir = true;
+                else if (by === this.listRendering.keyToSort) this.listRendering.sortDir = !this.listRendering.sortDir;
+                this.listRendering.keyToSort = by;
+                if (typeof type === "undefined") sortType = "number";
+                else sortType = type;
+            },
+            showKeySorting: function(txt, key) {
+                if (key === this.listRendering.keyToSort) {
+                    txt += (this.listRendering.sortDir ? arrowDropDown : arrowDropUp);
+                }
+                return txt;
             },
             flipPage: function(to) {
                 var dataLength;
                 if (!this.detailIsOpen) {
-                    dataLength = this[nowActiveSection].data.list.length;
+                    dataLength = this[nowActiveSection + "List"].length;
                 } else {
                     dataLength = this[nowActiveSection + "Detail"].data.history.length;
                 }
-                var maxIndex = Math.ceil(dataLength / this.dynamicLoading.rawCapacity);
+                var maxIndex = Math.ceil(dataLength / this.listRendering.rawCapacity);
                 switch (to) {
                     case "next":
-                        this.dynamicLoading.baseIndex = Math.min((this.dynamicLoading.baseIndex + 1), maxIndex);
+                        this.listRendering.baseIndex = Math.min((this.listRendering.baseIndex + 1), maxIndex);
                         break;
                     case "last":
-                        this.dynamicLoading.baseIndex = Math.max((this.dynamicLoading.baseIndex - 1), 1);
+                        this.listRendering.baseIndex = Math.max((this.listRendering.baseIndex - 1), 1);
                         break;
                 }
             },
@@ -220,8 +308,8 @@ function appInit(window) {
                     localApp[category].show = true;
                     nowActiveSection = category;
                     tmpDynamicLoadingBaseIndex = null;
-                    localApp.dynamicLoading.baseIndex = 1;
-                    needUpdate = true;
+                    listRenderingParamInit(localApp);
+                    domHasUpdated = true;
                     localApp.search.placeholder = (placeholderTxtDict[nowActiveSection] ? "在「" + placeholderTxtDict[nowActiveSection] + "」中搜尋" : "搜尋");
                     localApp[detailToShow].show = true;
                     showedDetail = detailToShow;
@@ -251,7 +339,7 @@ function appInit(window) {
             },
             searchRegExp: function() {
                 if (this.search.txt.length > 0) {
-                    this.dynamicLoading.baseIndex = 1;
+                    this.listRendering.baseIndex = 1;
                     var txtArr = this.search.txt.split(" ").filter(
                         function(ele) {
                             return ele !== "";
@@ -272,10 +360,46 @@ function appInit(window) {
                 }
             },
             shopList: function() {
-                return this.shop.data.list.filter(dataFilter);
+                if (this.listRendering.keyToSort === null || this.detailIsOpen) {
+                    return this.shop.data.list.filter(dataFilter);
+                } else {
+                    return this.shop.data.list.filter(dataFilter).sort(dataSorter.get(sortType));
+                }
+            },
+            shopDetailHistory: function() {
+                if (this.listRendering.keyToSort === null || !this.detailIsOpen) {
+                    return this.shopDetail.data.history;
+                } else {
+                    return this.shopDetail.data.history.sort(dataSorter.get(sortType));
+                }
             },
             userList: function() {
-                return this.user.data.list.filter(dataFilter);
+                if (this.listRendering.keyToSort === null || this.detailIsOpen) {
+                    return this.user.data.list.filter(dataFilter);
+                } else {
+                    return this.user.data.list.filter(dataFilter).sort(dataSorter.get(sortType));
+                }
+            },
+            userDetailHistory: function() {
+                if (this.listRendering.keyToSort === null || !this.detailIsOpen) {
+                    return this.userDetail.data.history;
+                } else {
+                    var lastIndex = this.userDetail.data.history.map(function(ele) {
+                        return ele.returnTime;
+                    }).lastIndexOf("尚未歸還") + 1;
+                    if (this.listRendering.keyToSort !== "returnTime")
+                        return this.userDetail.data.history.slice(0, lastIndex).sort(dataSorter.get(sortType))
+                            .concat(this.userDetail.data.history.slice(lastIndex).sort(dataSorter.get(sortType)));
+                    else
+                        return this.userDetail.data.history.slice(0, lastIndex).concat(this.userDetail.data.history.slice(lastIndex).sort(dataSorter.get(sortType)));
+                }
+            },
+            containerDetailHistory: function() {
+                if (this.listRendering.keyToSort === null || !this.detailIsOpen) {
+                    return this.containerDetail.data.history;
+                } else {
+                    return this.containerDetail.data.history.sort(dataSorter.get(sortType));
+                }
             }
         },
         data: {
@@ -283,9 +407,11 @@ function appInit(window) {
                 show: false,
                 txt: "載入中..."
             },
-            dynamicLoading: {
+            listRendering: {
                 baseIndex: 1,
-                rawCapacity: 0
+                rawCapacity: 0,
+                keyToSort: null,
+                sortDir: null
             },
             index: {
                 show: false,

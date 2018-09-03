@@ -159,11 +159,11 @@
             <table class="mdl-data-table mdl-js-data-table">
                <thead>
                   <tr>
-                     <th class="mdl-data-table__cell--non-numeric">名稱</th>
-                     <th>可用數量</th>
-                     <th>今日用量</th>
-                     <th>當週累計</th>
-                     <th>每週平均</th>
+                     <th @click="sortList('id')" v-html="showKeySorting('名稱', 'id')" class="mdl-data-table__cell--non-numeric"></th>
+                     <th @click="sortList('toUsedAmount')" v-html="showKeySorting('可用數量', 'toUsedAmount')"></th>
+                     <th @click="sortList('todayAmount')" v-html="showKeySorting('今日用量', 'todayAmount')"></th>
+                     <th @click="sortList('weekAmount')" v-html="showKeySorting('當週累計', 'weekAmount')"></th>
+                     <th @click="sortList('weekAverage')" v-html="showKeySorting('每週平均', 'weekAverage')"></th>
                   </tr>
                </thead>
                <tbody v-if="shopList.length === 0">
@@ -172,7 +172,7 @@
                   </tr>
                </tbody>
                <tbody v-else>
-                  <tr @click="aRecordClickListener('shop', aStore.id)" v-for="aStore in shopList.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
+                  <tr @click="aRecordClickListener('shop', aStore.id)" v-for="aStore in shopList.slice((listRendering.baseIndex - 1) * listRendering.rawCapacity, listRendering.baseIndex * listRendering.rawCapacity)">
                      <td class="mdl-data-table__cell--non-numeric" v-html="listMatchCtx(aStore.storeName)"></td>
                      <td>{{aStore.toUsedAmount}}</td>
                      <td>{{aStore.todayAmount}}</td>
@@ -182,11 +182,11 @@
                </tbody>
             </table>
          </div>
-         <div :class="{'is-display':dynamicLoading.rawCapacity < shopList.length}" class="table-page-switcher">
+         <div :class="{'is-display':listRendering.rawCapacity < shopList.length}" class="table-page-switcher">
             <div class="table-page-switcher-container">
-               <span :class="{disabled: dynamicLoading.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
-               <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(shopList.length / dynamicLoading.rawCapacity)}}</span>
-               <span :class="{disabled: dynamicLoading.baseIndex === Math.ceil(shopList.length / dynamicLoading.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
+               <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
+               <span>{{listRendering.baseIndex}}｜{{Math.ceil(shopList.length / listRendering.rawCapacity)}}</span>
+               <span :class="{disabled: listRendering.baseIndex === Math.ceil(shopList.length / listRendering.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
             </div>
          </div>
       </section>
@@ -238,20 +238,20 @@
                <table class="mdl-data-table mdl-js-data-table">
                   <thead>
                      <tr>
-                        <th class="mdl-data-table__cell--non-numeric">時間</th>
-                        <th class="mdl-data-table__cell--non-numeric">項目</th>
-                        <th class="mdl-data-table__cell--non-numeric">狀態</th>
-                        <th class="mdl-data-table__cell--non-numeric">擁有者</th>
-                        <th class="mdl-data-table__cell--non-numeric">經手人</th>
+                        <th @click="sortList('time', 'time')" v-html="showKeySorting('時間', 'time')" class="mdl-data-table__cell--non-numeric"></th>
+                        <th @click="sortList('serial', 'serial')" v-html="showKeySorting('項目', 'serial')" class="mdl-data-table__cell--non-numeric"></th>
+                        <th @click="sortList('action', 'string')" v-html="showKeySorting('狀態', 'action')" class="mdl-data-table__cell--non-numeric"></th>
+                        <th @click="sortList('owner', 'string')" v-html="showKeySorting('擁有者', 'owner')" class="mdl-data-table__cell--non-numeric"></th>
+                        <th @click="sortList('by', 'string')" v-html="showKeySorting('經手人', 'by')" class="mdl-data-table__cell--non-numeric"></th>
                      </tr>
                   </thead>
-                  <tbody v-if="shopDetail.data.history.length === 0">
+                  <tbody v-if="shopDetailHistory.length === 0">
                      <tr>
                         <td colspan="5" class="table-no-data">尚無資料</td>
                      </tr>
                   </tbody>
                   <tbody v-else>
-                     <tr v-for="aRecord in shopDetail.data.history.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
+                     <tr v-for="aRecord in shopDetailHistory.slice((listRendering.baseIndex - 1) * listRendering.rawCapacity, listRendering.baseIndex * listRendering.rawCapacity)">
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.time | dateToString}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.serial}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.action}}</td>
@@ -261,11 +261,11 @@
                   </tbody>
                </table>
             </div>
-            <div :class="{'is-display':dynamicLoading.rawCapacity < shopDetail.data.history.length}" class="table-page-switcher">
+            <div :class="{'is-display':listRendering.rawCapacity < shopDetailHistory.length}" class="table-page-switcher">
                <div class="table-page-switcher-container">
-                  <span :class="{disabled: dynamicLoading.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
-                  <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(shopDetail.data.history.length / dynamicLoading.rawCapacity)}}</span>
-                  <span :class="{disabled: dynamicLoading.baseIndex === Math.ceil(shopDetail.data.history.length / dynamicLoading.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
+                  <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
+                  <span>{{listRendering.baseIndex}}｜{{Math.ceil(shopDetailHistory.length / listRendering.rawCapacity)}}</span>
+                  <span :class="{disabled: listRendering.baseIndex === Math.ceil(shopDetailHistory.length / listRendering.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
                </div>
             </div>
          </div>
@@ -290,10 +290,10 @@
             <table class="mdl-data-table mdl-js-data-table">
                <thead>
                   <tr>
-                     <th class="mdl-data-table__cell--non-numeric">ID</th>
-                     <th>使用中</th>
-                     <th>遺失</th>
-                     <th>累計</th>
+                     <th @click="sortList('id', 'numberString')" v-html="showKeySorting('ID', 'id')" class="mdl-data-table__cell--non-numeric"></th>
+                     <th @click="sortList('usingAmount')" v-html="showKeySorting('使用中', 'usingAmount')"></th>
+                     <th @click="sortList('lostAmount')" v-html="showKeySorting('遺失', 'lostAmount')"></th>
+                     <th @click="sortList('totalUsageAmount')" v-html="showKeySorting('累計', 'totalUsageAmount')"></th>
                   </tr>
                </thead>
                <tbody v-if="userList.length === 0">
@@ -302,7 +302,7 @@
                   </tr>
                </tbody>
                <tbody v-else>
-                  <tr @click="aRecordClickListener('user', aUser.id)" v-for="aUser in userList.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
+                  <tr @click="aRecordClickListener('user', aUser.id)" v-for="aUser in userList.slice((listRendering.baseIndex - 1) * listRendering.rawCapacity, listRendering.baseIndex * listRendering.rawCapacity)">
                      <td class="mdl-data-table__cell--non-numeric" v-html="listMatchCtx(aUser.phone)"></td>
                      <td>{{aUser.usingAmount}}</td>
                      <td :class="{warning:aUser.lostAmount>0}">{{aUser.lostAmount}}</td>
@@ -311,11 +311,11 @@
                </tbody>
             </table>
          </div>
-         <div :class="{'is-display':dynamicLoading.rawCapacity < userList.length}" class="table-page-switcher">
+         <div tabindex="-1" :class="{'is-display':listRendering.rawCapacity < userList.length}" class="table-page-switcher">
             <div class="table-page-switcher-container">
-               <span :class="{disabled: dynamicLoading.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
-               <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(userList.length / dynamicLoading.rawCapacity)}}</span>
-               <span :class="{disabled: dynamicLoading.baseIndex === Math.ceil(userList.length / dynamicLoading.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
+               <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
+               <span>{{listRendering.baseIndex}}｜{{Math.ceil(userList.length / listRendering.rawCapacity)}}</span>
+               <span :class="{disabled: listRendering.baseIndex === Math.ceil(userList.length / listRendering.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
             </div>
          </div>
       </section>
@@ -369,19 +369,19 @@
                <table class="mdl-data-table mdl-js-data-table">
                   <thead>
                      <tr>
-                        <th class="mdl-data-table__cell--non-numeric">容器</th>
-                        <th class="mdl-data-table__cell--non-numeric">使用</th>
-                        <th class="mdl-data-table__cell--non-numeric">歸還</th>
-                        <th class="mdl-data-table__cell--non-numeric">佔用時間</th>
+                        <th @click="sortList('containerID', 'serial')" v-html="showKeySorting('容器', 'containerID')" class="mdl-data-table__cell--non-numeric"></th>
+                        <th @click="sortList('rentTime', 'time')" v-html="showKeySorting('使用', 'rentTime')" class="mdl-data-table__cell--non-numeric"></th>
+                        <th @click="sortList('returnTime', 'time')" v-html="showKeySorting('歸還', 'returnTime')" class="mdl-data-table__cell--non-numeric"></th>
+                        <th @click="sortList('usingDuration', 'time')" v-html="showKeySorting('佔用時間', 'usingDuration')" class="mdl-data-table__cell--non-numeric"></th>
                      </tr>
                   </thead>
-                  <tbody v-if="userDetail.data.history.length === 0">
+                  <tbody v-if="userDetailHistory.length === 0">
                      <tr>
                         <td colspan="4" class="table-no-data">尚無資料</td>
                      </tr>
                   </tbody>
                   <tbody v-else>
-                     <tr v-for="aRecord in userDetail.data.history.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
+                     <tr v-for="aRecord in userDetailHistory.slice((listRendering.baseIndex - 1) * listRendering.rawCapacity, listRendering.baseIndex * listRendering.rawCapacity)">
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.containerType}}<br>{{aRecord.containerID}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.rentTime | dateToString("with_day")}}<br>{{aRecord.rentPlace}}</td>
                         <td :class="{warning:aRecord.returnTime=='尚未歸還'}" class="mdl-data-table__cell--non-numeric">{{aRecord.returnTime | dateToString("with_day")}}<br v-if="aRecord.returnPlace">{{aRecord.returnPlace}}</td>
@@ -390,11 +390,11 @@
                   </tbody>
                </table>
             </div>
-            <div :class="{'is-display':dynamicLoading.rawCapacity < userDetail.data.history.length}" class="table-page-switcher">
+            <div :class="{'is-display':listRendering.rawCapacity < userDetailHistory.length}" class="table-page-switcher">
                <div class="table-page-switcher-container">
-                  <span :class="{disabled: dynamicLoading.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
-                  <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(userDetail.data.history.length / dynamicLoading.rawCapacity)}}</span>
-                  <span :class="{disabled: dynamicLoading.baseIndex === Math.ceil(userDetail.data.history.length / dynamicLoading.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
+                  <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
+                  <span>{{listRendering.baseIndex}}｜{{Math.ceil(userDetailHistory.length / listRendering.rawCapacity)}}</span>
+                  <span :class="{disabled: listRendering.baseIndex === Math.ceil(userDetailHistory.length / listRendering.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
                </div>
             </div>
          </div>
@@ -404,16 +404,16 @@
             <table class="mdl-data-table mdl-js-data-table">
                <thead>
                   <tr>
-                     <th class="mdl-data-table__cell--non-numeric">類別</th>
-                     <th>總量</th>
-                     <th>待使用</th>
-                     <th>使用中</th>
-                     <th>已歸還</th>
+                     <th @click="sortList('id')" v-html="showKeySorting('類別', 'id')" class="mdl-data-table__cell--non-numeric"></th>
+                     <th @click="sortList('totalAmount')" v-html="showKeySorting('總量', 'totalAmount')"></th>
+                     <th @click="sortList('toUsedAmount')" v-html="showKeySorting('待使用', 'toUsedAmount')"></th>
+                     <th @click="sortList('usingAmount')" v-html="showKeySorting('使用中', 'usingAmount')"></th>
+                     <th @click="sortList('returnedAmount')" v-html="showKeySorting('已歸還', 'returnedAmount')"></th>
                      <!-- <th>待清洗</th> -->
-                     <th>待配送</th>
-                     <th>待簽收</th>
-                     <th>庫存</th>
-                     <th>遺失</th>
+                     <th @click="sortList('toDeliveryAmount')" v-html="showKeySorting('待配送', 'toDeliveryAmount')"></th>
+                     <th @click="sortList('toSignAmount')" v-html="showKeySorting('待簽收', 'toSignAmount')"></th>
+                     <th @click="sortList('inStorageAmount')" v-html="showKeySorting('庫存', 'inStorageAmount')"></th>
+                     <th @click="sortList('lostAmount')" v-html="showKeySorting('遺失', 'lostAmount')"></th>
                   </tr>
                </thead>
                <tbody v-if="container.data.list.length === 0">
@@ -422,7 +422,7 @@
                   </tr>
                </tbody>
                <tbody v-else>
-                  <tr v-for="(aContainerType, index) in container.data.list.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
+                  <tr v-for="(aContainerType, index) in container.data.list.slice((listRendering.baseIndex - 1) * listRendering.rawCapacity, listRendering.baseIndex * listRendering.rawCapacity)">
                      <td class="mdl-data-table__cell--non-numeric">{{aContainerType.type}}</td>
                      <td>{{aContainerType.totalAmount}}</td>
                      <td>{{aContainerType.toUsedAmount}}</td>
@@ -437,11 +437,11 @@
                </tbody>
             </table>
          </div>
-         <div :class="{'is-display':dynamicLoading.rawCapacity < container.data.list.length}" class="table-page-switcher">
+         <div :class="{'is-display':listRendering.rawCapacity < container.data.list.length}" class="table-page-switcher">
             <div class="table-page-switcher-container">
-               <span :class="{disabled: dynamicLoading.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
-               <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(container.data.list.length / dynamicLoading.rawCapacity)}}</span>
-               <span :class="{disabled: dynamicLoading.baseIndex === Math.ceil(container.data.list.length / dynamicLoading.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
+               <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
+               <span>{{listRendering.baseIndex}}｜{{Math.ceil(container.data.list.length / listRendering.rawCapacity)}}</span>
+               <span :class="{disabled: listRendering.baseIndex === Math.ceil(container.data.list.length / listRendering.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
             </div>
          </div>
       </section>
@@ -482,20 +482,20 @@
                <table class="mdl-data-table mdl-js-data-table">
                   <thead>
                      <tr>
-                        <th class="mdl-data-table__cell--non-numeric">時間</th>
-                        <th class="mdl-data-table__cell--non-numeric">狀態</th>
-                        <th class="mdl-data-table__cell--non-numeric">擁有者</th>
-                        <th class="mdl-data-table__cell--non-numeric">經手人</th>
-                        <th class="mdl-data-table__cell--non-numeric">備註</th>
+                        <th @click="sortList('tradeTime', 'time')" v-html="showKeySorting('時間', 'tradeTime')" class="mdl-data-table__cell--non-numeric"></th>
+                        <th @click="sortList('action', 'string')" v-html="showKeySorting('狀態', 'action')" class="mdl-data-table__cell--non-numeric"></th>
+                        <th @click="sortList('newUser', 'string')" v-html="showKeySorting('擁有者', 'newUser')" class="mdl-data-table__cell--non-numeric"></th>
+                        <th @click="sortList('oriUser', 'string')" v-html="showKeySorting('經手人', 'oriUser')" class="mdl-data-table__cell--non-numeric"></th>
+                        <th @click="sortList('comment', 'string')" v-html="showKeySorting('備註', 'comment')" class="mdl-data-table__cell--non-numeric"></th>
                      </tr>
                   </thead>
-                  <tbody v-if="containerDetail.data.history.length === 0">
+                  <tbody v-if="containerDetailHistory.length === 0">
                      <tr>
                         <td colspan="5" class="table-no-data">尚無資料</td>
                      </tr>
                   </tbody>
                   <tbody v-else>
-                     <tr v-for="aRecord in containerDetail.data.history.slice((dynamicLoading.baseIndex - 1) * dynamicLoading.rawCapacity, dynamicLoading.baseIndex * dynamicLoading.rawCapacity)">
+                     <tr v-for="aRecord in containerDetailHistory.slice((listRendering.baseIndex - 1) * listRendering.rawCapacity, listRendering.baseIndex * listRendering.rawCapacity)">
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.tradeTime | dateToString}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.action}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.newUser}}</td>
@@ -505,11 +505,11 @@
                   </tbody>
                </table>
             </div>
-            <div :class="{'is-display':dynamicLoading.rawCapacity < containerDetail.data.history.length}" class="table-page-switcher">
+            <div :class="{'is-display':listRendering.rawCapacity < containerDetailHistory.length}" class="table-page-switcher">
                <div class="table-page-switcher-container">
-                  <span :class="{disabled: dynamicLoading.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
-                  <span>{{dynamicLoading.baseIndex}}｜{{Math.ceil(containerDetail.data.history.length / dynamicLoading.rawCapacity)}}</span>
-                  <span :class="{disabled: dynamicLoading.baseIndex === Math.ceil(containerDetail.data.history.length / dynamicLoading.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
+                  <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
+                  <span>{{listRendering.baseIndex}}｜{{Math.ceil(containerDetailHistory.length / listRendering.rawCapacity)}}</span>
+                  <span :class="{disabled: listRendering.baseIndex === Math.ceil(containerDetailHistory.length / listRendering.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
                </div>
             </div>
          </div>
