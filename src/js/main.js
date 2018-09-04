@@ -124,7 +124,7 @@ function appInit(window) {
         }
     };
     var cleanSearchBar = function() {
-        $('.searchbar-field .mdl-textfield__input').val('').blur().parent().removeClass('is-focused').removeClass('is-dirty');
+        $('.searchbar-field .mdl-textfield__input').val('').parent().removeClass('is-focused').removeClass('is-dirty');
         app.search.txt = "";
     };
     var listRenderingParamInit = function(app, option) {
@@ -175,6 +175,9 @@ function appInit(window) {
                     localApp.listRendering.rawCapacity = rawCapacityCount(nowActiveSection + (localApp.detailIsOpen ? "-detail" : ""));
             }, 500));
         },
+        updated: function() {
+            this.listRendering.rawCapacity = rawCapacityCount(nowActiveSection + (this.detailIsOpen ? "-detail" : ""));
+        },
         filters: {
             numberWithCommas: function(number) {
                 return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -201,7 +204,10 @@ function appInit(window) {
         methods: {
             navClickListener: function(destination) {
                 var localApp = this;
-                if (showedDetail || (nowActiveSection + "Detail") in this) this[showedDetail || (nowActiveSection + "Detail")].show = false;
+                if (showedDetail || (nowActiveSection + "Detail") in this) {
+                    this[showedDetail || (nowActiveSection + "Detail")].data.history = [];
+                    this[showedDetail || (nowActiveSection + "Detail")].show = false;
+                }
                 cleanSearchBar();
                 $('.mdl-layout__obfuscator.is-visible').click();
                 requestData(destination, function(data) {
@@ -215,7 +221,6 @@ function appInit(window) {
                     localApp.$nextTick(function() {
                         componentHandler.upgradeDom();
                         bindKeyUpEvent(nowActiveSection);
-                        localApp.listRendering.rawCapacity = rawCapacityCount(nowActiveSection);
                         if (!test) localApp[destination].data = data;
                     });
                 });
@@ -233,7 +238,6 @@ function appInit(window) {
                     cleanSearchBar();
                     $('main').scrollTop(0);
                     localApp.$nextTick(function() {
-                        localApp.listRendering.rawCapacity = rawCapacityCount(from + "-detail");
                         if (!test) localApp[showedDetail].data = data;
                     });
                 });
@@ -245,7 +249,6 @@ function appInit(window) {
                     baseIndex: tmpDynamicLoadingBaseIndex || 1
                 });
                 this[showedDetail || (nowActiveSection + "Detail")].data.history = [];
-                this.listRendering.rawCapacity = rawCapacityCount(nowActiveSection);
                 showedDetail = null;
             },
             sortList: function(by, type) {
@@ -321,7 +324,6 @@ function appInit(window) {
                     localApp.$nextTick(function() {
                         componentHandler.upgradeDom();
                         bindKeyUpEvent(nowActiveSection);
-                        localApp.listRendering.rawCapacity = rawCapacityCount(nowActiveSection);
                         if (!test) localApp[showedDetail].data = data;
                     });
                     if (!test)
