@@ -106,10 +106,11 @@ function appInit(window) {
             else return dataA - dataB;
         }
     };
-    var bindKeyUpEvent = function(destination) {
-        var tablePageSwitcher = $("#" + destination).find('.table-page-switcher');
+    var bindKeyUpEvent = function() {
+        var tablePageSwitcher = $('.table-page-switcher');
         if (tablePageSwitcher.length) {
-            tablePageSwitcher.get(0).focus();
+            tablePageSwitcher.focus();
+            tablePageSwitcher.off("keyup");
             tablePageSwitcher.each(function() {
                 $(this).keyup(function(event) {
                     if (event.key === "ArrowLeft") {
@@ -119,8 +120,6 @@ function appInit(window) {
                     }
                 });
             });
-        } else {
-            $(window).off("resize");
         }
     };
     var cleanSearchBar = function() {
@@ -171,7 +170,7 @@ function appInit(window) {
             this[nowActiveSection].show = true;
             var localApp = this;
             $(window).resize(debounce(function() {
-                if ($("#" + nowActiveSection).find('.table-page-switcher').length)
+                if ($('.table-page-switcher').length)
                     localApp.listRendering.rawCapacity = rawCapacityCount(nowActiveSection + (localApp.detailIsOpen ? "-detail" : ""));
             }, 500));
         },
@@ -220,7 +219,7 @@ function appInit(window) {
                     $('main').scrollTop(0);
                     localApp.$nextTick(function() {
                         componentHandler.upgradeDom();
-                        bindKeyUpEvent(nowActiveSection);
+                        bindKeyUpEvent();
                         if (!test) localApp[destination].data = data;
                     });
                 });
@@ -323,7 +322,7 @@ function appInit(window) {
                     $('main').scrollTop(0);
                     localApp.$nextTick(function() {
                         componentHandler.upgradeDom();
-                        bindKeyUpEvent(nowActiveSection);
+                        bindKeyUpEvent();
                         if (!test) localApp[showedDetail].data = data;
                     });
                     if (!test)
