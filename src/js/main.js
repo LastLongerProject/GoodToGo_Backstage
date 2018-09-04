@@ -18,7 +18,6 @@ function debounce(func, delay) {
 }
 
 function appInit(window) {
-    var domHasUpdated = false;
     var showedDetail = null;
     var nowActiveSection = (window.location.hash || "#index").replace("#", "");
     if (!$("#" + nowActiveSection).get(0)) nowActiveSection = index;
@@ -128,10 +127,14 @@ function appInit(window) {
         $('.searchbar-field .mdl-textfield__input').val('').blur().parent().removeClass('is-focused').removeClass('is-dirty');
         app.search.txt = "";
     };
-    var listRenderingParamInit = function(app) {
-        app.listRendering.baseIndex = 1;
-        app.listRendering.sortDir = null;
-        app.listRendering.keyToSort = null;
+    var listRenderingParamInit = function(app, option) {
+        var dataToInit = {
+            baseIndex: 1,
+            sortDir: null,
+            keyToSort: null
+        };
+        if (option) Object.assign(dataToInit, option);
+        Object.assign(app.listRendering, dataToInit);
         sortType = null;
     };
     var durationToString = function(duration) {
@@ -168,7 +171,6 @@ function appInit(window) {
             this[nowActiveSection].show = true;
             var localApp = this;
             $(window).resize(debounce(function() {
-                console.log("resize")
                 if ($("#" + nowActiveSection).find('.table-page-switcher').length)
                     localApp.listRendering.rawCapacity = rawCapacityCount(nowActiveSection + (localApp.detailIsOpen ? "-detail" : ""));
             }, 500));
@@ -196,14 +198,6 @@ function appInit(window) {
                 }
             }
         },
-        updated: function() {
-            if (domHasUpdated) {
-                componentHandler.upgradeDom();
-                bindKeyUpEvent(nowActiveSection);
-                domHasUpdated = false;
-            }
-            this.listRendering.rawCapacity = rawCapacityCount(nowActiveSection + (this.detailIsOpen ? "-detail" : ""));
-        },
         methods: {
             navClickListener: function(destination) {
                 var localApp = this;
@@ -213,13 +207,17 @@ function appInit(window) {
                 requestData(destination, function(data) {
                     localApp[nowActiveSection].show = false;
                     localApp[destination].show = true;
-                    if (!test) localApp[destination].data = data;
                     tmpDynamicLoadingBaseIndex = null;
                     listRenderingParamInit(localApp);
                     nowActiveSection = destination;
-                    domHasUpdated = true;
                     localApp.search.placeholder = (placeholderTxtDict[nowActiveSection] ? "在「" + placeholderTxtDict[nowActiveSection] + "」中搜尋" : "搜尋");
                     $('main').scrollTop(0);
+                    localApp.$nextTick(function() {
+                        componentHandler.upgradeDom();
+                        bindKeyUpEvent(nowActiveSection);
+                        localApp.listRendering.rawCapacity = rawCapacityCount(nowActiveSection);
+                        if (!test) localApp[destination].data = data;
+                    });
                 });
             },
             aRecordClickListener: function(from, id) {
@@ -230,27 +228,33 @@ function appInit(window) {
                     if (showedDetail) localApp[showedDetail].show = false;
                     localApp[detailToShow].show = true;
                     showedDetail = detailToShow;
-                    if (!test) localApp[showedDetail].data = data;
                     tmpDynamicLoadingBaseIndex = localApp.listRendering.baseIndex;
                     listRenderingParamInit(localApp);
                     cleanSearchBar();
                     $('main').scrollTop(0);
+                    localApp.$nextTick(function() {
+                        localApp.listRendering.rawCapacity = rawCapacityCount(from + "-detail");
+                        if (!test) localApp[showedDetail].data = data;
+                    });
                 });
             },
             closeDetail: function() {
                 cleanSearchBar();
                 this[showedDetail || (nowActiveSection + "Detail")].show = false;
+                listRenderingParamInit(this, {
+                    baseIndex: tmpDynamicLoadingBaseIndex || 1
+                });
                 this[showedDetail || (nowActiveSection + "Detail")].data.history = [];
+                this.listRendering.rawCapacity = rawCapacityCount(nowActiveSection);
                 showedDetail = null;
-                this.listRendering.baseIndex = tmpDynamicLoadingBaseIndex || 1;
             },
             sortList: function(by, type) {
-                cleanSearchBar();
                 if (this.listRendering.sortDir == null) this.listRendering.sortDir = true;
                 else if (by === this.listRendering.keyToSort) this.listRendering.sortDir = !this.listRendering.sortDir;
                 this.listRendering.keyToSort = by;
                 if (typeof type === "undefined") sortType = "number";
                 else sortType = type;
+                this.listRendering.baseIndex = 1;
             },
             showKeySorting: function(txt, key) {
                 if (key === this.listRendering.keyToSort) {
@@ -309,13 +313,17 @@ function appInit(window) {
                     nowActiveSection = category;
                     tmpDynamicLoadingBaseIndex = null;
                     listRenderingParamInit(localApp);
-                    domHasUpdated = true;
                     localApp.search.placeholder = (placeholderTxtDict[nowActiveSection] ? "在「" + placeholderTxtDict[nowActiveSection] + "」中搜尋" : "搜尋");
                     localApp[detailToShow].show = true;
                     showedDetail = detailToShow;
-                    if (!test) localApp[showedDetail].data = data;
                     cleanSearchBar();
                     $('main').scrollTop(0);
+                    localApp.$nextTick(function() {
+                        componentHandler.upgradeDom();
+                        bindKeyUpEvent(nowActiveSection);
+                        localApp.listRendering.rawCapacity = rawCapacityCount(nowActiveSection);
+                        if (!test) localApp[showedDetail].data = data;
+                    });
                     if (!test)
                         requestData(category, function(data) {
                             localApp[category].data = data;
@@ -409,7 +417,7 @@ function appInit(window) {
             },
             listRendering: {
                 baseIndex: 1,
-                rawCapacity: 0,
+                rawCapacity: 1,
                 keyToSort: null,
                 sortDir: null
             },
@@ -476,14 +484,7 @@ function appInit(window) {
             shop: {
                 show: false,
                 data: {
-                    list: [{
-                        id: 0,
-                        storeName: "店名",
-                        toUsedAmount: 0,
-                        todayAmount: 0,
-                        weekAmount: 0,
-                        weekAverage: 0
-                    }]
+                    list: []
                 }
             },
             shopDetail: {
@@ -500,13 +501,7 @@ function appInit(window) {
                     contactPhone: "0988555666",
                     recentAmountPercentage: 0.16,
                     weekAverage: 10,
-                    history: [{
-                        time: 1234,
-                        serial: "#161",
-                        action: "借出",
-                        owner: "0911-***-521",
-                        by: "布萊恩紅茶(阿呆店長)"
-                    }]
+                    history: []
                 }
             },
             activity: {
@@ -520,13 +515,7 @@ function appInit(window) {
                     totalUsageAmount: 0,
                     weeklyAverageUsage: 0,
                     totalLostAmount: 0,
-                    list: [{
-                        id: "",
-                        phone: "0912-345-678",
-                        usingAmount: 0,
-                        lostAmount: 0,
-                        totalUsageAmount: 0
-                    }]
+                    list: []
                 }
             },
             userDetail: {
@@ -544,33 +533,13 @@ function appInit(window) {
                     weekAverage: 10,
                     averageUsingDuration: 20 * 60 * 1000,
                     amountOfBorrowingFromDiffPlace: 43,
-                    history: [{
-                        containerType: "12oz 玻璃杯",
-                        containerID: "#101",
-                        rentTime: 1234,
-                        rentPlace: "布萊恩紅茶",
-                        returnTime: 1234,
-                        returnPlace: "布萊恩紅茶",
-                        usingDuration: 1234
-                    }]
+                    history: []
                 }
             },
             container: {
                 show: false,
                 data: {
-                    list: [{
-                        id: 0,
-                        type: "類別",
-                        totalAmount: 0,
-                        toUsedAmount: 0,
-                        usingAmount: 0,
-                        returnedAmount: 0,
-                        toCleanAmount: 0,
-                        toDeliveryAmount: 0,
-                        toSignAmount: 0,
-                        inStorageAmount: 0,
-                        lostAmount: 0
-                    }]
+                    list: []
                 }
             },
             containerDetail: {
@@ -586,13 +555,7 @@ function appInit(window) {
                     status: "使用中",
                     bindedUser: "0921-**-931",
                     joinedDate: 1234,
-                    history: [{
-                        tradeTime: 1234,
-                        action: "借出",
-                        newUser: "0921-***-931",
-                        oriUser: "特有種商行(小衛)",
-                        comment: ""
-                    }]
+                    history: []
                 }
             },
             delivery: {

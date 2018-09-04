@@ -512,21 +512,11 @@ section.disabled {
     }
 }
 
-@media screen and (min-width: 1025px) {
-    section[id$="-detail"] {
-        left: calc(100vw - 240px);
-    }
-
-    section[id$="-detail"].is-display {
-        transform: translateX(calc(240px - 100vw));
-    }
-}
-
 .table-page-switcher {
     display: none;
     margin: 0;
     user-select: none;
-    position: absolute;
+    position: fixed;
     width: 100%;
     bottom: 16px;
     left: 0;
@@ -564,6 +554,25 @@ section.disabled {
 
 .table-page-switcher-container span.disabled i {
     color: rgba(0, 0, 0, .3);
+}
+
+.switcher-spacer {
+    height: 20px;
+}
+
+@media screen and (min-width: 1025px) {
+    section[id$="-detail"] {
+        left: calc(100vw - 240px);
+    }
+
+    section[id$="-detail"].is-display {
+        transform: translateX(calc(240px - 100vw));
+    }
+
+    section.main-content .table-page-switcher {
+        left: 240px;
+        width: calc(100vw - 240px);
+    }
 }
 
 td strong,

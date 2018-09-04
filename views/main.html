@@ -182,7 +182,8 @@
                </tbody>
             </table>
          </div>
-         <div :class="{'is-display':listRendering.rawCapacity < shopList.length}" class="table-page-switcher">
+         <div class="mdl-cell mdl-cell--12-col switcher-spacer"></div>
+         <div tabindex="-1" :class="{'is-display':listRendering.rawCapacity < shopList.length}" class="table-page-switcher">
             <div class="table-page-switcher-container">
                <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
                <span>{{listRendering.baseIndex}}｜{{Math.ceil(shopList.length / listRendering.rawCapacity)}}</span>
@@ -261,7 +262,8 @@
                   </tbody>
                </table>
             </div>
-            <div :class="{'is-display':listRendering.rawCapacity < shopDetailHistory.length}" class="table-page-switcher">
+            <div class="mdl-cell mdl-cell--12-col switcher-spacer"></div>
+            <div tabindex="-1" :class="{'is-display':listRendering.rawCapacity < shopDetailHistory.length}" class="table-page-switcher">
                <div class="table-page-switcher-container">
                   <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
                   <span>{{listRendering.baseIndex}}｜{{Math.ceil(shopDetailHistory.length / listRendering.rawCapacity)}}</span>
@@ -311,6 +313,7 @@
                </tbody>
             </table>
          </div>
+         <div class="mdl-cell mdl-cell--12-col switcher-spacer"></div>
          <div tabindex="-1" :class="{'is-display':listRendering.rawCapacity < userList.length}" class="table-page-switcher">
             <div class="table-page-switcher-container">
                <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
@@ -390,7 +393,8 @@
                   </tbody>
                </table>
             </div>
-            <div :class="{'is-display':listRendering.rawCapacity < userDetailHistory.length}" class="table-page-switcher">
+            <div class="mdl-cell mdl-cell--12-col switcher-spacer"></div>
+            <div tabindex="-1" :class="{'is-display':listRendering.rawCapacity < userDetailHistory.length}" class="table-page-switcher">
                <div class="table-page-switcher-container">
                   <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
                   <span>{{listRendering.baseIndex}}｜{{Math.ceil(userDetailHistory.length / listRendering.rawCapacity)}}</span>
@@ -437,7 +441,8 @@
                </tbody>
             </table>
          </div>
-         <div :class="{'is-display':listRendering.rawCapacity < container.data.list.length}" class="table-page-switcher">
+         <div class="mdl-cell mdl-cell--12-col switcher-spacer"></div>
+         <div tabindex="-1" :class="{'is-display':listRendering.rawCapacity < container.data.list.length}" class="table-page-switcher">
             <div class="table-page-switcher-container">
                <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
                <span>{{listRendering.baseIndex}}｜{{Math.ceil(container.data.list.length / listRendering.rawCapacity)}}</span>
@@ -505,7 +510,8 @@
                   </tbody>
                </table>
             </div>
-            <div :class="{'is-display':listRendering.rawCapacity < containerDetailHistory.length}" class="table-page-switcher">
+            <div class="mdl-cell mdl-cell--12-col switcher-spacer"></div>
+            <div tabindex="-1" :class="{'is-display':listRendering.rawCapacity < containerDetailHistory.length}" class="table-page-switcher">
                <div class="table-page-switcher-container">
                   <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
                   <span>{{listRendering.baseIndex}}｜{{Math.ceil(containerDetailHistory.length / listRendering.rawCapacity)}}</span>
