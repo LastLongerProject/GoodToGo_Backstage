@@ -18,8 +18,6 @@ function debounce(func, delay) {
 }
 
 function appInit(window) {
-    var nowActiveSection = (window.location.hash || "#index").replace("#", "");
-    if (!$("#" + nowActiveSection).get(0)) nowActiveSection = 'index';
     var sortType = null;
     var tmpDynamicLoadingBaseIndex = null;
     var placeholderTxtDict = {
@@ -55,11 +53,10 @@ function appInit(window) {
     };
     var dataFilter = function(aData) {
         if (app.searchRegExp) {
-            if (nowActiveSection === "user")
+            if (Section.active === "user")
                 return aData.id.match(app.searchRegExp);
-            else if (nowActiveSection === "shop")
+            else if (Section.active === "shop")
                 return aData.storeName.match(app.searchRegExp);
-        } else {
             return aData;
         }
     };
@@ -129,7 +126,7 @@ function appInit(window) {
         $('.searchbar-field .mdl-textfield__input').val('').parent().removeClass('is-focused').removeClass('is-dirty');
         app.search.txt = "";
     };
-    var listRenderingParamInit = function(app, option) {
+    var listRenderingParamInit = function(option) {
         var dataToInit = {
             baseIndex: 1,
             sortDir: null,
@@ -138,6 +135,43 @@ function appInit(window) {
         if (option) Object.assign(dataToInit, option);
         Object.assign(app.listRendering, dataToInit);
         sortType = null;
+    };
+    var Section = {
+        showed: null,
+        get active() {
+            return this.showed;
+        },
+        open: function(destination, data, daemon) {
+            if (!(destination in app)) return;
+            if (this.showed !== null) this.close();
+            app[destination].show = true;
+            tmpDynamicLoadingBaseIndex = null;
+            listRenderingParamInit();
+            app.search.placeholder = (placeholderTxtDict[destination] ? "在「" + placeholderTxtDict[destination] + "」中搜尋" : "搜尋");
+            if (!daemon) {
+                $('main').scrollTop(0);
+                if (!test) app[destination].data = data;
+                app.$nextTick(function() {
+                    componentHandler.upgradeDom();
+                    bindKeyUpEvent();
+                });
+            } else {
+                if (!test)
+                    requestData(destination, function(data) {
+                        app[destination].data = data;
+                    }, {
+                        daemon: true
+                    });
+            }
+            this.showed = destination;
+        },
+        close: function() {
+            var showedSection = this.showed;
+            if (showedSection !== null) {
+                app[showedSection].show = false;
+                this.showed = null;
+            }
+        }
     };
     var Detail = {
         showed: null,
@@ -159,6 +193,7 @@ function appInit(window) {
                     }, 600);
                 });
             this.showed = destination;
+            $('main').scrollTop(0);
         },
         close: function() {
             var showedDetail = this.showed;
@@ -211,15 +246,14 @@ function appInit(window) {
     var app = new Vue({
         el: "#app",
         mounted: function() {
-            this[nowActiveSection].show = true;
             var localApp = this;
             $(window).resize(debounce(function() {
                 if ($('table').length)
-                    localApp.listRendering.rawCapacity = rawCapacityCount(nowActiveSection + (localApp.detailIsOpen ? "-detail" : ""));
+                    localApp.listRendering.rawCapacity = rawCapacityCount(Section.active + (localApp.detailIsOpen ? "-detail" : ""));
             }, 500));
         },
         updated: function() {
-            this.listRendering.rawCapacity = rawCapacityCount(nowActiveSection + (this.detailIsOpen ? "-detail" : ""));
+            this.listRendering.rawCapacity = rawCapacityCount(Section.active + (this.detailIsOpen ? "-detail" : ""));
         },
         filters: {
             numberWithCommas: function(number) {
@@ -247,23 +281,11 @@ function appInit(window) {
         },
         methods: {
             navClickListener: function(destination) {
-                var localApp = this;
                 cleanSearchBar();
                 $('.mdl-layout__obfuscator.is-visible').click();
                 requestData(destination, function(data) {
                     Detail.close();
-                    localApp[nowActiveSection].show = false;
-                    localApp[destination].show = true;
-                    tmpDynamicLoadingBaseIndex = null;
-                    listRenderingParamInit(localApp);
-                    nowActiveSection = destination;
-                    localApp.search.placeholder = (placeholderTxtDict[nowActiveSection] ? "在「" + placeholderTxtDict[nowActiveSection] + "」中搜尋" : "搜尋");
-                    $('main').scrollTop(0);
-                    localApp.$nextTick(function() {
-                        componentHandler.upgradeDom();
-                        bindKeyUpEvent();
-                        if (!test) localApp[destination].data = data;
-                    });
+                    Section.open(destination, data);
                 });
             },
             aRecordClickListener: function(from, id) {
@@ -273,15 +295,14 @@ function appInit(window) {
                 requestData(toRequest, function(data) {
                     Detail.open(detailToShow, data);
                     tmpDynamicLoadingBaseIndex = localApp.listRendering.baseIndex;
-                    listRenderingParamInit(localApp);
                     cleanSearchBar();
-                    $('main').scrollTop(0);
+                    listRenderingParamInit();
                 });
             },
             closeDetail: function() {
-                cleanSearchBar();
                 Detail.close();
-                listRenderingParamInit(this, {
+                cleanSearchBar();
+                listRenderingParamInit({
                     baseIndex: tmpDynamicLoadingBaseIndex || 1
                 });
             },
@@ -289,39 +310,25 @@ function appInit(window) {
                 var txt = this.search.txt;
                 if (txt.length < 1) return;
                 var toRequest = "search?txt=" + txt;
-                if (nowActiveSection === 'index') {
+                if (Section.active === 'index') {
                     toRequest += "&fields=shop,user,container"
-                } else if (nowActiveSection === 'container') {
+                } else if (Section.active === 'container') {
                     toRequest += "&fields=container"
                 } else {
                     return;
                 }
                 requestData(toRequest, function(data) {
                     Detail.open("search", data);
-                    $('main').scrollTop(0);
                 });
             },
             aSearchResultClickListener: function(category, id) {
-                var localApp = this;
                 var detailToShow = category + "Detail";
                 if (id === -1) return;
                 var toRequest = detailToShow + "?id=" + id;
                 requestData(toRequest, function(data) {
-                    localApp[nowActiveSection].show = false;
-                    localApp[category].show = true;
-                    nowActiveSection = category;
-                    tmpDynamicLoadingBaseIndex = null;
-                    listRenderingParamInit(localApp);
-                    localApp.search.placeholder = (placeholderTxtDict[nowActiveSection] ? "在「" + placeholderTxtDict[nowActiveSection] + "」中搜尋" : "搜尋");
                     Detail.open(detailToShow, data);
+                    Section.open(category, data, true);
                     cleanSearchBar();
-                    $('main').scrollTop(0);
-                    if (!test)
-                        requestData(category, function(data) {
-                            localApp[category].data = data;
-                        }, {
-                            daemon: true
-                        });
                 });
             },
             sortList: function(by, type) {
@@ -341,9 +348,9 @@ function appInit(window) {
             flipPage: function(to) {
                 var dataLength;
                 if (!this.detailIsOpen) {
-                    dataLength = this[nowActiveSection + "List"].length;
+                    dataLength = this[Section.active + "List"].length;
                 } else {
-                    dataLength = this[nowActiveSection + "Detail"].data.history.length;
+                    dataLength = this[Section.active + "Detail"].data.history.length;
                 }
                 var maxIndex = Math.ceil(dataLength / this.listRendering.rawCapacity);
                 switch (to) {
@@ -594,5 +601,7 @@ function appInit(window) {
         }
     });
     window.app = app;
-    app.navClickListener(nowActiveSection);
+    Section.showed = (window.location.hash || "#index").replace("#", "");
+    if (!$("#" + Section.showed).get(0)) Section.showed = 'index';
+    app.navClickListener(Section.active);
 }

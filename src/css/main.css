@@ -513,17 +513,13 @@ section.disabled {
 }
 
 .table-page-switcher {
-    display: none;
+    display: block;
     margin: 0;
     user-select: none;
     position: fixed;
     width: 100%;
     bottom: 16px;
     left: 0;
-}
-
-.table-page-switcher.is-display {
-    display: block;
 }
 
 .table-page-switcher-container {
