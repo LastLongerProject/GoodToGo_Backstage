@@ -57,6 +57,7 @@ function appInit(window) {
                 return aData.id.match(app.searchRegExp);
             else if (Section.active === "shop")
                 return aData.storeName.match(app.searchRegExp);
+        } else {
             return aData;
         }
     };
