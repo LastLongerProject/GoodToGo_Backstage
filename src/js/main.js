@@ -374,7 +374,7 @@ function appInit(window) {
         },
         computed: {
             detailIsOpen: function() {
-                return this.search.show || this.shopDetail.show || this.userDetail.show || this.containerDetail.show || this.deliveryDetail.show;
+                return this.search.show || this.shopDetail.show || this.userDetail.show || this.containerDetail.show;
             },
             searchRegExp: function() {
                 if (this.search.txt.length > 0) {
@@ -603,6 +603,6 @@ function appInit(window) {
     });
     window.app = app;
     Section.showed = (window.location.hash || "#index").replace("#", "");
-    if (!$("#" + Section.showed).get(0)) Section.showed = 'index';
+    if (!(Section.showed in app)) Section.showed = 'index';
     app.navClickListener(Section.active);
 }

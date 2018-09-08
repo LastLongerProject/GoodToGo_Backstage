@@ -20,8 +20,9 @@
                 cb(data);
             })
             .fail(function(jqXHR, textStatus, errorThrown) {
-                if (jqXHR.responseJSON && jqXHR.responseJSON.code === "B005")
+                if (jqXHR.responseJSON && jqXHR.responseJSON.code === "B005") {
                     return window.location.href = $("#logout").attr('href');
+                }
                 if (!daemon) stopLoading();
                 if (jqXHR.statusText !== "abort") {
                     showErr("[" + jqXHR.status + "]: " + (jqXHR.responseJSON ? jqXHR.responseJSON.message : jqXHR.statusText || "Unknown ERR"));
