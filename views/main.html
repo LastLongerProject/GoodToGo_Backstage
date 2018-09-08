@@ -78,15 +78,29 @@
             <span class="content-block-data"><span>使用時間</span><span>{{index.data.activityHistorySummary.totalDuration | durationToString}}</span></span>
          </div> -->
          <div class="mdl-cell mdl-cell--12-col content-title">
+            <span class="content-title-history"><i class="material-icons" role="presentation">update</i><span>店鋪當週紀錄</span></span>
+         </div>
+         <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
+            <span class="content-block-data"><span>使用量</span><span>{{index.data.shopRecentHistorySummary.usedAmount | numberWithCommas}}</span></span>
+         </div>
+         <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
+            <span class="content-block-data"><span>使用時間</span><span>{{index.data.shopRecentHistorySummary.totalDuration | durationToString}}</span></span>
+         </div>
+         <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
+            <span class="content-block-data"><span>A借B還</span><span>{{index.data.shopRecentHistorySummary.quantityOfBorrowingFromDiffPlace | numberWithCommas}}
+                  <span class="data-percentage">{{index.data.shopRecentHistorySummary.quantityOfBorrowingFromDiffPlace / index.data.shopRecentHistorySummary.usedAmount | numberToPercentage}}</span></span>
+            </span>
+         </div>
+         <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
+            <span class="content-block-data"><span>個人遺失</span><span>{{index.data.shopRecentHistorySummary.customerLostAmount | numberWithCommas}}
+                  <span class="data-percentage">{{index.data.shopRecentHistorySummary.customerLostAmount / index.data.shopRecentHistorySummary.usedAmount | numberToPercentage}}</span></span>
+            </span>
+         </div>
+         <div class="mdl-cell mdl-cell--12-col content-title">
             <span class="content-title-history"><i class="material-icons" role="presentation">update</i><span>店鋪總紀錄</span></span>
          </div>
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
             <span class="content-block-data"><span>使用量</span><span>{{index.data.shopHistorySummary.usedAmount | numberWithCommas}}</span></span>
-         </div>
-         <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-            <span class="content-block-data"><span>遺失數量</span><span>{{index.data.shopHistorySummary.lostAmount | numberWithCommas}}<span class="data-percentage">{{index.data.shopHistorySummary.lostAmount / index.data.shopHistorySummary.usedAmount |
-                     numberToPercentage}}</span></span>
-            </span>
          </div>
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
             <span class="content-block-data"><span>使用時間</span><span>{{index.data.shopHistorySummary.totalDuration | durationToString}}</span></span>
@@ -97,23 +111,14 @@
             </span>
             </span>
          </div>
-         <div class="mdl-cell mdl-cell--12-col content-title">
-            <span class="content-title-history"><i class="material-icons" role="presentation">update</i><span>店鋪最近七日</span></span>
-         </div>
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-            <span class="content-block-data"><span>使用量</span><span>{{index.data.shopRecentHistorySummary.usedAmount | numberWithCommas}}</span></span>
-         </div>
-         <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-            <span class="content-block-data"><span>遺失數量</span><span>{{index.data.shopRecentHistorySummary.lostAmount | numberWithCommas}}
-                  <span class="data-percentage">{{index.data.shopRecentHistorySummary.lostAmount / index.data.shopRecentHistorySummary.usedAmount | numberToPercentage}}</span></span>
+            <span class="content-block-data"><span>個人遺失</span><span>{{index.data.shopHistorySummary.customerLostAmount | numberWithCommas}}
+                  <span class="data-percentage">{{index.data.shopHistorySummary.customerLostAmount / index.data.shopHistorySummary.usedAmount | numberToPercentage}}</span></span>
             </span>
          </div>
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-            <span class="content-block-data"><span>使用時間</span><span>{{index.data.shopRecentHistorySummary.totalDuration | durationToString}}</span></span>
-         </div>
-         <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-            <span class="content-block-data"><span>A借B還</span><span>{{index.data.shopRecentHistorySummary.quantityOfBorrowingFromDiffPlace | numberWithCommas}}
-                  <span class="data-percentage">{{index.data.shopRecentHistorySummary.quantityOfBorrowingFromDiffPlace / index.data.shopRecentHistorySummary.usedAmount | numberToPercentage}}</span></span>
+            <span class="content-block-data"><span>店鋪遺失</span><span>{{index.data.shopHistorySummary.shopLostAmount | numberWithCommas}}
+                  <span class="data-percentage">{{index.data.shopHistorySummary.shopLostAmount / index.data.shopHistorySummary.usedAmount | numberToPercentage}}</span></span>
             </span>
          </div>
       </section>
@@ -183,7 +188,7 @@
             </table>
          </div>
          <div class="mdl-cell mdl-cell--12-col switcher-spacer"></div>
-         <div tabindex="-1" :class="{'is-display':listRendering.rawCapacity < shopList.length}" class="table-page-switcher">
+         <div tabindex="-1" v-show="listRendering.rawCapacity < shopList.length" class="table-page-switcher">
             <div class="table-page-switcher-container">
                <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
                <span>{{listRendering.baseIndex}}｜{{Math.ceil(shopList.length / listRendering.rawCapacity)}}</span>
@@ -263,7 +268,7 @@
                </table>
             </div>
             <div class="mdl-cell mdl-cell--12-col switcher-spacer"></div>
-            <div tabindex="-1" :class="{'is-display':listRendering.rawCapacity < shopDetailHistory.length}" class="table-page-switcher">
+            <div tabindex="-1" v-show="listRendering.rawCapacity < shopDetailHistory.length" class="table-page-switcher">
                <div class="table-page-switcher-container">
                   <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
                   <span>{{listRendering.baseIndex}}｜{{Math.ceil(shopDetailHistory.length / listRendering.rawCapacity)}}</span>
@@ -314,7 +319,7 @@
             </table>
          </div>
          <div class="mdl-cell mdl-cell--12-col switcher-spacer"></div>
-         <div tabindex="-1" :class="{'is-display':listRendering.rawCapacity < userList.length}" class="table-page-switcher">
+         <div tabindex="-1" v-show="listRendering.rawCapacity < userList.length" class="table-page-switcher">
             <div class="table-page-switcher-container">
                <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
                <span>{{listRendering.baseIndex}}｜{{Math.ceil(userList.length / listRendering.rawCapacity)}}</span>
@@ -394,7 +399,7 @@
                </table>
             </div>
             <div class="mdl-cell mdl-cell--12-col switcher-spacer"></div>
-            <div tabindex="-1" :class="{'is-display':listRendering.rawCapacity < userDetailHistory.length}" class="table-page-switcher">
+            <div tabindex="-1" v-show="listRendering.rawCapacity < userDetailHistory.length" class="table-page-switcher">
                <div class="table-page-switcher-container">
                   <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
                   <span>{{listRendering.baseIndex}}｜{{Math.ceil(userDetailHistory.length / listRendering.rawCapacity)}}</span>
@@ -442,7 +447,7 @@
             </table>
          </div>
          <div class="mdl-cell mdl-cell--12-col switcher-spacer"></div>
-         <div tabindex="-1" :class="{'is-display':listRendering.rawCapacity < container.data.list.length}" class="table-page-switcher">
+         <div tabindex="-1" v-show="listRendering.rawCapacity < container.data.list.length" class="table-page-switcher">
             <div class="table-page-switcher-container">
                <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
                <span>{{listRendering.baseIndex}}｜{{Math.ceil(container.data.list.length / listRendering.rawCapacity)}}</span>
@@ -511,7 +516,7 @@
                </table>
             </div>
             <div class="mdl-cell mdl-cell--12-col switcher-spacer"></div>
-            <div tabindex="-1" :class="{'is-display':listRendering.rawCapacity < containerDetailHistory.length}" class="table-page-switcher">
+            <div tabindex="-1" v-show="listRendering.rawCapacity < containerDetailHistory.length" class="table-page-switcher">
                <div class="table-page-switcher-container">
                   <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
                   <span>{{listRendering.baseIndex}}｜{{Math.ceil(containerDetailHistory.length / listRendering.rawCapacity)}}</span>

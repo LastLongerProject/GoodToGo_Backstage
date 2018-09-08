@@ -18,25 +18,26 @@ function debounce(func, delay) {
 }
 
 function appInit(window) {
-    var showedDetail = null;
     var nowActiveSection = (window.location.hash || "#index").replace("#", "");
-    if (!$("#" + nowActiveSection).get(0)) nowActiveSection = index;
+    if (!$("#" + nowActiveSection).get(0)) nowActiveSection = 'index';
+    var sortType = null;
     var tmpDynamicLoadingBaseIndex = null;
     var placeholderTxtDict = {
         shop: "店鋪",
         user: "使用者",
         container: "容器"
     };
-    var sortType = null;
-    var arrowUpward = '<i class="material-icons" role="presentation">arrow_upward</i>';
-    var arrowDownward = '<i class="material-icons" role="presentation">arrow_downward</i>';
-    var arrowDropDown = '<i class="material-icons" role="presentation">arrow_drop_down</i>';
-    var arrowDropUp = '<i class="material-icons" role="presentation">arrow_drop_up</i>';
+    var icon = {
+        arrowUpward: '<i class="material-icons" role="presentation">arrow_upward</i>',
+        arrowDownward: '<i class="material-icons" role="presentation">arrow_downward</i>',
+        arrowDropDown: '<i class="material-icons" role="presentation">arrow_drop_down</i>',
+        arrowDropUp: '<i class="material-icons" role="presentation">arrow_drop_up</i>'
+    };
     var numberToPercentage = function(number, option) {
         if (isNaN(number)) number = 0;
         switch (option) {
             case 'withArrow':
-                var arrow = number >= 0 ? arrowUpward : arrowDownward;
+                var arrow = number >= 0 ? icon.arrowUpward : icon.arrowDownward;
                 return "(" + arrow + parseFloat(Math.abs(number) * 100).toFixed(1) + "%)";
             case 'withoutParentheses':
                 return parseFloat(number * 100).toFixed(1) + "%";
@@ -107,18 +108,20 @@ function appInit(window) {
         }
     };
     var bindKeyUpEvent = function() {
-        var tablePageSwitcher = $('.table-page-switcher');
+        if (!app.detailIsOpen) var tablePageSwitcher = $('.table-page-switcher');
+        else {
+            var detailId = Detail.showed.slice(0, Detail.showed.indexOf("Detail")) + "-detail";
+            var tablePageSwitcher = $('#' + detailId + ' .table-page-switcher');
+        }
         if (tablePageSwitcher.length) {
             tablePageSwitcher.focus();
             tablePageSwitcher.off("keyup");
-            tablePageSwitcher.each(function() {
-                $(this).keyup(function(event) {
-                    if (event.key === "ArrowLeft") {
-                        app.flipPage("last");
-                    } else if (event.key === "ArrowRight") {
-                        app.flipPage("next");
-                    }
-                });
+            tablePageSwitcher.keyup(function(event) {
+                if (event.key === "ArrowLeft") {
+                    app.flipPage("last");
+                } else if (event.key === "ArrowRight") {
+                    app.flipPage("next");
+                }
             });
         }
     };
@@ -135,6 +138,47 @@ function appInit(window) {
         if (option) Object.assign(dataToInit, option);
         Object.assign(app.listRendering, dataToInit);
         sortType = null;
+    };
+    var Detail = {
+        showed: null,
+        open: function(destination, data) {
+            if (!(destination in app)) return;
+            if (this.showed !== null) this.close();
+            app[destination].show = true;
+            if (!test) app[destination].data = data;
+            if (this.showed === "search")
+                app.$nextTick(function() {
+                    componentHandler.upgradeDom();
+                    bindKeyUpEvent();
+                });
+            else
+                app.$nextTick(function() {
+                    setTimeout(function() {
+                        componentHandler.upgradeDom();
+                        bindKeyUpEvent();
+                    }, 600);
+                });
+            this.showed = destination;
+        },
+        close: function() {
+            var showedDetail = this.showed;
+            if (showedDetail !== null) {
+                if (showedDetail === "search") {
+                    for (var aCategory in app.search.data)
+                        app.search.data[aCategory].list = [];
+                    app.search.show = false;
+                } else {
+                    app[showedDetail].data.history = [];
+                    app[showedDetail].show = false;
+                }
+                this.showed = null;
+                app.$nextTick(function() {
+                    setTimeout(function() {
+                        bindKeyUpEvent();
+                    }, 600);
+                });
+            }
+        }
     };
     var durationToString = function(duration) {
         var ctr = 0;
@@ -170,7 +214,7 @@ function appInit(window) {
             this[nowActiveSection].show = true;
             var localApp = this;
             $(window).resize(debounce(function() {
-                if ($('.table-page-switcher').length)
+                if ($('table').length)
                     localApp.listRendering.rawCapacity = rawCapacityCount(nowActiveSection + (localApp.detailIsOpen ? "-detail" : ""));
             }, 500));
         },
@@ -179,6 +223,7 @@ function appInit(window) {
         },
         filters: {
             numberWithCommas: function(number) {
+                if (typeof number !== "number") return "0";
                 return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             },
             numberToPercentage: numberToPercentage,
@@ -203,13 +248,10 @@ function appInit(window) {
         methods: {
             navClickListener: function(destination) {
                 var localApp = this;
-                if (showedDetail || (nowActiveSection + "Detail") in this) {
-                    this[showedDetail || (nowActiveSection + "Detail")].data.history = [];
-                    this[showedDetail || (nowActiveSection + "Detail")].show = false;
-                }
                 cleanSearchBar();
                 $('.mdl-layout__obfuscator.is-visible').click();
                 requestData(destination, function(data) {
+                    Detail.close();
                     localApp[nowActiveSection].show = false;
                     localApp[destination].show = true;
                     tmpDynamicLoadingBaseIndex = null;
@@ -229,26 +271,58 @@ function appInit(window) {
                 var detailToShow = from + "Detail";
                 var toRequest = detailToShow + "?id=" + id;
                 requestData(toRequest, function(data) {
-                    if (showedDetail) localApp[showedDetail].show = false;
-                    localApp[detailToShow].show = true;
-                    showedDetail = detailToShow;
+                    Detail.open(detailToShow, data);
                     tmpDynamicLoadingBaseIndex = localApp.listRendering.baseIndex;
                     listRenderingParamInit(localApp);
                     cleanSearchBar();
                     $('main').scrollTop(0);
-                    localApp.$nextTick(function() {
-                        if (!test) localApp[showedDetail].data = data;
-                    });
                 });
             },
             closeDetail: function() {
                 cleanSearchBar();
-                this[showedDetail || (nowActiveSection + "Detail")].show = false;
+                Detail.close();
                 listRenderingParamInit(this, {
                     baseIndex: tmpDynamicLoadingBaseIndex || 1
                 });
-                this[showedDetail || (nowActiveSection + "Detail")].data.history = [];
-                showedDetail = null;
+            },
+            searchData: function() {
+                var txt = this.search.txt;
+                if (txt.length < 1) return;
+                var toRequest = "search?txt=" + txt;
+                if (nowActiveSection === 'index') {
+                    toRequest += "&fields=shop,user,container"
+                } else if (nowActiveSection === 'container') {
+                    toRequest += "&fields=container"
+                } else {
+                    return;
+                }
+                requestData(toRequest, function(data) {
+                    Detail.open("search", data);
+                    $('main').scrollTop(0);
+                });
+            },
+            aSearchResultClickListener: function(category, id) {
+                var localApp = this;
+                var detailToShow = category + "Detail";
+                if (id === -1) return;
+                var toRequest = detailToShow + "?id=" + id;
+                requestData(toRequest, function(data) {
+                    localApp[nowActiveSection].show = false;
+                    localApp[category].show = true;
+                    nowActiveSection = category;
+                    tmpDynamicLoadingBaseIndex = null;
+                    listRenderingParamInit(localApp);
+                    localApp.search.placeholder = (placeholderTxtDict[nowActiveSection] ? "在「" + placeholderTxtDict[nowActiveSection] + "」中搜尋" : "搜尋");
+                    Detail.open(detailToShow, data);
+                    cleanSearchBar();
+                    $('main').scrollTop(0);
+                    if (!test)
+                        requestData(category, function(data) {
+                            localApp[category].data = data;
+                        }, {
+                            daemon: true
+                        });
+                });
             },
             sortList: function(by, type) {
                 if (this.listRendering.sortDir == null) this.listRendering.sortDir = true;
@@ -260,7 +334,7 @@ function appInit(window) {
             },
             showKeySorting: function(txt, key) {
                 if (key === this.listRendering.keyToSort) {
-                    txt += (this.listRendering.sortDir ? arrowDropDown : arrowDropUp);
+                    txt += (this.listRendering.sortDir ? icon.arrowDropDown : icon.arrowDropUp);
                 }
                 return txt;
             },
@@ -280,58 +354,6 @@ function appInit(window) {
                         this.listRendering.baseIndex = Math.max((this.listRendering.baseIndex - 1), 1);
                         break;
                 }
-            },
-            searchData: function() {
-                var localApp = this;
-                var txt = this.search.txt;
-                if (txt.length < 1) return;
-                var toRequest = "search?txt=" + txt;
-                if (nowActiveSection === 'index') {
-                    toRequest += "&fields=shop,user,container"
-                } else if (nowActiveSection === 'container') {
-                    toRequest += "&fields=container"
-                } else {
-                    return;
-                }
-                requestData(toRequest, function(data) {
-                    showedDetail = "search";
-                    localApp[showedDetail].show = true;
-                    if (!test) localApp[showedDetail].data = data;
-                    $('main').scrollTop(0);
-                });
-            },
-            aSearchResultClickListener: function(category, id) {
-                var localApp = this;
-                var detailToShow = category + "Detail";
-                if (id === -1) return;
-                var toRequest = detailToShow + "?id=" + id;
-                requestData(toRequest, function(data) {
-                    localApp.search.show = false;
-                    for (var aCategory in localApp.search.data) {
-                        localApp.search.data[aCategory].list = [];
-                    }
-                    localApp[nowActiveSection].show = false;
-                    localApp[category].show = true;
-                    nowActiveSection = category;
-                    tmpDynamicLoadingBaseIndex = null;
-                    listRenderingParamInit(localApp);
-                    localApp.search.placeholder = (placeholderTxtDict[nowActiveSection] ? "在「" + placeholderTxtDict[nowActiveSection] + "」中搜尋" : "搜尋");
-                    localApp[detailToShow].show = true;
-                    showedDetail = detailToShow;
-                    cleanSearchBar();
-                    $('main').scrollTop(0);
-                    localApp.$nextTick(function() {
-                        componentHandler.upgradeDom();
-                        bindKeyUpEvent();
-                        if (!test) localApp[showedDetail].data = data;
-                    });
-                    if (!test)
-                        requestData(category, function(data) {
-                            localApp[category].data = data;
-                        }, {
-                            daemon: true
-                        });
-                });
             },
             listMatchCtx: function(data) {
                 if (this.searchRegExp) {
@@ -435,17 +457,18 @@ function appInit(window) {
                         lostAmount: 135,
                         totalDuration: 12314
                     },
-                    shopHistorySummary: {
-                        usedAmount: 6487,
-                        lostAmount: 248,
-                        totalDuration: 57563433659,
-                        quantityOfBorrowingFromDiffPlace: 796
-                    },
                     shopRecentHistorySummary: {
                         usedAmount: 87,
-                        lostAmount: 3,
+                        customerLostAmount: 3,
                         totalDuration: 111013967,
                         quantityOfBorrowingFromDiffPlace: 23
+                    },
+                    shopHistorySummary: {
+                        usedAmount: 6487,
+                        shopLostAmount: 248,
+                        customerLostAmount: 248,
+                        totalDuration: 57563433659,
+                        quantityOfBorrowingFromDiffPlace: 796
                     }
                 }
             },
