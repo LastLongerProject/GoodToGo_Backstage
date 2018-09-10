@@ -363,7 +363,7 @@
                </div>
             </div>
             <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-               <span class="content-block-data"><span>最近7天使用量</span><span :class="{warning:userDetail.data.recentAmountPercentage<0}">{{userDetail.data.recentAmount}}<span class="data-percentage" v-html="numberToPercentage(userDetail.data.recentAmountPercentage, 'withArrow')"></span></span>
+               <span class="content-block-data"><span>本週使用量</span><span :class="{warning:userDetail.data.recentAmountPercentage<0}">{{userDetail.data.recentAmount}}<span class="data-percentage" v-html="numberToPercentage(userDetail.data.recentAmountPercentage, 'withArrow')"></span></span>
                </span>
             </div>
             <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
