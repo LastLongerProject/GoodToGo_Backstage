@@ -198,44 +198,50 @@
       </section>
       <section v-if="shop.show" :class="{'is-display':shopDetail.show}" id="shop-detail">
          <div class="mdl-grid main-content">
-            <div class="mdl-cell mdl-cell--12-col mdl-grid content-block-detail-outer-container">
-               <div :class="{'is-expanded':shopDetail.expand}" class="mdl-cell mdl-cell--9-col mdl-shadow--2dp content-block-detail-container">
-                  <div @click="shopDetail.expand = !shopDetail.expand" class="content-block content-block-detail-outer mdl-color--white mdl-js-button mdl-js-ripple-effect">
-                     <span class="content-block-detail">
-                        <span class="content-block-inline"><i class="material-icons" role="presentation">store_mall_directory</i>{{shopDetail.data.storeName}}</span>
-                        <span><span>可用數量</span><span>{{shopDetail.data.toUsedAmount}}</span></span>
-                        <span><span>今日用量</span><span>{{shopDetail.data.todayAmount}}</span></span>
-                        <span><span>當週累計</span><span>{{shopDetail.data.weekAmount}}</span></span>
-                     </span>
-                     <span><i class="material-icons" role="presentation">{{shopDetail.expand? 'expand_less' : 'expand_more'}}</i></span>
-                  </div>
-                  <div class="content-block content-block-detail-footer">
-                     <div>
-                        <button type="button" class="mdl-chip detail-active-button">
-                           <span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
-                        </button>
-                        <span class="mdl-chip">
-                           <span class="mdl-chip__text">{{shopDetail.data.joinedDate | dateToString('only_date')}}</span>
-                        </span>
-                        <span class="mdl-chip">
-                           <span class="mdl-chip__text">聯絡人: {{shopDetail.data.contactNickname}}</span>
-                        </span>
-                        <span class="mdl-chip">
-                           <span class="mdl-chip__text">{{shopDetail.data.contactPhone}}</span>
-                        </span>
-                     </div>
-                     <button class="mdl-button mdl-js-button mdl-button--raised detail-edit-button">
-                        編輯
+            <div :class="{'is-expanded':shopDetail.expand}" class="mdl-cell mdl-cell--12-col mdl-shadow--2dp content-block-detail-container">
+               <div @click="shopDetail.expand = !shopDetail.expand" class="content-block content-block-detail-outer mdl-color--white mdl-js-button mdl-js-ripple-effect">
+                  <span class="content-block-detail">
+                     <span class="content-block-inline"><i class="material-icons" role="presentation">store_mall_directory</i>{{shopDetail.data.storeName}}</span>
+                     <span><span>可用數量</span><span>{{shopDetail.data.toUsedAmount}}</span></span>
+                     <span><span>今日用量</span><span>{{shopDetail.data.todayAmount}}</span></span>
+                     <span>
+                        <span>當週累計</span>
+                        <span :class="{warning:shopDetail.data.weekAmountPercentage<0}">{{shopDetail.data.weekAmount}}<span class="data-percentage" v-html="numberToPercentage(shopDetail.data.weekAmountPercentage, 'withArrow')"></span>
+                        </span></span>
+                  </span>
+                  <span><i class="material-icons" role="presentation">{{shopDetail.expand? 'expand_less' : 'expand_more'}}</i></span>
+               </div>
+               <div class="content-block content-block-detail-footer">
+                  <div>
+                     <button type="button" class="mdl-chip detail-active-button">
+                        <span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
                      </button>
+                     <span class="mdl-chip">
+                        <span class="mdl-chip__text">{{shopDetail.data.joinedDate | dateToString('only_date')}}</span>
+                     </span>
+                     <span class="mdl-chip">
+                        <span class="mdl-chip__text">聯絡人: {{shopDetail.data.contactNickname}}</span>
+                     </span>
+                     <span class="mdl-chip">
+                        <span class="mdl-chip__text">{{shopDetail.data.contactPhone}}</span>
+                     </span>
                   </div>
+                  <button class="mdl-button mdl-js-button mdl-button--raised detail-edit-button">
+                     編輯
+                  </button>
                </div>
             </div>
             <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-               <span class="content-block-data"><span>最近7天使用量</span><span :class="{warning:shopDetail.data.recentAmountPercentage<0}">{{shopDetail.data.recentAmount}}<span class="data-percentage" v-html="numberToPercentage(shopDetail.data.recentAmountPercentage, 'withArrow')"></span></span>
-               </span>
+               <span class="content-block-data"><span>每週平均使用量</span><span>{{shopDetail.data.weekAverage}}</span></span>
             </div>
             <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-               <span class="content-block-data"><span>每週平均使用量</span><span>{{shopDetail.data.weekAverage}}</span></span>
+               <span class="content-block-data"><span>總使用量</span><span>{{shopDetail.data.totalAmount}}</span></span>
+            </div>
+            <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
+               <span class="content-block-data"><span>個人遺失</span><span :class="{warning:shopDetail.data.customerLostAmount>0}">{{shopDetail.data.customerLostAmount}}</span></span>
+            </div>
+            <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
+               <span class="content-block-data"><span>店鋪遺失</span><span :class="{warning:shopDetail.data.shopLostAmount>0}">{{shopDetail.data.shopLostAmount}}</span></span>
             </div>
             <div class="mdl-cell mdl-cell--12-col content-title">
                <span class="content-title-history"><i class="material-icons" role="presentation">update</i>使用紀錄</span>
@@ -329,33 +335,31 @@
       </section>
       <section v-if="user.show" :class="{'is-display':userDetail.show}" id="user-detail">
          <div class="mdl-grid main-content">
-            <div class="mdl-cell mdl-cell--12-col mdl-grid content-block-detail-outer-container">
-               <div :class="{'is-expanded':userDetail.expand}" class="mdl-cell mdl-cell--9-col mdl-shadow--2dp content-block-detail-container">
-                  <div @click="userDetail.expand = !userDetail.expand" class="content-block content-block-detail-outer mdl-color--white mdl-js-button mdl-js-ripple-effect">
-                     <span class="content-block-detail">
-                        <span class="content-block-inline"><i class="material-icons" role="presentation">person</i>{{userDetail.data.userPhone}}</span>
-                        <span><span>使用中</span><span>{{userDetail.data.usingAmount}}</span></span>
-                        <span><span>遺失</span><span :class="{warning:userDetail.data.lostAmount>0}">{{userDetail.data.lostAmount}}</span></span>
-                        <span><span>累計使用量</span><span>{{userDetail.data.totalUsageAmount}}</span></span>
-                     </span>
-                     <span><i class="material-icons" role="presentation">{{userDetail.expand? 'expand_less' : 'expand_more'}}</i></span>
-                  </div>
-                  <div class="content-block content-block-detail-footer">
-                     <div>
-                        <button type="button" class="mdl-chip detail-active-button">
-                           <span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
-                        </button>
-                        <span class="mdl-chip">
-                           <span class="mdl-chip__text">加入日期: {{userDetail.data.joinedDate | dateToString('only_date')}} ({{(Date.now() - new Date(userDetail.data.joinedDate).valueOf()) | durationToString}})</span>
-                        </span>
-                        <span class="mdl-chip">
-                           <span class="mdl-chip__text">管道: {{userDetail.data.joinedMethod}}</span>
-                        </span>
-                     </div>
-                     <button class="mdl-button mdl-js-button mdl-button--raised detail-edit-button">
-                        編輯
+            <div :class="{'is-expanded':userDetail.expand}" class="mdl-cell mdl-cell--12-col mdl-shadow--2dp content-block-detail-container">
+               <div @click="userDetail.expand = !userDetail.expand" class="content-block content-block-detail-outer mdl-color--white mdl-js-button mdl-js-ripple-effect">
+                  <span class="content-block-detail">
+                     <span class="content-block-inline"><i class="material-icons" role="presentation">person</i>{{userDetail.data.userPhone}}</span>
+                     <span><span>使用中</span><span>{{userDetail.data.usingAmount}}</span></span>
+                     <span><span>遺失</span><span :class="{warning:userDetail.data.lostAmount>0}">{{userDetail.data.lostAmount}}</span></span>
+                     <span><span>累計使用量</span><span>{{userDetail.data.totalUsageAmount}}</span></span>
+                  </span>
+                  <span><i class="material-icons" role="presentation">{{userDetail.expand? 'expand_less' : 'expand_more'}}</i></span>
+               </div>
+               <div class="content-block content-block-detail-footer">
+                  <div>
+                     <button type="button" class="mdl-chip detail-active-button">
+                        <span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
                      </button>
+                     <span class="mdl-chip">
+                        <span class="mdl-chip__text">加入日期: {{userDetail.data.joinedDate | dateToString('only_date')}} ({{(Date.now() - new Date(userDetail.data.joinedDate).valueOf()) | durationToString}})</span>
+                     </span>
+                     <span class="mdl-chip">
+                        <span class="mdl-chip__text">管道: {{userDetail.data.joinedMethod}}</span>
+                     </span>
                   </div>
+                  <button class="mdl-button mdl-js-button mdl-button--raised detail-edit-button">
+                     編輯
+                  </button>
                </div>
             </div>
             <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
@@ -457,32 +461,30 @@
       </section>
       <section v-if="container.show" :class="{'is-display':containerDetail.show}" id="container-detail">
          <div class="mdl-grid main-content">
-            <div class="mdl-cell mdl-cell--12-col mdl-grid content-block-detail-outer-container">
-               <div :class="{'is-expanded':containerDetail.expand}" class="mdl-cell mdl-cell--9-col mdl-shadow--2dp content-block-detail-container">
-                  <div @click="containerDetail.expand = !containerDetail.expand" class="content-block content-block-detail-outer mdl-color--white mdl-js-button mdl-js-ripple-effect">
-                     <span class="content-block-detail">
-                        <span class="content-block-inline"><span :class="'container-' + containerDetail.data.containerType.code" class="goodtogo-icons"></span>{{containerDetail.data.containerID}}　{{containerDetail.data.containerType.txt}}</span>
-                        <span><span>循環次數</span><span>{{containerDetail.data.reuseTime}}</span></span>
-                        <span class="mdl-chip">
-                           <span class="mdl-chip__text">{{containerDetail.data.status}}</span>
-                        </span>
-                        <span><span>@</span><span>{{containerDetail.data.bindedUser}}</span></span>
+            <div :class="{'is-expanded':containerDetail.expand}" class="mdl-cell mdl-cell--12-col mdl-shadow--2dp content-block-detail-container">
+               <div @click="containerDetail.expand = !containerDetail.expand" class="content-block content-block-detail-outer mdl-color--white mdl-js-button mdl-js-ripple-effect">
+                  <span class="content-block-detail">
+                     <span class="content-block-inline"><span :class="'container-' + containerDetail.data.containerType.code" class="goodtogo-icons"></span>{{containerDetail.data.containerID}}　{{containerDetail.data.containerType.txt}}</span>
+                     <span><span>循環次數</span><span>{{containerDetail.data.reuseTime}}</span></span>
+                     <span class="mdl-chip">
+                        <span class="mdl-chip__text">{{containerDetail.data.status}}</span>
                      </span>
-                     <span><i class="material-icons" role="presentation">{{userDetail.expand? 'expand_less' : 'expand_more'}}</i></span>
-                  </div>
-                  <div class="content-block content-block-detail-footer">
-                     <div>
-                        <button type="button" class="mdl-chip detail-active-button">
-                           <span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
-                        </button>
-                        <span class="mdl-chip">
-                           <span class="mdl-chip__text">啟用日期: {{containerDetail.data.joinedDate | dateToString('only_date')}} ({{(Date.now() - new Date(containerDetail.data.joinedDate).valueOf()) | durationToString}})</span>
-                        </span>
-                     </div>
-                     <button class="mdl-button mdl-js-button mdl-button--raised detail-edit-button">
-                        <span class="mdl-chip__text">編輯</span>
+                     <span><span>@</span><span>{{containerDetail.data.bindedUser}}</span></span>
+                  </span>
+                  <span><i class="material-icons" role="presentation">{{userDetail.expand? 'expand_less' : 'expand_more'}}</i></span>
+               </div>
+               <div class="content-block content-block-detail-footer">
+                  <div>
+                     <button type="button" class="mdl-chip detail-active-button">
+                        <span class="mdl-chip__text">Active<i class="material-icons" role="presentation">expand_more</i></span>
                      </button>
+                     <span class="mdl-chip">
+                        <span class="mdl-chip__text">啟用日期: {{containerDetail.data.joinedDate | dateToString('only_date')}} ({{(Date.now() - new Date(containerDetail.data.joinedDate).valueOf()) | durationToString}})</span>
+                     </span>
                   </div>
+                  <button class="mdl-button mdl-js-button mdl-button--raised detail-edit-button">
+                     <span class="mdl-chip__text">編輯</span>
+                  </button>
                </div>
             </div>
             <div class="mdl-cell mdl-cell--12-col content-title">
@@ -573,17 +575,15 @@
       </section>
       <section v-if="delivery.show" :class="{'is-display':deliveryDetail.show}" id="delivery-detail">
          <div class="mdl-grid main-content">
-            <div class="mdl-cell mdl-cell--12-col mdl-grid content-block-detail-outer-container">
-               <div class="mdl-cell mdl-cell--9-col mdl-shadow--2dp content-block-detail-container is-expanded">
-                  <div class="content-block content-block-detail-outer mdl-color--white">
-                     <span class="content-block-detail">
-                        <span class="content-block-inline"><span class="goodtogo-icons container-1"></span>#017　16oz杯子</span>
-                        <span class="mdl-chip">
-                           <span class="mdl-chip__text">使用中</span>
-                        </span>
-                        <p>2018-07-02 上午 10:00</br>由 0921630931 建立</p>
+            <div class="mdl-cell mdl-cell--12-col mdl-shadow--2dp content-block-detail-container is-expanded">
+               <div class="content-block content-block-detail-outer mdl-color--white">
+                  <span class="content-block-detail">
+                     <span class="content-block-inline"><span class="goodtogo-icons container-1"></span>#017　16oz杯子</span>
+                     <span class="mdl-chip">
+                        <span class="mdl-chip__text">使用中</span>
                      </span>
-                  </div>
+                     <p>2018-07-02 上午 10:00</br>由 0921630931 建立</p>
+                  </span>
                </div>
             </div>
             <div class="mdl-cell mdl-cell--12-col content-title">
