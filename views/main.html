@@ -422,7 +422,7 @@
                      <th @click="sortList('toUsedAmount')" v-html="showKeySorting('待使用', 'toUsedAmount')"></th>
                      <th @click="sortList('usingAmount')" v-html="showKeySorting('使用中', 'usingAmount')"></th>
                      <th @click="sortList('returnedAmount')" v-html="showKeySorting('已歸還', 'returnedAmount')"></th>
-                     <!-- <th>待清洗</th> -->
+                     <th @click="sortList('toCleanAmount')" v-html="showKeySorting('待清洗', 'toCleanAmount')"></th>
                      <th @click="sortList('toDeliveryAmount')" v-html="showKeySorting('待配送', 'toDeliveryAmount')"></th>
                      <th @click="sortList('toSignAmount')" v-html="showKeySorting('待簽收', 'toSignAmount')"></th>
                      <th @click="sortList('inStorageAmount')" v-html="showKeySorting('庫存', 'inStorageAmount')"></th>
@@ -441,7 +441,7 @@
                      <td>{{aContainerType.toUsedAmount}}</td>
                      <td>{{aContainerType.usingAmount}}</td>
                      <td>{{aContainerType.returnedAmount}}</td>
-                     <!-- <td>{{aContainerType.toCleanAmount}}</td> -->
+                     <td>{{aContainerType.toCleanAmount}}</td>
                      <td>{{aContainerType.toDeliveryAmount}}</td>
                      <td>{{aContainerType.toSignAmount}}</td>
                      <td>{{aContainerType.inStorageAmount}}</td>
