@@ -520,7 +520,7 @@ section.disabled {
     display: block;
     margin: 0;
     user-select: none;
-    position: fixed;
+    position: sticky;
     width: 100%;
     bottom: 16px;
     left: 0;

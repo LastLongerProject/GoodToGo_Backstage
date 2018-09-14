@@ -48,7 +48,7 @@ function appInit(window) {
         if (!table) return;
         var table_box = table.getBoundingClientRect();
         var rawHeight = (realActiveSection !== "user-detail" ? 48 : 65);
-        var rawCapacity = Math.floor((window.innerHeight - table_box.top - 44) / rawHeight);
+        var rawCapacity = Math.floor((window.innerHeight - table_box.top - 44 - $("main").scrollTop()) / rawHeight);
         return rawCapacity > 5 ? rawCapacity : 5;
     };
     var dataFilter = function(aData) {
@@ -150,7 +150,7 @@ function appInit(window) {
             listRenderingParamInit();
             app.search.placeholder = (placeholderTxtDict[destination] ? "在「" + placeholderTxtDict[destination] + "」中搜尋" : "搜尋");
             if (!daemon) {
-                $('main').scrollTop(0);
+                $("main").scrollTop(0);
                 if (!test) app[destination].data = data;
                 app.$nextTick(function() {
                     componentHandler.upgradeDom();
@@ -181,7 +181,7 @@ function appInit(window) {
             if (this.showed !== null) this.close();
             app[destination].show = true;
             if (!test) app[destination].data = data;
-            if (this.showed === "search")
+            if (destination === "search")
                 app.$nextTick(function() {
                     componentHandler.upgradeDom();
                     bindKeyUpEvent();
@@ -189,12 +189,13 @@ function appInit(window) {
             else
                 app.$nextTick(function() {
                     setTimeout(function() {
+                        // if (destination === "shopDetail") drawChart(data.chartData);
                         componentHandler.upgradeDom();
                         bindKeyUpEvent();
                     }, 600);
                 });
             this.showed = destination;
-            $('main').scrollTop(0);
+            $("main").scrollTop(0);
         },
         close: function() {
             var showedDetail = this.showed;
@@ -244,11 +245,32 @@ function appInit(window) {
         if (result === "") result += "0";
         return result;
     };
+    var drawChart = function(data) {
+        google.charts.load('current', {
+            'packages': ['corechart']
+        });
+        google.charts.setOnLoadCallback(function() {
+            var dataTable = google.visualization.arrayToDataTable(data);
+            var options = {
+                // title: "歷史每週使用量",
+                // hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+                vAxis: {
+                    minValue: 0
+                }
+            };
+            var chart = new google.visualization.AreaChart($('#chart_div').get(0));
+            chart.draw(dataTable, options);
+            window.drawChart = function() {
+                return chart.draw(dataTable, options);
+            };
+        });
+    };
     var app = new Vue({
         el: "#app",
         mounted: function() {
             var localApp = this;
             $(window).resize(debounce(function() {
+                // window.drawChart();
                 if ($('table').length)
                     localApp.listRendering.rawCapacity = rawCapacityCount(Section.active + (localApp.detailIsOpen ? "-detail" : ""));
             }, 500));

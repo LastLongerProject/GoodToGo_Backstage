@@ -68,9 +68,9 @@
          <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
             <span class="content-block-data"><span><i class="material-icons" role="presentation">store_mall_directory</i>店鋪數量</span><span>{{index.data.summary.storeAmount | numberWithCommas}}</span></span>
          </div>
-         <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
+         <!-- <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
             <span class="content-block-data"><span><i class="material-icons" role="presentation">event</i>活動數量</span><span>{{index.data.summary.activityAmount | numberWithCommas}}</span></span>
-         </div>
+         </div> -->
          <!-- <div class="mdl-cell mdl-cell--12-col content-title">
             <span class="content-title-history"><i class="material-icons" role="presentation">update</i><span>活動總紀錄</span></span>
          </div>
@@ -250,6 +250,9 @@
             <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
                <span class="content-block-data"><span>店鋪遺失</span><span :class="{warning:shopDetail.data.shopLostAmount>0}">{{shopDetail.data.shopLostAmount}}</span></span>
             </div>
+            <!-- <div class="mdl-cell mdl-cell--12-col mdl-color--white mdl-shadow--2dp">
+               <div id="chart_div" style="width:calc(100% - 48px); padding: 16px;"></div>
+            </div> -->
             <div class="mdl-cell mdl-cell--12-col content-title">
                <span class="content-title-history"><i class="material-icons" role="presentation">update</i>使用紀錄</span>
             </div>
