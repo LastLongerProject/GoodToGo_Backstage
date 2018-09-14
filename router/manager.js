@@ -1,18 +1,20 @@
 const Router = require('koa-router');
 const JWT = require('jsonwebtoken');
 const restAPI = require('../models/restAPI');
+const getNavList = require('../models/middleware').getNavList;
 const checkIsLogin = require('../models/middleware').checkIsLogin;
+const checkIsAdmin = require('../models/middleware').checkIsAdmin;
 
 const router = new Router();
 const LANDING_PAGE_URL_DEMO = "/manager/demo";
 const LANDING_PAGE_URL_LIVE = "/manager/dashboard";
 
 function redirect(ctx) {
-    var user = ctx.session.user;
-    if (user && user.phone === "0911111111")
-        return ctx.redirect(LANDING_PAGE_URL_DEMO);
-    else
-        return ctx.redirect(LANDING_PAGE_URL_LIVE);
+    // var user = ctx.session.user;
+    // if (user && user.phone === "0911111111")
+    //     return ctx.redirect(LANDING_PAGE_URL_DEMO);
+    // else
+    return ctx.redirect(LANDING_PAGE_URL_LIVE);
 }
 
 router.get('/login', async ctx => {
@@ -44,8 +46,10 @@ router.get('/', async ctx => {
     redirect(ctx);
 });
 
-router.get('/dashboard', async ctx => {
-    await ctx.render('main');
+router.get('/dashboard', checkIsAdmin, async ctx => {
+    await ctx.render('main', {
+        navList: getNavList(ctx.session.user)
+    });
 });
 
 router.get('/demo', async ctx => {

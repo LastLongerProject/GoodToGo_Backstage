@@ -39,11 +39,18 @@
             <%- user.name %></span>
       </header>
       <nav class="mdl-navigation navigation">
-         <a :class="{'is-active':index.show}" @click="navClickListener('index')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#index"><i class="material-icons" role="presentation">home</i>首頁</a>
-         <a :class="{'is-active':shop.show}" @click="navClickListener('shop')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#shop"><i class="material-icons" role="presentation">store_mall_directory</i>店鋪</a>
+         <% for (var aLink in navList) { %>
+         <a :class=<%- "{'is-active':" + navList[aLink].id + ".show}" %> @click=
+            <%- "navClickListener('" + navList[aLink].id + "')" %> class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href=
+            <%- "'#" + navList[aLink].id + "'" %>><i class="material-icons" role="presentation">
+               <%- navList[aLink].icon %></i>
+            <%- navList[aLink].txt %></a>
+         <% } %>
+         <!-- <a :class="{'is-active':index.show}" @click="navClickListener('index')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#index"><i class="material-icons" role="presentation">home</i>首頁</a> -->
+         <!-- <a :class="{'is-active':shop.show}" @click="navClickListener('shop')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#shop"><i class="material-icons" role="presentation">store_mall_directory</i>店鋪</a> -->
          <!-- <a :class="{'is-active':activity.show}" @click="navClickListener('activity')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#activity"><i class="material-icons" role="presentation">event</i>活動</a> -->
-         <a :class="{'is-active':user.show}" @click="navClickListener('user')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#user"><i class="material-icons" role="presentation">supervisor_account</i>使用者</a>
-         <a :class="{'is-active':container.show}" @click="navClickListener('container')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#container"><i class="material-icons" role="presentation">local_drink</i>容器</a>
+         <!-- <a :class="{'is-active':user.show}" @click="navClickListener('user')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#user"><i class="material-icons" role="presentation">supervisor_account</i>使用者</a> -->
+         <!-- <a :class="{'is-active':container.show}" @click="navClickListener('container')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#container"><i class="material-icons" role="presentation">local_drink</i>容器</a> -->
          <!-- <a :class="{'is-active':delivery.show}" @click="navClickListener('delivery')" class="mdl-navigation__link mdl-js-button mdl-js-ripple-effect drawer-link" href="#delivery"><i class="material-icons" role="presentation">local_shipping</i>配送</a> -->
       </nav>
    </div>
@@ -363,7 +370,7 @@
                </div>
             </div>
             <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">
-               <span class="content-block-data"><span>本週使用量</span><span :class="{warning:userDetail.data.recentAmountPercentage<0}">{{userDetail.data.recentAmount}}<span class="data-percentage" v-html="numberToPercentage(userDetail.data.recentAmountPercentage, 'withArrow')"></span></span>
+               <span class="content-block-data"><span>當週使用量</span><span :class="{warning:userDetail.data.recentAmountPercentage<0}">{{userDetail.data.recentAmount}}<span class="data-percentage" v-html="numberToPercentage(userDetail.data.recentAmountPercentage, 'withArrow')"></span></span>
                </span>
             </div>
             <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-phone mdl-cell--4-col-tablet mdl-color--white mdl-shadow--2dp content-block">

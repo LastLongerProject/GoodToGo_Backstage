@@ -7,7 +7,6 @@
         var daemon = option.daemon || false;
         if (!daemon) startLoading();
         var requestUrl = "/manager/data/" + page;
-        console.log(requestUrl);
         pendingReq = $.ajax(requestUrl, {
                 headers: {
                     Accept: "application/json; charset=utf-8"
@@ -36,8 +35,6 @@
     function requestDataDemo(page, cb, option) {
         if (pendingReq) clearTimeout(pendingReq);
         startLoading();
-        var requestUrl = "/manager/data/" + page;
-        console.log(requestUrl);
         pendingReq = setTimeout(function() {
             pendingReq = null;
             stopLoading();
