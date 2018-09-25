@@ -286,13 +286,18 @@ function appInit(window) {
                 if ($('table').length) {
                     localApp.listRendering.rawCapacity = getListRenderingRawCapacity(Section.active + (localApp.detailIsOpen ? "-detail" : ""));
                     localApp.listRendering.dataLength = getListRenderingDataLength();
+                    localApp.$nextTick(function() {
+                        componentHandler.upgradeDom();
+                    });
                 }
             }, 500));
         },
         updated: function() {
             this.listRendering.rawCapacity = getListRenderingRawCapacity(Section.active + (this.detailIsOpen ? "-detail" : ""));
             this.listRendering.dataLength = getListRenderingDataLength();
-            componentHandler.upgradeDom();
+            this.$nextTick(function() {
+                componentHandler.upgradeDom();
+            });
         },
         filters: {
             numberWithCommas: function(number) {
