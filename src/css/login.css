@@ -11,23 +11,23 @@ img {
     margin: 0 10%;
 }
 
-form {
+div#login {
     width: 70vw;
     max-width: 400px;
     margin: 0 auto;
 }
 
-form div {
+div#login div {
     width: 100%;
     padding: 2vh 0;
 }
 
-form div.form-header {
+div#login div.form-header {
     padding: 0;
     border-bottom: 5px solid #FFCD14;
 }
 
-form div p {
+div#login div p {
     width: 100%;
     padding: 0;
     margin: 1vh 0 2.5vh 0;
@@ -36,6 +36,26 @@ form div p {
     font-size: 2em;
     text-align: center;
     line-height: 1;
+}
+
+div#login div.err-msg {
+    width: calc(100% - 32px);
+    padding: 12px;
+    margin: 16px auto;
+    box-sizing: border-box;
+    background-color: whitesmoke;
+}
+
+div#login div.err-msg h1,
+div#login div.err-msg p {
+    width: 100%;
+    padding: 0;
+    margin: 1vh 0;
+    color: #2c3e50;
+    font-weight: normal;
+    text-align: center;
+    line-height: 1;
+    word-wrap: break-word;
 }
 
 form div label {

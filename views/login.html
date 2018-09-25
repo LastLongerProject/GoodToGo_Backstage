@@ -1,21 +1,33 @@
 <link rel="stylesheet" href="assets/css/login.css">
-<div class="login">
-    <form action="/manager/login" method="POST">
-        <input type="hidden" name="_csrf" value="<%= csrf %>">
-        <img src="assets/img/logo.png" alt="logo">
-        <div class="form-header">
-            <p>管　理　系　統</p>
-        </div>
-        <div>
+<div id="login">
+   <img src="assets/img/logo.png" alt="logo">
+   <div class="form-header">
+      <p>管　理　系　統</p>
+   </div>
+   <% if (error) { %>
+      <div class="err-msg">
+         <h1><%= error.status %></h1>
+         <p><%= error.message %></p>
+      </div>
+      <script>
+         setTimeout(function(){
+            window.location = "/manager/login";
+         }, 2000);
+      </script>
+   <% } else { %>
+      <form action="/manager/login" method="POST">
+         <input type="hidden" name="_csrf" value="<%= csrf %>">
+         <div>
             <label for="user">Username:</label>
             <input type="tel" id="user" name="user" placeholder="請輸入手機號碼" pattern="^09[0-9]{8}" required>
-        </div>
-        <div>
+         </div>
+         <div>
             <label for="pass">Password:</label>
             <input type="password" id="pass" name="pass" placeholder="請輸入密碼">
-        </div>
-        <div>
+         </div>
+         <div>
             <input type="submit" id="submit" value="登入">
-        </div>
-    </form>
+         </div>
+      </form>
+   <% } %>
 </div>

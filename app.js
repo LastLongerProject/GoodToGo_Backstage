@@ -132,11 +132,31 @@ function errHandler() {
             await next();
         } catch (error) {
             if (ctx.accepts('html')) {
-                debugErr("Err [Response_html] | ", error);
-                await ctx.render('error', {
-                    status: error.status || error.statusCode || 500,
-                    message: error.message || "something wrong"
-                });
+                if (error.hasOwnProperty("name") && error.name === "StatusCodeError") {
+                    let response = error.error;
+                    if (response.code === "D006")
+                        await ctx.render('login', {
+                            error: {
+                                status: "密碼錯誤",
+                                message: "請重新登入"
+                            }
+                        });
+                    else
+                        await ctx.render('login', {
+                            error: {
+                                status: response.code,
+                                message: response.message || "something wrong"
+                            }
+                        });
+                } else {
+                    debugErr("Err [Response_html] | ", error);
+                    await ctx.render('login', {
+                        error: {
+                            status: error.status || error.statusCode || 500,
+                            message: error.message || "something wrong"
+                        }
+                    });
+                }
             } else
                 switch (error.status) {
                     case 400:
