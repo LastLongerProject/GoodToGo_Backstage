@@ -195,13 +195,6 @@
             </table>
          </div>
          <div class="mdl-cell mdl-cell--12-col switcher-spacer"></div>
-         <div tabindex="-1" v-show="listRendering.rawCapacity < shopList.length" class="table-page-switcher">
-            <div class="table-page-switcher-container">
-               <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
-               <span>{{listRendering.baseIndex}}｜{{Math.ceil(shopList.length / listRendering.rawCapacity)}}</span>
-               <span :class="{disabled: listRendering.baseIndex === Math.ceil(shopList.length / listRendering.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
-            </div>
-         </div>
       </section>
       <section v-if="shop.show" :class="{'is-display':shopDetail.show}" id="shop-detail">
          <div class="mdl-grid main-content">
@@ -284,13 +277,6 @@
                </table>
             </div>
             <div class="mdl-cell mdl-cell--12-col switcher-spacer"></div>
-            <div tabindex="-1" v-show="listRendering.rawCapacity < shopDetailHistory.length" class="table-page-switcher">
-               <div class="table-page-switcher-container">
-                  <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
-                  <span>{{listRendering.baseIndex}}｜{{Math.ceil(shopDetailHistory.length / listRendering.rawCapacity)}}</span>
-                  <span :class="{disabled: listRendering.baseIndex === Math.ceil(shopDetailHistory.length / listRendering.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
-               </div>
-            </div>
          </div>
       </section>
       <section v-if="activity.show" class="mdl-grid main-content disabled" id="activity">
@@ -335,13 +321,6 @@
             </table>
          </div>
          <div class="mdl-cell mdl-cell--12-col switcher-spacer"></div>
-         <div tabindex="-1" v-show="listRendering.rawCapacity < userList.length" class="table-page-switcher">
-            <div class="table-page-switcher-container">
-               <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
-               <span>{{listRendering.baseIndex}}｜{{Math.ceil(userList.length / listRendering.rawCapacity)}}</span>
-               <span :class="{disabled: listRendering.baseIndex === Math.ceil(userList.length / listRendering.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
-            </div>
-         </div>
       </section>
       <section v-if="user.show" :class="{'is-display':userDetail.show}" id="user-detail">
          <div class="mdl-grid main-content">
@@ -413,13 +392,6 @@
                </table>
             </div>
             <div class="mdl-cell mdl-cell--12-col switcher-spacer"></div>
-            <div tabindex="-1" v-show="listRendering.rawCapacity < userDetailHistory.length" class="table-page-switcher">
-               <div class="table-page-switcher-container">
-                  <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
-                  <span>{{listRendering.baseIndex}}｜{{Math.ceil(userDetailHistory.length / listRendering.rawCapacity)}}</span>
-                  <span :class="{disabled: listRendering.baseIndex === Math.ceil(userDetailHistory.length / listRendering.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
-               </div>
-            </div>
          </div>
       </section>
       <section v-if="container.show" :class="{'is-hide':containerDetail.show}" class="mdl-grid main-content" id="container">
@@ -461,13 +433,6 @@
             </table>
          </div>
          <div class="mdl-cell mdl-cell--12-col switcher-spacer"></div>
-         <div tabindex="-1" v-show="listRendering.rawCapacity < container.data.list.length" class="table-page-switcher">
-            <div class="table-page-switcher-container">
-               <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
-               <span>{{listRendering.baseIndex}}｜{{Math.ceil(container.data.list.length / listRendering.rawCapacity)}}</span>
-               <span :class="{disabled: listRendering.baseIndex === Math.ceil(container.data.list.length / listRendering.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
-            </div>
-         </div>
       </section>
       <section v-if="container.show" :class="{'is-display':containerDetail.show}" id="container-detail">
          <div class="mdl-grid main-content">
@@ -528,13 +493,6 @@
                </table>
             </div>
             <div class="mdl-cell mdl-cell--12-col switcher-spacer"></div>
-            <div tabindex="-1" v-show="listRendering.rawCapacity < containerDetailHistory.length" class="table-page-switcher">
-               <div class="table-page-switcher-container">
-                  <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
-                  <span>{{listRendering.baseIndex}}｜{{Math.ceil(containerDetailHistory.length / listRendering.rawCapacity)}}</span>
-                  <span :class="{disabled: listRendering.baseIndex === Math.ceil(containerDetailHistory.length / listRendering.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
-               </div>
-            </div>
          </div>
       </section>
       <section v-if="delivery.show" :class="{'is-hide':containerDetail.show}" class="mdl-grid main-content" id="delivery">
@@ -638,6 +596,13 @@
          </div>
       </section>
    </main>
+   <div tabindex="-1" v-show="listRendering.rawCapacity < listRendering.dataLength" class="table-page-switcher">
+      <div class="table-page-switcher-container">
+         <span :class="{disabled: listRendering.baseIndex === 1}" @click="flipPage('last')"><i class="material-icons" role="presentation">navigate_before</i></span>
+         <span>{{listRendering.baseIndex}}｜{{Math.ceil(listRendering.dataLength / listRendering.rawCapacity)}}</span>
+         <span :class="{disabled: listRendering.baseIndex === Math.ceil(listRendering.dataLength / listRendering.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
+      </div>
+   </div>
    <div id="toast" class="mdl-js-snackbar mdl-snackbar">
       <div class="mdl-snackbar__text"></div>
       <button class="mdl-snackbar__action" type="button"></button>

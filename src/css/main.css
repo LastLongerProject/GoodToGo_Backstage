@@ -233,7 +233,7 @@ header.header {
 }
 
 #search-detail .content-block.more-result {
-    cursor: context-menu;
+    cursor: default;
 }
 
 .content-block .content-block-inline,
@@ -520,10 +520,11 @@ section.disabled {
     display: block;
     margin: 0;
     user-select: none;
-    position: sticky;
+    position: fixed;
     width: 100%;
     bottom: 16px;
     left: 0;
+    z-index: 2;
 }
 
 .table-page-switcher-container {
@@ -549,7 +550,7 @@ section.disabled {
 }
 
 .table-page-switcher-container span.disabled {
-    cursor: context-menu;
+    cursor: default;
 }
 
 .table-page-switcher-container span.disabled i {
@@ -557,7 +558,7 @@ section.disabled {
 }
 
 .switcher-spacer {
-    height: 4px;
+    height: 12px;
 }
 
 @media screen and (min-width: 1025px) {
@@ -569,7 +570,7 @@ section.disabled {
         transform: translateX(calc(240px - 100vw));
     }
 
-    section.main-content .table-page-switcher {
+    .table-page-switcher {
         left: 240px;
         width: calc(100vw - 240px);
     }

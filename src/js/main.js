@@ -43,7 +43,7 @@ function appInit(window) {
                 return "(" + parseFloat(number * 100).toFixed(1) + "%)";
         }
     };
-    var rawCapacityCount = function(realActiveSection) {
+    var getListRenderingRawCapacity = function(realActiveSection) {
         var table = $("#" + realActiveSection).find('tbody').get(0);
         if (!table) return;
         var table_box = table.getBoundingClientRect();
@@ -51,6 +51,18 @@ function appInit(window) {
         var rawCapacity = Math.floor((window.innerHeight - table_box.top - 44 - $("main").scrollTop()) / rawHeight);
         return rawCapacity > 5 ? rawCapacity : 5;
     };
+    var getListRenderingDataLength = function() {
+        if (Detail.showed !== null) {
+            if (Detail.showed === "shopDetail") return app.shopDetailHistory.length;
+            else if (Detail.showed === "userDetail") return app.userDetailHistory.length;
+            else if (Detail.showed === "containerDetail") return app.containerDetailHistory.length;
+        } else {
+            if (Section.active === "shop") return app.shopList.length;
+            else if (Section.active === "user") return app.userList.length;
+            else if (Section.active === "container") return app.container.data.list.length;
+        }
+        return -1;
+    }
     var dataFilter = function(aData) {
         if (app.searchRegExp) {
             if (Section.active === "user")
@@ -271,12 +283,15 @@ function appInit(window) {
             var localApp = this;
             $(window).resize(debounce(function() {
                 // window.drawChart();
-                if ($('table').length)
-                    localApp.listRendering.rawCapacity = rawCapacityCount(Section.active + (localApp.detailIsOpen ? "-detail" : ""));
+                if ($('table').length) {
+                    localApp.listRendering.rawCapacity = getListRenderingRawCapacity(Section.active + (localApp.detailIsOpen ? "-detail" : ""));
+                    localApp.listRendering.dataLength = getListRenderingDataLength();
+                }
             }, 500));
         },
         updated: function() {
-            this.listRendering.rawCapacity = rawCapacityCount(Section.active + (this.detailIsOpen ? "-detail" : ""));
+            this.listRendering.rawCapacity = getListRenderingRawCapacity(Section.active + (this.detailIsOpen ? "-detail" : ""));
+            this.listRendering.dataLength = getListRenderingDataLength();
         },
         filters: {
             numberWithCommas: function(number) {
@@ -471,6 +486,7 @@ function appInit(window) {
             listRendering: {
                 baseIndex: 1,
                 rawCapacity: 1,
+                dataLength: -1,
                 keyToSort: null,
                 sortDir: null
             },
