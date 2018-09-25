@@ -292,6 +292,7 @@ function appInit(window) {
         updated: function() {
             this.listRendering.rawCapacity = getListRenderingRawCapacity(Section.active + (this.detailIsOpen ? "-detail" : ""));
             this.listRendering.dataLength = getListRenderingDataLength();
+            componentHandler.upgradeDom();
         },
         filters: {
             numberWithCommas: function(number) {

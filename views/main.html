@@ -254,8 +254,8 @@
                   <thead>
                      <tr>
                         <th @click="sortList('time', 'time')" v-html="showKeySorting('時間', 'time')" class="mdl-data-table__cell--non-numeric"></th>
-                        <th @click="sortList('serial', 'serial')" v-html="showKeySorting('項目', 'serial')" class="mdl-data-table__cell--non-numeric"></th>
                         <th @click="sortList('action', 'string')" v-html="showKeySorting('狀態', 'action')" class="mdl-data-table__cell--non-numeric"></th>
+                        <th @click="sortList('content', 'string')" v-html="showKeySorting('內容', 'content')" class="mdl-data-table__cell--non-numeric"></th>
                         <th @click="sortList('owner', 'string')" v-html="showKeySorting('擁有者', 'owner')" class="mdl-data-table__cell--non-numeric"></th>
                         <th @click="sortList('by', 'string')" v-html="showKeySorting('經手人', 'by')" class="mdl-data-table__cell--non-numeric"></th>
                      </tr>
@@ -266,10 +266,13 @@
                      </tr>
                   </tbody>
                   <tbody v-else>
-                     <tr v-for="aRecord in shopDetailHistory.slice((listRendering.baseIndex - 1) * listRendering.rawCapacity, listRendering.baseIndex * listRendering.rawCapacity)">
+                     <tr v-for="(aRecord, index) in shopDetailHistory.slice((listRendering.baseIndex - 1) * listRendering.rawCapacity, listRendering.baseIndex * listRendering.rawCapacity)">
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.time | dateToString}}</td>
-                        <td class="mdl-data-table__cell--non-numeric">{{aRecord.serial}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.action}}</td>
+                        <td class="mdl-data-table__cell--non-numeric has-tooltip">
+                           <span :id="'shop-detail-' + index">{{aRecord.content}}</span>
+                           <span class="mdl-tooltip mdl-tooltip--large mdl-tooltip--right" :for="'shop-detail-' + index" v-html="aRecord.contentDetail"></span>
+                        </td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.owner}}</td>
                         <td class="mdl-data-table__cell--non-numeric">{{aRecord.by}}</td>
                      </tr>

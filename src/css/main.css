@@ -265,6 +265,19 @@ td.warning {
     user-select: none;
 }
 
+.content-block-table tbody td span {
+    white-space: pre-wrap;
+}
+
+.content-block-table tbody td.has-tooltip {
+    cursor: context-menu;
+}
+
+.content-block-table span.mdl-tooltip {
+    text-align: left;
+    line-height: 16px;
+}
+
 .content-block-detail,
 .content-block-data {
     display: flex;
@@ -585,6 +598,7 @@ td.table-no-data {
     text-align: center;
 }
 
-div:focus {
+div:focus,
+span:focus {
     outline: none;
 }
