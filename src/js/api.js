@@ -8,23 +8,24 @@
         if (!daemon) startLoading();
         var requestUrl = "/manager/data/" + page;
         pendingReq = $.ajax(requestUrl, {
-                headers: {
-                    Accept: "application/json; charset=utf-8"
-                },
-                dataType: "json",
-                // timeout: 30 * 1000
-            })
+            headers: {
+                Accept: "application/json; charset=utf-8",
+            },
+            dataType: "json",
+            // timeout: 30 * 1000
+        })
             .done(function(data, textStatus, jqXHR) {
                 if (!daemon) stopLoading();
                 cb(data);
             })
             .fail(function(jqXHR, textStatus, errorThrown) {
                 if (jqXHR.responseJSON && jqXHR.responseJSON.code === "B005") {
-                    return window.location.href = $("#logout").attr('href');
+                    return (window.location.href = $("#logout").attr("href"));
                 }
                 if (!daemon) stopLoading();
                 if (jqXHR.statusText !== "abort") {
-                    showErr("[" + jqXHR.status + "]: " + (jqXHR.responseJSON ? jqXHR.responseJSON.message : jqXHR.statusText || "Unknown ERR"));
+                    var txt = jqXHR.responseJSON ? jqXHR.responseJSON.message : jqXHR.statusText || "Unknown ERR";
+                    showErr("[" + jqXHR.status + "]: " + txt);
                 }
             })
             .always(function() {
@@ -53,9 +54,9 @@
     }
 
     function showErr(errMsg) {
-        document.querySelector('#toast').MaterialSnackbar.showSnackbar({
+        document.querySelector("#toast").MaterialSnackbar.showSnackbar({
             message: errMsg,
-            timeout: 4000
+            timeout: 4000,
         });
     }
 
@@ -64,4 +65,4 @@
         if (!window.test) return requestData(page, cb, option);
         else return requestDataDemo(page, cb, option);
     };
-}(window));
+})(window);
