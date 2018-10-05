@@ -363,7 +363,7 @@ function appInit(window) {
                 });
             },
             aRefreshButtonClickListener: function (type) {
-                var typeToRefresh = "/refresh/" + type;
+                var typeToRefresh = "refresh/" + type;
                 requestData(typeToRefresh, function (data) {
                     if (typeof data === "object") data = "Done";
                     window.showToast(data);
