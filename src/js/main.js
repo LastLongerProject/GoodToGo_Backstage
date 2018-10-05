@@ -362,6 +362,15 @@ function appInit(window) {
                     listRenderingParamInit();
                 });
             },
+            aRefreshButtonClickListener: function (type) {
+                var typeToRefresh = "/refresh/" + type;
+                requestData(typeToRefresh, function (data) {
+                    if (typeof data === "object") data = "Done";
+                    window.showToast(data);
+                }, {
+                    method: "PATCH"
+                });
+            },
             closeDetail: function () {
                 Detail.close();
                 cleanSearchBar();
@@ -660,10 +669,9 @@ function appInit(window) {
                 show: false,
 
             },
-            deliveryDetail: {
+            console: {
                 show: false,
-                expand: false,
-
+                data: null
             }
         }
     });

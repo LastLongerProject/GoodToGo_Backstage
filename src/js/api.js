@@ -5,6 +5,7 @@
         if (pendingReq) pendingReq.abort();
         if (!option) option = {};
         var daemon = option.daemon || false;
+        var method = option.method || "GET";
         if (!daemon) startLoading();
         var requestUrl = "/manager/data/" + page;
         pendingReq = $.ajax(requestUrl, {
@@ -12,6 +13,7 @@
                     Accept: "application/json; charset=utf-8",
                 },
                 dataType: "json",
+                method: method
                 // timeout: 30 * 1000
             })
             .done(function (data, textStatus, jqXHR) {
@@ -25,7 +27,7 @@
                 if (!daemon) stopLoading();
                 if (jqXHR.statusText !== "abort") {
                     var txt = jqXHR.responseJSON ? jqXHR.responseJSON.message : jqXHR.statusText || "Unknown ERR";
-                    showErr("[" + jqXHR.status + "]: " + txt);
+                    showToast("[" + jqXHR.status + "]: " + txt);
                 }
             })
             .always(function () {
@@ -53,16 +55,17 @@
         app.loading.txt = "";
     }
 
-    function showErr(errMsg) {
+    function showToast(msg) {
         document.querySelector("#toast").MaterialSnackbar.showSnackbar({
-            message: errMsg,
+            message: msg,
             timeout: 4000,
         });
     }
 
-    window.test = true;
+    window.test = false;
     window.requestData = function (page, cb, option) {
         if (!window.test) return requestData(page, cb, option);
         else return requestDataDemo(page, cb, option);
     };
+    window.showToast = showToast;
 })(window);

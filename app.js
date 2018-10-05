@@ -85,7 +85,7 @@ app.use(async (ctx, next) => {
     ctx.state.demo = false;
     await next();
 });
-app.use(new csrf());
+// app.use(new csrf());
 
 app.use(async (ctx, next) => {
     if (!ctx.session.user) return next();
@@ -177,19 +177,19 @@ function errHandler() {
 }
 
 function regisRedisEvent(redisClient) {
-    redisClient.on('ready', function() {
+    redisClient.on('ready', function () {
         debug('redisDB ready');
     });
 
-    redisClient.on('connect', function() {
+    redisClient.on('connect', function () {
         debug('redisDB connect');
     });
 
-    redisClient.on('reconnecting', function(delay, attempt) {
+    redisClient.on('reconnecting', function (delay, attempt) {
         debug('redisDB reconnecting');
     });
 
-    redisClient.on('error', function(err) {
+    redisClient.on('error', function (err) {
         debugErr('redisDB err ', err);
     });
 }

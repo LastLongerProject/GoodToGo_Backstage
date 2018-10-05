@@ -876,3 +876,11 @@ dialog.dialog div.dialog-content div.dialog-content--second div.detail-list span
     padding: 6px 0;
     line-height: 24px;
 }
+
+button.update-button {
+    background-color: #9bd6e4;
+    color: white;
+    font-weight: normal;
+    float: left;
+    margin-right: 20px;
+}

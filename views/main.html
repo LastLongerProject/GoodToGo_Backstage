@@ -615,6 +615,17 @@
                 <i class="material-icons">add</i>
             </button>
         </section>
+        <section v-if="console.show" class="mdl-grid main-content" id="console">
+            <div class="mdl-cell mdl-cell--12-col">
+                <h4>更新按鈕</h4>
+            </div>
+            <div class="mdl-cell mdl-cell--12-col">
+                <button @click="aRefreshButtonClickListener('store')" class="mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect update-button">更新店鋪清單</button>
+                <button @click="aRefreshButtonClickListener('storeImg/0')" class="mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect update-button">更新店鋪照片</button>
+                <button @click="aRefreshButtonClickListener('container')" class="mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect update-button">更新容器清單</button>
+                <button @click="aRefreshButtonClickListener('containerIcon/0')" class="mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect update-button">更新容器照片</button>
+            </div>
+        </section>
     </main>
     <div tabindex="-1" v-show="listRendering.rawCapacity < listRendering.dataLength" class="table-page-switcher">
         <div class="table-page-switcher-container">
