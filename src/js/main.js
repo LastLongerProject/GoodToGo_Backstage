@@ -1,17 +1,25 @@
-$(window).on('load', function() {
+$(window).on('load', function () {
     if (window.location.pathname !== "/manager/login") {
         $('#loading_main').css('display', 'none');
         appInit(window);
     }
+    var dialog = document.querySelector('dialog');
+    if (!dialog.showModal) {
+        dialogPolyfill.registerDialog(dialog);
+    }
+    dialog.querySelector('.close').addEventListener('click', function () {
+        dialog.close();
+    });
+    window.dialog = dialog;
 });
 
 function debounce(func, delay) {
     var timer = null;
-    return function() {
+    return function () {
         var context = this;
         var args = arguments;
         clearTimeout(timer);
-        timer = setTimeout(function() {
+        timer = setTimeout(function () {
             func.apply(context, args)
         }, delay);
     }
@@ -31,7 +39,7 @@ function appInit(window) {
         arrowDropDown: '<i class="material-icons" role="presentation">arrow_drop_down</i>',
         arrowDropUp: '<i class="material-icons" role="presentation">arrow_drop_up</i>'
     };
-    var numberToPercentage = function(number, option) {
+    var numberToPercentage = function (number, option) {
         if (isNaN(number)) number = 0;
         switch (option) {
             case 'withArrow':
@@ -43,15 +51,26 @@ function appInit(window) {
                 return "(" + parseFloat(number * 100).toFixed(1) + "%)";
         }
     };
-    var getListRenderingRawCapacity = function(realActiveSection) {
+    var getListRenderingRawCapacity = function (realActiveSection) {
         var table = $("#" + realActiveSection).find('tbody').get(0);
         if (!table) return;
         var table_box = table.getBoundingClientRect();
-        var rawHeight = (realActiveSection !== "user-detail" ? 48 : 65);
+        var rawHeight;
+        switch (realActiveSection) {
+            case "user-detail":
+                rawHeight = 65;
+                break;
+            case "delivery":
+                rawHeight = 56;
+                break;
+            default:
+                rawHeight = 48;
+                break;
+        }
         var rawCapacity = Math.floor((window.innerHeight - table_box.top - 44 - $("main").scrollTop()) / rawHeight);
         return rawCapacity > 5 ? rawCapacity : 5;
     };
-    var getListRenderingDataLength = function() {
+    var getListRenderingDataLength = function () {
         if (Detail.showed !== null) {
             if (Detail.showed === "shopDetail") return app.shopDetailHistory.length;
             else if (Detail.showed === "userDetail") return app.userDetailHistory.length;
@@ -63,7 +82,7 @@ function appInit(window) {
         }
         return -1;
     }
-    var dataFilter = function(aData) {
+    var dataFilter = function (aData) {
         if (app.searchRegExp) {
             if (Section.active === "user")
                 return aData.id.match(app.searchRegExp);
@@ -74,11 +93,11 @@ function appInit(window) {
         }
     };
     var dataSorter = {
-        get: function(key) {
+        get: function (key) {
             if (this[key]) return this[key];
             else return this.number;
         },
-        string: function(dataA, dataB) {
+        string: function (dataA, dataB) {
             dataA = dataA[app.listRendering.keyToSort].toLowerCase();
             dataB = dataB[app.listRendering.keyToSort].toLowerCase();
             if (app.listRendering.sortDir) {
@@ -90,11 +109,11 @@ function appInit(window) {
             }
             return 0;
         },
-        number: function(dataA, dataB) {
+        number: function (dataA, dataB) {
             if (app.listRendering.sortDir) return dataB[app.listRendering.keyToSort] - dataA[app.listRendering.keyToSort];
             else return dataA[app.listRendering.keyToSort] - dataB[app.listRendering.keyToSort];
         },
-        numberString: function(dataA, dataB) {
+        numberString: function (dataA, dataB) {
             try {
                 dataA = parseInt(dataA[app.listRendering.keyToSort]);
                 dataB = parseInt(dataB[app.listRendering.keyToSort]);
@@ -104,20 +123,20 @@ function appInit(window) {
                 return 1;
             }
         },
-        serial: function(dataA, dataB) {
+        serial: function (dataA, dataB) {
             dataA = parseInt(dataA[app.listRendering.keyToSort].slice(1));
             dataB = parseInt(dataB[app.listRendering.keyToSort].slice(1));
             if (app.listRendering.sortDir) return dataB - dataA;
             else return dataA - dataB;
         },
-        time: function(dataA, dataB) {
+        time: function (dataA, dataB) {
             dataA = new Date(dataA[app.listRendering.keyToSort]);
             dataB = new Date(dataB[app.listRendering.keyToSort]);
             if (app.listRendering.sortDir) return dataB - dataA;
             else return dataA - dataB;
         }
     };
-    var bindKeyUpEvent = function() {
+    var bindKeyUpEvent = function () {
         if (!app.detailIsOpen) var tablePageSwitcher = $('.table-page-switcher');
         else {
             var detailId = Detail.showed.slice(0, Detail.showed.indexOf("Detail")) + "-detail";
@@ -126,7 +145,7 @@ function appInit(window) {
         if (tablePageSwitcher.length) {
             tablePageSwitcher.focus();
             tablePageSwitcher.off("keyup");
-            tablePageSwitcher.keyup(function(event) {
+            tablePageSwitcher.keyup(function (event) {
                 if (event.key === "ArrowLeft") {
                     app.flipPage("last");
                 } else if (event.key === "ArrowRight") {
@@ -135,11 +154,11 @@ function appInit(window) {
             });
         }
     };
-    var cleanSearchBar = function() {
+    var cleanSearchBar = function () {
         $('.searchbar-field .mdl-textfield__input').val('').parent().removeClass('is-focused').removeClass('is-dirty');
         app.search.txt = "";
     };
-    var listRenderingParamInit = function(option) {
+    var listRenderingParamInit = function (option) {
         var dataToInit = {
             baseIndex: 1,
             sortDir: null,
@@ -154,7 +173,7 @@ function appInit(window) {
         get active() {
             return this.showed;
         },
-        open: function(destination, data, daemon) {
+        open: function (destination, data, daemon) {
             if (!(destination in app)) return;
             if (this.showed !== null) this.close();
             app[destination].show = true;
@@ -164,13 +183,13 @@ function appInit(window) {
             if (!daemon) {
                 $("main").scrollTop(0);
                 if (!test) app[destination].data = data;
-                app.$nextTick(function() {
+                app.$nextTick(function () {
                     componentHandler.upgradeDom();
                     bindKeyUpEvent();
                 });
             } else {
                 if (!test)
-                    requestData(destination, function(data) {
+                    requestData(destination, function (data) {
                         app[destination].data = data;
                     }, {
                         daemon: true
@@ -178,7 +197,7 @@ function appInit(window) {
             }
             this.showed = destination;
         },
-        close: function() {
+        close: function () {
             var showedSection = this.showed;
             if (showedSection !== null) {
                 app[showedSection].show = false;
@@ -188,19 +207,19 @@ function appInit(window) {
     };
     var Detail = {
         showed: null,
-        open: function(destination, data) {
+        open: function (destination, data) {
             if (!(destination in app)) return;
             if (this.showed !== null) this.close();
             app[destination].show = true;
             if (!test) app[destination].data = data;
             if (destination === "search")
-                app.$nextTick(function() {
+                app.$nextTick(function () {
                     componentHandler.upgradeDom();
                     bindKeyUpEvent();
                 });
             else
-                app.$nextTick(function() {
-                    setTimeout(function() {
+                app.$nextTick(function () {
+                    setTimeout(function () {
                         // if (destination === "shopDetail") drawChart(data.chartData);
                         componentHandler.upgradeDom();
                         bindKeyUpEvent();
@@ -209,7 +228,7 @@ function appInit(window) {
             this.showed = destination;
             $("main").scrollTop(0);
         },
-        close: function() {
+        close: function () {
             var showedDetail = this.showed;
             if (showedDetail !== null) {
                 if (showedDetail === "search") {
@@ -221,18 +240,18 @@ function appInit(window) {
                     app[showedDetail].show = false;
                 }
                 this.showed = null;
-                app.$nextTick(function() {
-                    setTimeout(function() {
+                app.$nextTick(function () {
+                    setTimeout(function () {
                         bindKeyUpEvent();
                     }, 600);
                 });
             }
         }
     };
-    var durationToString = function(duration) {
+    var durationToString = function (duration) {
         var ctr = 0;
         var result = "";
-        var addString = function(num, txt) {
+        var addString = function (num, txt) {
             ctr++;
             result += (ctr === 2 ? " " : "") + num + " " + txt;
         };
@@ -257,11 +276,11 @@ function appInit(window) {
         if (result === "") result += "0";
         return result;
     };
-    var drawChart = function(data) {
+    var drawChart = function (data) {
         google.charts.load('current', {
             'packages': ['corechart']
         });
-        google.charts.setOnLoadCallback(function() {
+        google.charts.setOnLoadCallback(function () {
             var dataTable = google.visualization.arrayToDataTable(data);
             var options = {
                 // title: "歷史每週使用量",
@@ -272,44 +291,44 @@ function appInit(window) {
             };
             var chart = new google.visualization.AreaChart($('#chart_div').get(0));
             chart.draw(dataTable, options);
-            window.drawChart = function() {
+            window.drawChart = function () {
                 return chart.draw(dataTable, options);
             };
         });
     };
     var app = new Vue({
         el: "#app",
-        mounted: function() {
+        mounted: function () {
             var localApp = this;
-            $(window).resize(debounce(function() {
+            $(window).resize(debounce(function () {
                 // window.drawChart();
                 if ($('table').length) {
                     localApp.listRendering.rawCapacity = getListRenderingRawCapacity(Section.active + (localApp.detailIsOpen ? "-detail" : ""));
                     localApp.listRendering.dataLength = getListRenderingDataLength();
-                    localApp.$nextTick(function() {
+                    localApp.$nextTick(function () {
                         componentHandler.upgradeDom();
                     });
                 }
             }, 500));
         },
-        updated: function() {
+        updated: function () {
             this.listRendering.rawCapacity = getListRenderingRawCapacity(Section.active + (this.detailIsOpen ? "-detail" : ""));
             this.listRendering.dataLength = getListRenderingDataLength();
-            this.$nextTick(function() {
+            this.$nextTick(function () {
                 componentHandler.upgradeDom();
             });
         },
         filters: {
-            numberWithCommas: function(number) {
+            numberWithCommas: function (number) {
                 if (typeof number !== "number") return "0";
                 return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             },
             numberToPercentage: numberToPercentage,
-            durationToString: function(millisecond) {
+            durationToString: function (millisecond) {
                 if (isNaN(millisecond)) return millisecond;
                 return durationToString(moment.duration(millisecond));
             },
-            dateToString: function(date, mode) {
+            dateToString: function (date, mode) {
                 if (date === "尚未歸還") return date;
                 var thisMoment = moment(date);
                 if (!thisMoment.isValid()) return date;
@@ -324,33 +343,33 @@ function appInit(window) {
             }
         },
         methods: {
-            navClickListener: function(destination) {
+            navClickListener: function (destination) {
                 cleanSearchBar();
                 $('.mdl-layout__obfuscator.is-visible').click();
-                requestData(destination, function(data) {
+                requestData(destination, function (data) {
                     Detail.close();
                     Section.open(destination, data);
                 });
             },
-            aRecordClickListener: function(from, id) {
+            aRecordClickListener: function (from, id) {
                 var localApp = this;
                 var detailToShow = from + "Detail";
                 var toRequest = detailToShow + "?id=" + id;
-                requestData(toRequest, function(data) {
+                requestData(toRequest, function (data) {
                     Detail.open(detailToShow, data);
                     tmpDynamicLoadingBaseIndex = localApp.listRendering.baseIndex;
                     cleanSearchBar();
                     listRenderingParamInit();
                 });
             },
-            closeDetail: function() {
+            closeDetail: function () {
                 Detail.close();
                 cleanSearchBar();
                 listRenderingParamInit({
                     baseIndex: tmpDynamicLoadingBaseIndex || 1
                 });
             },
-            searchData: function() {
+            searchData: function () {
                 var txt = this.search.txt;
                 if (txt.length < 1) return;
                 var toRequest = "search?txt=" + txt;
@@ -361,21 +380,21 @@ function appInit(window) {
                 } else {
                     return;
                 }
-                requestData(toRequest, function(data) {
+                requestData(toRequest, function (data) {
                     Detail.open("search", data);
                 });
             },
-            aSearchResultClickListener: function(category, id) {
+            aSearchResultClickListener: function (category, id) {
                 var detailToShow = category + "Detail";
                 if (id === -1) return;
                 var toRequest = detailToShow + "?id=" + id;
-                requestData(toRequest, function(data) {
+                requestData(toRequest, function (data) {
                     Detail.open(detailToShow, data);
                     Section.open(category, data, true);
                     cleanSearchBar();
                 });
             },
-            sortList: function(by, type) {
+            sortList: function (by, type) {
                 if (this.listRendering.sortDir == null) this.listRendering.sortDir = true;
                 else if (by === this.listRendering.keyToSort) this.listRendering.sortDir = !this.listRendering.sortDir;
                 this.listRendering.keyToSort = by;
@@ -383,13 +402,13 @@ function appInit(window) {
                 else sortType = type;
                 this.listRendering.baseIndex = 1;
             },
-            showKeySorting: function(txt, key) {
+            showKeySorting: function (txt, key) {
                 if (key === this.listRendering.keyToSort) {
                     txt += (this.listRendering.sortDir ? icon.arrowDropDown : icon.arrowDropUp);
                 }
                 return txt;
             },
-            flipPage: function(to) {
+            flipPage: function (to) {
                 var dataLength;
                 if (!this.detailIsOpen) {
                     dataLength = this[Section.active + "List"].length;
@@ -406,28 +425,31 @@ function appInit(window) {
                         break;
                 }
             },
-            listMatchCtx: function(data) {
+            listMatchCtx: function (data) {
                 if (this.searchRegExp) {
                     return data.replace(this.searchRegExp, "<strong>$&</strong>");
                 } else {
                     return data;
                 }
             },
-            numberToPercentage: numberToPercentage
+            numberToPercentage: numberToPercentage,
+            openDialog: function () {
+                return window.dialog.showModal();
+            }
         },
         computed: {
-            detailIsOpen: function() {
+            detailIsOpen: function () {
                 return this.search.show || this.shopDetail.show || this.userDetail.show || this.containerDetail.show;
             },
-            searchRegExp: function() {
+            searchRegExp: function () {
                 if (this.search.txt.length > 0) {
                     this.listRendering.baseIndex = 1;
                     var txtArr = this.search.txt.split(" ").filter(
-                        function(ele) {
+                        function (ele) {
                             return ele !== "";
                         }
                     );
-                    txtArr.forEach(function(ele, index, arr) {
+                    txtArr.forEach(function (ele, index, arr) {
                         if (ele.length > 1)
                             arr[index] = ele.split("").join("-*");
                     });
@@ -441,32 +463,32 @@ function appInit(window) {
                     return null;
                 }
             },
-            shopList: function() {
+            shopList: function () {
                 if (this.listRendering.keyToSort === null || this.detailIsOpen) {
                     return this.shop.data.list.filter(dataFilter);
                 } else {
                     return this.shop.data.list.filter(dataFilter).sort(dataSorter.get(sortType));
                 }
             },
-            shopDetailHistory: function() {
+            shopDetailHistory: function () {
                 if (this.listRendering.keyToSort === null || !this.detailIsOpen) {
                     return this.shopDetail.data.history;
                 } else {
                     return this.shopDetail.data.history.sort(dataSorter.get(sortType));
                 }
             },
-            userList: function() {
+            userList: function () {
                 if (this.listRendering.keyToSort === null || this.detailIsOpen) {
                     return this.user.data.list.filter(dataFilter);
                 } else {
                     return this.user.data.list.filter(dataFilter).sort(dataSorter.get(sortType));
                 }
             },
-            userDetailHistory: function() {
+            userDetailHistory: function () {
                 if (this.listRendering.keyToSort === null || !this.detailIsOpen) {
                     return this.userDetail.data.history;
                 } else {
-                    var lastIndex = this.userDetail.data.history.map(function(ele) {
+                    var lastIndex = this.userDetail.data.history.map(function (ele) {
                         return ele.returnTime;
                     }).lastIndexOf("尚未歸還") + 1;
                     if (this.listRendering.keyToSort !== "returnTime")
@@ -476,7 +498,7 @@ function appInit(window) {
                         return this.userDetail.data.history.slice(0, lastIndex).concat(this.userDetail.data.history.slice(lastIndex).sort(dataSorter.get(sortType)));
                 }
             },
-            containerDetailHistory: function() {
+            containerDetailHistory: function () {
                 if (this.listRendering.keyToSort === null || !this.detailIsOpen) {
                     return this.containerDetail.data.history;
                 } else {

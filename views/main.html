@@ -513,100 +513,107 @@
                 <table class="mdl-data-table mdl-js-data-table">
                     <thead>
                         <tr>
-                            <th class="mdl-data-table__cell--non-numeric">編號</th>
-                            <th class="mdl-data-table__cell--non-numeric">名稱</th>
-                            <th class="mdl-data-table__cell--non-numeric">內容</th>
-                            <th class="mdl-data-table__cell--non-numeric">備註</th>
-                            <th>件數</th>
-                            <th class="mdl-data-table__cell--non-numeric">狀態</th>
-                            <th class="mdl-data-table__cell--non-numeric">建立時間</th>
+                            <th class="number-icon-container"></th>
+                            <th class="mdl-data-table__cell--non-numeric" style="width: 200px;">全部配送單</th>
+                            <th class="mdl-data-table__cell--non-numeric">預計配送日</th>
+                            <th>待裝箱</th>
+                            <th>待配送</th>
+                            <th>待簽收</th>
+                            <th>已簽收</th>
+                            <th>異常</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="mdl-data-table__cell--non-numeric">Acrylic (Transparent)</td>
-                            <td class="mdl-data-table__cell--non-numeric">25</td>
-                            <td class="mdl-data-table__cell--non-numeric">$2.90</td>
-                            <td class="mdl-data-table__cell--non-numeric">$2.90</td>
-                            <td>$2.90</td>
-                            <td class="mdl-data-table__cell--non-numeric">$2.90</td>
-                            <td class="mdl-data-table__cell--non-numeric">$2.90</td>
+                            <td class="number-icon-container">
+                                <div class="number-icon"><span>4</span></div>
+                            </td>
+                            <td class="mdl-data-table__cell--non-numeric">布萊恩紅茶</td>
+                            <td class="mdl-data-table__cell--non-numeric">
+                                <span class="big-txt">9/13 (Thu)</span>
+                                <span class="tiny-txt">剩餘 1 天</span>
+                            </td>
+                            <td class="is-checked">✔</td>
+                            <td class="is-checked">✔</td>
+                            <td>4</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><i class="material-icons" role="presentation">expand_more</i></td>
+                        </tr>
+                        <tr class="hide-border-bottom">
+                            <td class="number-icon-container">
+                                <div class="number-icon"><span>4</span></div>
+                            </td>
+                            <td class="mdl-data-table__cell--non-numeric">布萊恩紅茶</td>
+                            <td class="mdl-data-table__cell--non-numeric">
+                                <span class="big-txt">9/13 (Thu)</span>
+                                <span class="tiny-txt">剩餘 1 天</span>
+                            </td>
+                            <td class="is-checked">✔</td>
+                            <td class="is-checked">✔</td>
+                            <td>4</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><i class="material-icons" role="presentation">expand_less</i></td>
+                        </tr>
+                        <tr class="hide-border-top">
+                            <td colspan="9">
+                                <div class="table-row-detail-container">
+                                    <div class="table-row-detail">
+                                        <div class="delivery-overview">
+                                            <div>總量</div>
+                                            <div class="delivery-overview-list">
+                                                <div class="delivery-overview-list-item"><span>12oz 360ml</span><span>6 件</span></div>
+                                                <div class="delivery-overview-list-item"><span>16oz 480ml</span><span>6 件</span></div>
+                                                <div class="delivery-overview-list-item"><span>白蓋</span><span>12 件</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="delivery-boxes">
+                                            <table>
+                                                <tbody>
+                                                    <tr class="delivery-boxes-item mdl-shadow--2dp">
+                                                        <td class="box-name">Box1</td>
+                                                        <td class="box-detail">12oz 360ml*6<br>白蓋*6</td>
+                                                        <td class="box-state"><span>待裝箱</span></td>
+                                                    </tr>
+                                                    <tr class="delivery-boxes-item delivery-boxes-item--spacer">
+                                                    </tr>
+                                                    <tr class="delivery-boxes-item mdl-shadow--2dp">
+                                                        <td class="box-name">大密封箱</td>
+                                                        <td class="box-detail">16oz 480ml*6<br>白蓋*6</td>
+                                                        <td class="box-state"><span>待裝箱</span></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <button @click="openDialog()" class="mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect detail-edit-button">編輯</button>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
-                            <td class="mdl-data-table__cell--non-numeric">Plywood (Birch)</td>
-                            <td class="mdl-data-table__cell--non-numeric">50</td>
-                            <td class="mdl-data-table__cell--non-numeric">$1.25</td>
-                            <td class="mdl-data-table__cell--non-numeric">$1.90</td>
-                            <td>$2.90</td>
-                            <td class="mdl-data-table__cell--non-numeric">$2.90</td>
-                            <td class="mdl-data-table__cell--non-numeric">$2.90</td>
-                        </tr>
-                        <tr>
-                            <td class="mdl-data-table__cell--non-numeric">Laminate (Gold on Blue)</td>
-                            <td class="mdl-data-table__cell--non-numeric">10</td>
-                            <td class="mdl-data-table__cell--non-numeric">$2.35</td>
-                            <td class="mdl-data-table__cell--non-numeric">$2.90</td>
-                            <td>$2.90</td>
-                            <td class="mdl-data-table__cell--non-numeric">$2.90</td>
-                            <td class="mdl-data-table__cell--non-numeric">$2.90</td>
+                            <td class="number-icon-container">
+                                <div class="number-icon"><span>4</span></div>
+                            </td>
+                            <td class="mdl-data-table__cell--non-numeric">布萊恩紅茶</td>
+                            <td class="mdl-data-table__cell--non-numeric">
+                                <span class="big-txt">9/13 (Thu)</span>
+                                <span class="tiny-txt">剩餘 1 天</span>
+                            </td>
+                            <td class="is-checked">✔</td>
+                            <td class="is-checked">✔</td>
+                            <td>4</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><i class="material-icons" role="presentation">expand_more</i></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-        </section>
-        <section v-if="delivery.show" :class="{'is-display':deliveryDetail.show}" id="delivery-detail">
-            <div class="mdl-grid main-content">
-                <div class="mdl-cell mdl-cell--12-col mdl-shadow--2dp content-block-detail-container is-expanded">
-                    <div class="content-block content-block-detail-outer mdl-color--white">
-                        <span class="content-block-detail">
-                            <span class="content-block-inline"><span class="goodtogo-icons container-1"></span>#017　16oz杯子</span>
-                            <span class="mdl-chip">
-                                <span class="mdl-chip__text">使用中</span>
-                            </span>
-                            <p>2018-07-02 上午 10:00<br>由 0921630931 建立</p>
-                        </span>
-                    </div>
-                </div>
-                <div class="mdl-cell mdl-cell--12-col content-title">
-                    <span class="content-title-history"><i class="material-icons" role="presentation">update</i>使用紀錄</span>
-                </div>
-                <div class="mdl-cell mdl-cell--12-col mdl-shadow--2dp content-block-table">
-                    <table class="mdl-data-table mdl-js-data-table">
-                        <thead>
-                            <tr>
-                                <th class="mdl-data-table__cell--non-numeric">時間</th>
-                                <th class="mdl-data-table__cell--non-numeric">狀態</th>
-                                <th class="mdl-data-table__cell--non-numeric">擁有者</th>
-                                <th class="mdl-data-table__cell--non-numeric">經手人</th>
-                                <th class="mdl-data-table__cell--non-numeric">備註</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="mdl-data-table__cell--non-numeric">Acrylic (Transparent)</td>
-                                <td class="mdl-data-table__cell--non-numeric">25</td>
-                                <td class="mdl-data-table__cell--non-numeric">$2.90</td>
-                                <td class="mdl-data-table__cell--non-numeric">$2.90</td>
-                                <td class="mdl-data-table__cell--non-numeric">$2.90</td>
-                            </tr>
-                            <tr>
-                                <td class="mdl-data-table__cell--non-numeric">Plywood (Birch)</td>
-                                <td class="mdl-data-table__cell--non-numeric">50</td>
-                                <td class="mdl-data-table__cell--non-numeric">$1.25</td>
-                                <td class="mdl-data-table__cell--non-numeric">$1.90</td>
-                                <td class="mdl-data-table__cell--non-numeric">$2.90</td>
-                            </tr>
-                            <tr>
-                                <td class="mdl-data-table__cell--non-numeric">Laminate (Gold on Blue)</td>
-                                <td class="mdl-data-table__cell--non-numeric">10</td>
-                                <td class="mdl-data-table__cell--non-numeric">$2.35</td>
-                                <td class="mdl-data-table__cell--non-numeric">$2.90</td>
-                                <td class="mdl-data-table__cell--non-numeric">$2.90</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <button class="fab mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--mini-fab">
+                <i class="material-icons">add</i>
+            </button>
         </section>
     </main>
     <div tabindex="-1" v-show="listRendering.rawCapacity < listRendering.dataLength" class="table-page-switcher">
@@ -616,8 +623,24 @@
             <span :class="{disabled: listRendering.baseIndex === Math.ceil(listRendering.dataLength / listRendering.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
         </div>
     </div>
-    <div id="toast" class="mdl-js-snackbar mdl-snackbar">
-        <div class="mdl-snackbar__text"></div>
-        <button class="mdl-snackbar__action" type="button"></button>
+</div>
+<dialog class="mdl-dialog dialog">
+    <div class="dialog-header">
+        <span>編輯配送單</span>
+        <span><button class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">close</i></button></span>
     </div>
+    <div class="dialog-header"></div>
+    <div class="mdl-dialog__content">
+        <p>
+            Allowing us to collect data will let us get you the information you want faster.
+        </p>
+    </div>
+    <div class="mdl-dialog__actions">
+        <button type="button" class="mdl-button close">完成</button>
+        <button type="button" class="mdl-button close">取消</button>
+    </div>
+</dialog>
+<div id="toast" class="mdl-js-snackbar mdl-snackbar">
+    <div class="mdl-snackbar__text"></div>
+    <button class="mdl-snackbar__action" type="button"></button>
 </div>

@@ -281,7 +281,7 @@ td.warning {
     justify-content: space-between;
 }
 
-.content-block-detail > span > span:nth-of-type(2) {
+.content-block-detail>span>span:nth-of-type(2) {
     margin-left: 16px;
     color: #40b9d8;
 }
@@ -600,7 +600,7 @@ span:focus {
     display: flex;
 }
 
-.filter > .filter-cell {
+.filter>.filter-cell {
     display: inline-block;
     box-sizing: border-box;
     width: 120px;
@@ -610,22 +610,180 @@ span:focus {
     border-radius: 0;
 }
 
-.filter > .filter-cell:first-child {
+.filter>.filter-cell:first-child {
     border-radius: 2px 0 0 2px;
 }
 
-.filter > .filter-cell:last-child {
+.filter>.filter-cell:last-child {
     border-radius: 0 2px 2px 0;
+    margin-right: 0;
 }
 
-.filter > .filter-cell span {
+.filter>.filter-cell span {
     color: #9bd6e4;
 }
 
-.filter > .filter-cell.filter-cell--selected {
+.filter>.filter-cell.filter-cell--selected {
     background-color: #9bd6e4;
 }
 
-.filter > .filter-cell.filter-cell--selected span {
+.filter>.filter-cell.filter-cell--selected span {
     color: white;
+}
+
+span.is-checked,
+td.is-checked {
+    color: #9bd6e4;
+}
+
+th.number-icon-container,
+td.number-icon-container {
+    padding-left: 24px !important;
+    width: 20px;
+    padding-right: 6px !important;
+}
+
+div.number-icon {
+    background-color: #9bd6e4;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+span.big-txt {
+    display: block;
+    font-size: 13px;
+    line-height: 17px;
+}
+
+span.tiny-txt {
+    display: block;
+    font-size: 7px;
+    line-height: 15px;
+}
+
+button.fab {
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+}
+
+section tbody tr.hide-border-top,
+section div.delivery-boxes tbody tr {
+    transition: none;
+}
+
+section tbody tr.hide-border-top:hover,
+section div.delivery-boxes tbody tr:hover {
+    background-color: unset;
+    cursor: unset !important;
+}
+
+tr.hide-border-bottom>td {
+    border-bottom: 0;
+}
+
+tr.hide-border-top>td {
+    border-top: 0;
+    padding-top: 0;
+}
+
+td .material-icons {
+    font-size: 16px;
+    line-height: 31px;
+}
+
+div.table-row-detail-container {
+    text-align: left;
+    width: 100%;
+    padding-top: 12px;
+    border-top: 1px solid rgba(0, 0, 0, .10);
+}
+
+div.table-row-detail-container>div.table-row-detail {
+    display: flex;
+}
+
+div.table-row-detail>div.delivery-overview {
+    box-sizing: border-box;
+    margin: 0 0 0 26px;
+    padding: 0 18px;
+    width: 200px;
+}
+
+div.table-row-detail>div.delivery-overview>div.delivery-overview-list {
+    padding-left: 8px;
+    line-height: 40px;
+}
+
+div.table-row-detail>div.delivery-overview>div.delivery-overview-list>div.delivery-overview-list-item {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(0, 0, 0, .10);
+}
+
+div.table-row-detail>div.delivery-boxes {
+    box-sizing: border-box;
+    width: 400px;
+    padding: 0 18px;
+}
+
+div.table-row-detail>div.delivery-boxes tr.delivery-boxes-item td {
+    margin-top: 15px;
+    border: none;
+    padding: 10px 12px;
+    text-align: left;
+}
+
+div.table-row-detail>div.delivery-boxes tr.delivery-boxes-item.delivery-boxes-item--spacer {
+    height: 15px;
+}
+
+div.table-row-detail>div.delivery-boxes tr.delivery-boxes-item>td.box-detail {
+    font-size: 11px;
+    line-height: 17px;
+}
+
+div.table-row-detail>div.delivery-boxes tr.delivery-boxes-item>td.box-state {
+    text-align: right;
+}
+
+div.table-row-detail>div.delivery-boxes tr.delivery-boxes-item>td.box-state span {
+    width: 50px;
+    padding: 6px 8px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, .2);
+}
+
+div.table-row-detail-container button.detail-edit-button {
+    position: relative;
+    bottom: 0;
+    right: 0;
+}
+
+dialog.dialog {
+    width: 80%;
+    max-width: 1000px;
+    max-height: 80vh;
+    padding: 0;
+}
+
+dialog.dialog div.dialog-header {
+    box-sizing: border-box;
+    height: 55px;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(0, 0, 0, .12);
+}
+
+dialog.dialog div.dialog-header span {
+    font-size: 24px;
+    line-height: 32px;
+    padding: 12px 18px;
+    display: block;
 }
