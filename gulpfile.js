@@ -26,7 +26,7 @@ function css() {
 }
 
 function js() {
-    return gulp.src('src/js/*.js')
+    return gulp.src(['src/js/*.js'])
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(concat({
@@ -43,7 +43,7 @@ function browser_sync() {
         proxy: 'localhost:' + (process.env.PORT || '3040') + '/manager/dashboard'
     });
 
-    gulp.watch(['assets/css/*.css', 'assets/js/*.js', 'views/*.html']).on('change', function() {
+    gulp.watch(['assets/css/*.css', 'assets/js/*.js', 'views/*.html']).on('change', function () {
         browserSync.reload();
     });
 }
@@ -78,7 +78,7 @@ function revReplace() {
         .pipe(cleaner());
     let manifest = gulp.src('src/rev-manifest.json');
     return gulp.src('views/layout.html')
-        .pipe(through.obj(function(file, enc, cb) {
+        .pipe(through.obj(function (file, enc, cb) {
             let contents = file.contents.toString()
             file.contents = Buffer.from(contents.replace(/\-[0-9a-z]+\./, '.'));
             this.push(file);
@@ -101,7 +101,7 @@ function cleanerRevDel(keepQuantity) {
     keepQuantity = parseInt(keepQuantity) || 2;
     var lists = {};
 
-    return through.obj(function(file, enc, cb) {
+    return through.obj(function (file, enc, cb) {
         var regex = new RegExp('^(.*)-[0-9a-f]{8,10}(?:\\.min.js)?\\' + path.extname(file.path) + '$');
         if (regex.test(file.path)) {
             var identifier = regex.exec(file.path)[1] + path.extname(file.path);
@@ -114,13 +114,13 @@ function cleanerRevDel(keepQuantity) {
             });
         }
         cb();
-    }, function(cb) {
-        Object.keys(lists).forEach(function(identifier) {
-            lists[identifier].sort(function(a, b) {
+    }, function (cb) {
+        Object.keys(lists).forEach(function (identifier) {
+            lists[identifier].sort(function (a, b) {
                     return b.time - a.time;
                 })
                 .slice(keepQuantity)
-                .forEach(function(f) {
+                .forEach(function (f) {
                     this.push(f.file);
                 }, this);
         }, this);
@@ -129,8 +129,8 @@ function cleanerRevDel(keepQuantity) {
 }
 
 function cleaner() {
-    return through.obj(function(file, enc, cb) {
-        rimraf(path.resolve((file.cwd || process.cwd()), file.path), function(err) {
+    return through.obj(function (file, enc, cb) {
+        rimraf(path.resolve((file.cwd || process.cwd()), file.path), function (err) {
             if (err) {
                 this.emit('error', new Error(err));
             }

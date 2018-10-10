@@ -2,15 +2,42 @@ $(window).on('load', function () {
     if (window.location.pathname !== "/manager/login") {
         $('#loading_main').css('display', 'none');
         appInit(window);
+
+        var dialog = document.querySelector('dialog');
+        if (!dialog.showModal) {
+            dialogPolyfill.registerDialog(dialog);
+        }
+        dialog.querySelector('.close').addEventListener('click', function () {
+            dialog.close();
+        });
+        window.dialog = dialog;
+
+        var datedisplay = $("#delivery_time_display");
+        var dateInput = $("#delivery_time_date");
+        var datePicker = null;
+        datedisplay.focus(function () {
+            if (datePicker) {
+                datePicker.show();
+            } else {
+                var startDate = new Date();
+                startDate.setDate(startDate.getDate() + 3);
+                datePicker = $("#datepicker");
+                datePicker.datepicker({
+                    language: "zh",
+                    startDate: startDate,
+                    minDate: new Date(),
+                    dateFormat: "mm / dd ( D )",
+                    autoClose: true,
+                    inline: false,
+                    onSelect: function (formattedDate, date, inst) {
+                        datedisplay.val(formattedDate);
+                        dateInput.val(date);
+                        datePicker.hide();
+                    }
+                });
+            }
+        });
     }
-    var dialog = document.querySelector('dialog');
-    if (!dialog.showModal) {
-        dialogPolyfill.registerDialog(dialog);
-    }
-    dialog.querySelector('.close').addEventListener('click', function () {
-        dialog.close();
-    });
-    window.dialog = dialog;
 });
 
 function debounce(func, delay) {

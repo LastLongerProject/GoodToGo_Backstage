@@ -62,7 +62,7 @@
         });
     }
 
-    window.test = false;
+    window.test = true;
     window.requestData = function (page, cb, option) {
         if (!window.test) return requestData(page, cb, option);
         else return requestDataDemo(page, cb, option);

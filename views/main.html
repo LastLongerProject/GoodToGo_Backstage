@@ -635,13 +635,13 @@
         </div>
     </div>
 </div>
-<dialog class="mdl-dialog dialog">
+<dialog class="mdl-dialog dialog dialog--thin">
     <div class="dialog-header">
         <span>編輯配送單</span>
-        <span><button class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">close</i></button></span>
+        <span><button class="mdl-button mdl-js-button mdl-button--icon close"><i class="material-icons">close</i></button></span>
     </div>
     <div class="dialog-header dialog-header--second">
-        <span>配送至 正興咖啡館</span>
+        <span><i class="material-icons">looks_one</i><br>配送至 正興咖啡館</span>
     </div>
     <div class="mdl-dialog__content dialog-content">
         <div class="dialog-content--first">
@@ -653,10 +653,20 @@
             <div class="detail-list"><span>12oz 360ml</span><span>12 件</span></div>
             <div class="detail-list"><span>白蓋</span><span>12 件</span></div>
         </div>
+        <div class="dialog-content--third">
+            <select id="delivery_shop">
+                <option value="0">正興咖啡館</option>
+                <option value="1">方糖咖啡</option>
+                <option value="2">樹有風</option>
+            </select>
+            <input id="delivery_time_display">
+            <input id="delivery_time_date">
+            <div id="datepicker" class="mdl-shadow--2dp"></div>
+        </div>
     </div>
-    <div class="mdl-dialog__actions">
-        <button type="button" class="mdl-button close">完成</button>
-        <button type="button" class="mdl-button close">取消</button>
+    <div class="mdl-dialog__actions dialog-actions">
+        <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect button--main mdl-shadow--2dp">完成</button>
+        <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect button--secondary">取消</button>
     </div>
 </dialog>
 <div id="toast" class="mdl-js-snackbar mdl-snackbar">
