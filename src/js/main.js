@@ -7,7 +7,7 @@ $(window).on('load', function () {
         if (!dialog.showModal) {
             dialogPolyfill.registerDialog(dialog);
         }
-        dialog.querySelector('.close').addEventListener('click', function () {
+        $('.close').click(function () {
             dialog.close();
         });
         window.dialog = dialog;
@@ -195,6 +195,54 @@ function appInit(window) {
         Object.assign(app.listRendering, dataToInit);
         sortType = null;
     };
+    var durationToString = function (duration) {
+        var ctr = 0;
+        var result = "";
+        var addString = function (num, txt) {
+            ctr++;
+            result += (ctr === 2 ? " " : "") + num + " " + txt;
+        };
+        if (duration.get("Y") !== 0) {
+            addString(duration.get("Y"), "年");
+        }
+        if (duration.get("M") !== 0) {
+            addString(duration.get("M"), "個月");
+        }
+        if (ctr == 2) return result;
+        if (duration.get("d") !== 0) {
+            addString(duration.get("d"), "天");
+        }
+        if (ctr == 2) return result;
+        if (duration.get("h") !== 0) {
+            addString(duration.get("h"), "小時");
+        }
+        if (ctr == 2) return result;
+        if (duration.get("m") !== 0) {
+            addString(duration.get("m"), "分鐘");
+        }
+        if (result === "") result += "0";
+        return result;
+    };
+    var drawChart = function (data) {
+        google.charts.load('current', {
+            'packages': ['corechart']
+        });
+        google.charts.setOnLoadCallback(function () {
+            var dataTable = google.visualization.arrayToDataTable(data);
+            var options = {
+                // title: "歷史每週使用量",
+                // hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+                vAxis: {
+                    minValue: 0
+                }
+            };
+            var chart = new google.visualization.AreaChart($('#chart_div').get(0));
+            chart.draw(dataTable, options);
+            window.drawChart = function () {
+                return chart.draw(dataTable, options);
+            };
+        });
+    };
     var Section = {
         showed: null,
         get active() {
@@ -275,54 +323,61 @@ function appInit(window) {
             }
         }
     };
-    var durationToString = function (duration) {
-        var ctr = 0;
-        var result = "";
-        var addString = function (num, txt) {
-            ctr++;
-            result += (ctr === 2 ? " " : "") + num + " " + txt;
-        };
-        if (duration.get("Y") !== 0) {
-            addString(duration.get("Y"), "年");
+    var Dialog = {
+        ele: $("dialog.dialog"),
+        nowClass: "dialog--step_one",
+        get nowActiveClass() {
+            return this.nowClass;
+        },
+        classDict: {
+            stepOne: "dialog--step_one",
+            stepTwo: "dialog--step_two",
+            edit: "dialog--edit"
+        },
+        changeClass: function (to) {
+            if (!this.classDict[to]) throw new Error("Dialog has No such Class!");
+            this.ele.removeClass(this.nowClass);
+            this.ele.addClass(this.classDict[to]);
+        },
+        open: function (to) {
+            if (typeof to !== "undefined") this.changeClass(to);
+            return this.ele.showModal();
+        },
+        close: function () {
+            return this.ele.close();
         }
-        if (duration.get("M") !== 0) {
-            addString(duration.get("M"), "個月");
-        }
-        if (ctr == 2) return result;
-        if (duration.get("d") !== 0) {
-            addString(duration.get("d"), "天");
-        }
-        if (ctr == 2) return result;
-        if (duration.get("h") !== 0) {
-            addString(duration.get("h"), "小時");
-        }
-        if (ctr == 2) return result;
-        if (duration.get("m") !== 0) {
-            addString(duration.get("m"), "分鐘");
-        }
-        if (result === "") result += "0";
-        return result;
     };
-    var drawChart = function (data) {
-        google.charts.load('current', {
-            'packages': ['corechart']
-        });
-        google.charts.setOnLoadCallback(function () {
-            var dataTable = google.visualization.arrayToDataTable(data);
-            var options = {
-                // title: "歷史每週使用量",
-                // hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
-                vAxis: {
-                    minValue: 0
-                }
-            };
-            var chart = new google.visualization.AreaChart($('#chart_div').get(0));
-            chart.draw(dataTable, options);
-            window.drawChart = function () {
-                return chart.draw(dataTable, options);
-            };
-        });
+    var DeliveryDetail = {
+        eleHtml: null,
+        showedElement: null,
+        showedDelivery: null,
+        dataIndex: -1,
+        init: function () {
+            var ele = $("#delivery_detail");
+            this.eleHtml = ele.html();
+            ele.remove();
+        },
+        open: function (rawIndex, dataIndex) {
+            var theDelivery = $("#detail tbody tr:nth-child(" + rawIndex + ")");
+            if (theDelivery.length === 0) return;
+            if (this.showedElement !== null) this.close();
+            theDelivery.addClass("hide-border-bottom");
+            theDelivery.after(this.eleHtml);
+            this.showedElement = $("#delivery_detail");
+            this.showedDelivery = theDelivery;
+            this.dataIndex = dataIndex;
+        },
+        close: function () {
+            if (this.showedElement === null) return;
+            this.showedElement.remove();
+            this.showedElement = null;
+            this.showedDelivery.removeClass("hide-border-bottom");
+            this.dataIndex = -1;
+        }
     };
+    Vue.component("delivery-detail-component", {
+        template: "#delivery_detail_component"
+    });
     var app = new Vue({
         el: "#app",
         mounted: function () {
@@ -469,8 +524,17 @@ function appInit(window) {
                 }
             },
             numberToPercentage: numberToPercentage,
-            openDialog: function () {
-                return window.dialog.showModal();
+            openDialog: function (to) {
+                return Dialog.open(to);
+            },
+            flipDialogPage: function (to) {
+                return Dialog.changeClass(to);
+            },
+            closeDialog: function () {
+                return Dialog.close();
+            },
+            openDeliveryDetail: function (rawIndex, dataIndex) {
+                return DeliveryDetail.open(rawIndex, dataIndex);
             }
         },
         computed: {
@@ -532,6 +596,13 @@ function appInit(window) {
                             .concat(this.userDetail.data.history.slice(lastIndex).sort(dataSorter.get(sortType)));
                     else
                         return this.userDetail.data.history.slice(0, lastIndex).concat(this.userDetail.data.history.slice(lastIndex).sort(dataSorter.get(sortType)));
+                }
+            },
+            containerTypeList: function () {
+                if (this.listRendering.keyToSort === null || this.detailIsOpen) {
+                    return this.container.data.list;
+                } else {
+                    return this.container.data.list.sort(dataSorter.get(sortType));
                 }
             },
             containerDetailHistory: function () {
@@ -694,7 +765,41 @@ function appInit(window) {
             },
             delivery: {
                 show: false,
-
+                data: {
+                    list: [{
+                        boxAmount: 4,
+                        deliveryDate: 23132131,
+                        toBox: -1,
+                        toDelivery: -1,
+                        toSign: 4,
+                        signed: -2,
+                        warning: -2,
+                        boxList: [{
+                            boxName: "Box1",
+                            contentList: [{
+                                contentName: "12oz 360ml",
+                                contentCode: 1,
+                                amount: 6
+                            }]
+                        }]
+                    }, {
+                        boxAmount: 4,
+                        deliveryDate: 23132131,
+                        toBox: -1,
+                        toDelivery: -1,
+                        toSign: 4,
+                        signed: -2,
+                        warning: -2,
+                        boxList: [{
+                            boxName: "大密封箱",
+                            contentList: [{
+                                contentName: "12oz 360ml",
+                                contentCode: 1,
+                                amount: 6
+                            }]
+                        }]
+                    }]
+                }
             },
             console: {
                 show: false,

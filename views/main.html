@@ -417,13 +417,13 @@
                             <th @click="sortList('lostAmount')" v-html="showKeySorting('遺失', 'lostAmount')"></th>
                         </tr>
                     </thead>
-                    <tbody v-if="container.data.list.length === 0">
+                    <tbody v-if="containerTypeList.length === 0">
                         <tr>
                             <td colspan="9" class="table-no-data">尚無資料</td>
                         </tr>
                     </tbody>
                     <tbody v-else>
-                        <tr v-for="(aContainerType, index) in container.data.list.slice((listRendering.baseIndex - 1) * listRendering.rawCapacity, listRendering.baseIndex * listRendering.rawCapacity)">
+                        <tr v-for="(aContainerType, index) in containerTypeList.slice((listRendering.baseIndex - 1) * listRendering.rawCapacity, listRendering.baseIndex * listRendering.rawCapacity)">
                             <td class="mdl-data-table__cell--non-numeric">{{aContainerType.type}}</td>
                             <td>{{aContainerType.totalAmount | numberWithCommas}}</td>
                             <td>{{aContainerType.toUsedAmount | numberWithCommas}}</td>
@@ -557,41 +557,7 @@
                             <td>-</td>
                             <td><i class="material-icons" role="presentation">expand_less</i></td>
                         </tr>
-                        <tr class="hide-border-top">
-                            <td colspan="9">
-                                <div class="table-row-detail-container">
-                                    <div class="table-row-detail">
-                                        <div class="delivery-overview">
-                                            <div>總量</div>
-                                            <div class="delivery-overview-list">
-                                                <div class="delivery-overview-list-item"><span>12oz 360ml</span><span>6 件</span></div>
-                                                <div class="delivery-overview-list-item"><span>16oz 480ml</span><span>6 件</span></div>
-                                                <div class="delivery-overview-list-item"><span>白蓋</span><span>12 件</span></div>
-                                            </div>
-                                        </div>
-                                        <div class="delivery-boxes">
-                                            <table>
-                                                <tbody>
-                                                    <tr class="delivery-boxes-item mdl-shadow--2dp">
-                                                        <td class="box-name">Box1</td>
-                                                        <td class="box-detail">12oz 360ml*6<br>白蓋*6</td>
-                                                        <td class="box-state"><span>待裝箱</span></td>
-                                                    </tr>
-                                                    <tr class="delivery-boxes-item delivery-boxes-item--spacer">
-                                                    </tr>
-                                                    <tr class="delivery-boxes-item mdl-shadow--2dp">
-                                                        <td class="box-name">大密封箱</td>
-                                                        <td class="box-detail">16oz 480ml*6<br>白蓋*6</td>
-                                                        <td class="box-state"><span>待裝箱</span></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <button @click="openDialog()" class="mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect detail-edit-button">編輯</button>
-                                </div>
-                            </td>
-                        </tr>
+                        <delivery-detail-component></delivery-detail-component>
                         <tr>
                             <td class="number-icon-container">
                                 <div class="number-icon"><span>4</span></div>
@@ -634,42 +600,95 @@
             <span :class="{disabled: listRendering.baseIndex === Math.ceil(listRendering.dataLength / listRendering.rawCapacity)}" @click="flipPage('next')"><i class="material-icons" role="presentation">navigate_next</i></span>
         </div>
     </div>
+    <dialog class="mdl-dialog dialog dialog--step_one">
+        <div class="dialog-header">
+            <span class="dialog-header--new">新增配送單</span>
+            <span class="dialog-header--edit">編輯配送單</span>
+            <span class="dialog-header--button"><button class="mdl-button mdl-js-button mdl-button--icon close"><i class="material-icons">close</i></button></span>
+        </div>
+        <div class="dialog-header dialog-header--second">
+            <span>
+                <i class="dialog-header-icon--step_one material-icons">looks_one</i>
+                <i class="dialog-header-icon--step_two material-icons">looks_two</i>
+                <br class="dialog-header-icon--step_one dialog-header-icon--step_two">
+                配送至 正興咖啡館
+            </span>
+        </div>
+        <div class="mdl-dialog__content dialog-content">
+            <div class="dialog-content--first">
+                <div class="boxes-list mdl-shadow--2dp"><span class="box-name">Box1</span><span class="box-detail tiny-txt">12oz 360ml*6<br>白蓋*6</span></div>
+                <div class="boxes-list mdl-shadow--2dp"><span class="box-name">大密封箱</span><span class="box-detail tiny-txt">12oz 360ml*6<br>白蓋*6</span></div>
+                <div class="boxes-list--new mdl-button mdl-js-button mdl-js-ripple-effect"><i class="material-icons">add</i><span>新增箱子</span></div>
+            </div>
+            <div class="dialog-content--second">
+                <div class="detail-list"><span>12oz 360ml</span><span>12 件</span></div>
+                <div class="detail-list"><span>白蓋</span><span>12 件</span></div>
+            </div>
+            <div class="dialog-content--third">
+                <select id="delivery_shop">
+                    <option value="0">正興咖啡館</option>
+                    <option value="1">方糖咖啡</option>
+                    <option value="2">樹有風</option>
+                </select>
+                <input id="delivery_time_display">
+                <input id="delivery_time_date">
+                <div id="datepicker" class="mdl-shadow--2dp"></div>
+            </div>
+        </div>
+        <div class="mdl-dialog__actions dialog-actions dialog-actions--step_one">
+            <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect button--main mdl-shadow--2dp">下一步</button>
+        </div>
+        <div class="mdl-dialog__actions dialog-actions dialog-actions--step_two">
+            <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect button--main mdl-shadow--2dp">送出</button>
+            <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect button--secondary">清除</button>
+            <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect button--secondary">使用上次配送單</button>
+            <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect button--secondary">上一步</button>
+        </div>
+        <div class="mdl-dialog__actions dialog-actions dialog-actions--edit">
+            <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect button--main mdl-shadow--2dp">完成</button>
+            <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect button--secondary close">取消</button>
+        </div>
+    </dialog>
 </div>
-<dialog class="mdl-dialog dialog dialog--thin">
-    <div class="dialog-header">
-        <span>編輯配送單</span>
-        <span><button class="mdl-button mdl-js-button mdl-button--icon close"><i class="material-icons">close</i></button></span>
-    </div>
-    <div class="dialog-header dialog-header--second">
-        <span><i class="material-icons">looks_one</i><br>配送至 正興咖啡館</span>
-    </div>
-    <div class="mdl-dialog__content dialog-content">
-        <div class="dialog-content--first">
-            <div class="boxes-list mdl-shadow--2dp"><span class="box-name">Box1</span><span class="box-detail tiny-txt">12oz 360ml*6<br>白蓋*6</span></div>
-            <div class="boxes-list mdl-shadow--2dp"><span class="box-name">大密封箱</span><span class="box-detail tiny-txt">12oz 360ml*6<br>白蓋*6</span></div>
-            <div class="boxes-list--new mdl-button mdl-js-button mdl-js-ripple-effect"><i class="material-icons">add</i><span>新增箱子</span></div>
-        </div>
-        <div class="dialog-content--second">
-            <div class="detail-list"><span>12oz 360ml</span><span>12 件</span></div>
-            <div class="detail-list"><span>白蓋</span><span>12 件</span></div>
-        </div>
-        <div class="dialog-content--third">
-            <select id="delivery_shop">
-                <option value="0">正興咖啡館</option>
-                <option value="1">方糖咖啡</option>
-                <option value="2">樹有風</option>
-            </select>
-            <input id="delivery_time_display">
-            <input id="delivery_time_date">
-            <div id="datepicker" class="mdl-shadow--2dp"></div>
-        </div>
-    </div>
-    <div class="mdl-dialog__actions dialog-actions">
-        <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect button--main mdl-shadow--2dp">完成</button>
-        <button type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect button--secondary">取消</button>
-    </div>
-</dialog>
 <div id="toast" class="mdl-js-snackbar mdl-snackbar">
     <div class="mdl-snackbar__text"></div>
     <button class="mdl-snackbar__action" type="button"></button>
 </div>
+
+<script type="text/x-templete" id="delivery_detail_component">
+    <tr class="hide-border-top" id="delivery_detail">
+        <td colspan="9">
+            <div class="table-row-detail-container">
+                <div class="table-row-detail">
+                    <div class="delivery-overview">
+                        <div>總量</div>
+                        <div class="delivery-overview-list">
+                            <div class="delivery-overview-list-item"><span>12oz 360ml</span><span>6 件</span></div>
+                            <div class="delivery-overview-list-item"><span>16oz 480ml</span><span>6 件</span></div>
+                            <div class="delivery-overview-list-item"><span>白蓋</span><span>12 件</span></div>
+                        </div>
+                    </div>
+                    <div class="delivery-boxes">
+                        <table>
+                            <tbody>
+                                <tr class="delivery-boxes-item mdl-shadow--2dp">
+                                    <td class="box-name">Box1</td>
+                                    <td class="box-detail">12oz 360ml*6<br>白蓋*6</td>
+                                    <td class="box-state"><span>待裝箱</span></td>
+                                </tr>
+                                <tr class="delivery-boxes-item delivery-boxes-item--spacer">
+                                </tr>
+                                <tr class="delivery-boxes-item mdl-shadow--2dp">
+                                    <td class="box-name">大密封箱</td>
+                                    <td class="box-detail">16oz 480ml*6<br>白蓋*6</td>
+                                    <td class="box-state"><span>待裝箱</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <button @click="openDialog()" class="mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect detail-edit-button">編輯</button>
+            </div>
+        </td>
+    </tr>
+</script>

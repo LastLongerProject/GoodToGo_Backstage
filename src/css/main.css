@@ -785,15 +785,24 @@ dialog.dialog div.dialog-header {
     border-bottom: 1px solid rgba(0, 0, 0, .12);
 }
 
-dialog.dialog div.dialog-header.dialog-header--second {
-    justify-content: center;
-}
-
 dialog.dialog div.dialog-header span {
     font-size: 16px;
     line-height: 32px;
     padding: 12px 18px;
+}
+
+dialog.dialog div.dialog-header:not(.dialog-header--second) span:not(.dialog-header--button) {
+    display: none;
+}
+
+dialog.dialog.dialog--step_one div.dialog-header span.dialog-header--new,
+dialog.dialog.dialog--step_two div.dialog-header span.dialog-header--new,
+dialog.dialog.dialog--edit div.dialog-header span.dialog-header--edit {
     display: block;
+}
+
+dialog.dialog div.dialog-header.dialog-header--second {
+    justify-content: center;
 }
 
 dialog.dialog div.dialog-header.dialog-header--second span {
@@ -802,8 +811,17 @@ dialog.dialog div.dialog-header.dialog-header--second span {
     line-height: 16px;
 }
 
+dialog.dialog.dialog--edit div.dialog-header.dialog-header--second span {
+    line-height: 32px;
+}
+
 dialog.dialog div.dialog-header.dialog-header--second span i.material-icons {
     font-size: 14px;
+}
+
+dialog.dialog div.dialog-header.dialog-header--second i,
+dialog.dialog div.dialog-header.dialog-header--second br {
+    display: none;
 }
 
 dialog.dialog div.dialog-content {
@@ -893,13 +911,14 @@ dialog.dialog div.dialog-content div.dialog-content--second div.detail-list span
 }
 
 dialog.dialog div.dialog-actions {
-    padding: 0 0 16px 0;
+    padding: 0 0 4px 0;
+    display: none;
 }
 
 dialog.dialog div.dialog-actions button {
     font-weight: normal;
-    width: calc(20% - 27px);
     margin-right: 18px;
+    margin-bottom: 12px;
     min-width: 70px;
 }
 
@@ -914,45 +933,85 @@ dialog.dialog div.dialog-actions button.button--secondary {
     border: 1px solid rgba(0, 0, 0, .12);
 }
 
-dialog.dialog.dialog--thin {
+dialog.dialog.dialog--step_one {
     width: 298px;
 }
 
-dialog.dialog.dialog--thin div.dialog-content div.dialog-content--first,
-dialog.dialog.dialog--thin div.dialog-content div.dialog-content--second {
+dialog.dialog.dialog--step_one div.dialog-content div.dialog-content--first,
+dialog.dialog.dialog--step_one div.dialog-content div.dialog-content--second {
     display: none;
 }
 
-dialog.dialog.dialog--thin div.dialog-content div.dialog-content--third {
+dialog.dialog.dialog--step_one div.dialog-content div.dialog-content--third {
     display: flex;
     flex-direction: column;
     width: 100%;
 }
 
-dialog.dialog.dialog--thin div.dialog-content div.dialog-content--third select,
-dialog.dialog.dialog--thin div.dialog-content div.dialog-content--third input {
+dialog.dialog.dialog--step_one div.dialog-content div.dialog-content--third select,
+dialog.dialog.dialog--step_one div.dialog-content div.dialog-content--third input {
     font-size: 14px;
     height: 44px;
     border: 1px solid #d7d7d7;
     border-radius: 4px;
 }
 
-dialog.dialog.dialog--thin div.dialog-content div.dialog-content--third option {
+dialog.dialog.dialog--step_one div.dialog-content div.dialog-content--third option {
     font-size: 14px;
 }
 
-dialog.dialog.dialog--thin div.dialog-content div.dialog-content--third select {
+dialog.dialog.dialog--step_one div.dialog-content div.dialog-content--third select {
     padding: 9px 18px;
     margin-bottom: 12px;
     flex-shrink: 0;
 }
 
-dialog.dialog.dialog--thin div.dialog-content div.dialog-content--third input {
+dialog.dialog.dialog--step_one div.dialog-content div.dialog-content--third input {
     padding: 12px 18px;
 }
 
-dialog.dialog.dialog--thin div.dialog-content div.dialog-content--third input#delivery_time_date {
+dialog.dialog.dialog--step_one div.dialog-content div.dialog-content--third input#delivery_time_date {
     display: none;
+}
+
+dialog.dialog.dialog--step_one div.dialog-actions.dialog-actions--step_one {
+    display: flex;
+}
+
+dialog.dialog.dialog--step_two div.dialog-actions.dialog-actions--step_two {
+    display: flex;
+    flex-wrap: wrap-reverse;
+}
+
+dialog.dialog.dialog--step_two div.dialog-actions.dialog-actions--step_two button:nth-child(-n + 2) {
+    width: calc(16vw - 20px);
+}
+
+dialog.dialog.dialog--step_two div.dialog-actions.dialog-actions--step_two button:nth-last-child(2) {
+    padding: 0 40px;
+}
+
+dialog.dialog.dialog--step_two div.dialog-actions.dialog-actions--step_two button:nth-last-child(1) {
+    margin-left: 18px;
+    margin-right: auto;
+}
+
+dialog.dialog.dialog--step_one div.dialog-header.dialog-header--second i.dialog-header-icon--step_one,
+dialog.dialog.dialog--step_two div.dialog-header.dialog-header--second i.dialog-header-icon--step_two {
+    display: inline-block;
+}
+
+dialog.dialog.dialog--step_one div.dialog-header.dialog-header--second br.dialog-header-icon--step_one,
+dialog.dialog.dialog--step_two div.dialog-header.dialog-header--second br.dialog-header-icon--step_two {
+    display: block;
+}
+
+dialog.dialog.dialog--edit div.dialog-actions.dialog-actions--edit {
+    display: flex;
+}
+
+dialog.dialog.dialog--edit div.dialog-actions.dialog-actions--edit button {
+    width: calc(20% - 27px);
 }
 
 div#datepicker {

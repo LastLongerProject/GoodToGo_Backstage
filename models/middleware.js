@@ -40,11 +40,11 @@ module.exports = {
                         icon: "local_drink",
                         txt: "容器"
                     },
-                    {
-                        id: "delivery",
-                        icon: "local_shipping",
-                        txt: "配送",
-                    },
+                    // {
+                    //     id: "delivery",
+                    //     icon: "local_shipping",
+                    //     txt: "配送",
+                    // },
                     {
                         id: "console",
                         icon: "build",
