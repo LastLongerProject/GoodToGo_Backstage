@@ -417,13 +417,13 @@
                             <th @click="sortList('lostAmount')" v-html="showKeySorting('遺失', 'lostAmount')"></th>
                         </tr>
                     </thead>
-                    <tbody v-if="containerTypeList.length === 0">
+                    <tbody v-if="containerList.length === 0">
                         <tr>
                             <td colspan="9" class="table-no-data">尚無資料</td>
                         </tr>
                     </tbody>
                     <tbody v-else>
-                        <tr v-for="(aContainerType, index) in containerTypeList.slice((listRendering.baseIndex - 1) * listRendering.rawCapacity, listRendering.baseIndex * listRendering.rawCapacity)">
+                        <tr v-for="(aContainerType, index) in containerList.slice((listRendering.baseIndex - 1) * listRendering.rawCapacity, listRendering.baseIndex * listRendering.rawCapacity)">
                             <td class="mdl-data-table__cell--non-numeric">{{aContainerType.type}}</td>
                             <td>{{aContainerType.totalAmount | numberWithCommas}}</td>
                             <td>{{aContainerType.toUsedAmount | numberWithCommas}}</td>

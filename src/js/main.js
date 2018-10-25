@@ -598,7 +598,7 @@ function appInit(window) {
                         return this.userDetail.data.history.slice(0, lastIndex).concat(this.userDetail.data.history.slice(lastIndex).sort(dataSorter.get(sortType)));
                 }
             },
-            containerTypeList: function () {
+            containerList: function () {
                 if (this.listRendering.keyToSort === null || this.detailIsOpen) {
                     return this.container.data.list;
                 } else {
