@@ -184,7 +184,7 @@
                         </tr>
                     </tbody>
                     <tbody v-else>
-                        <tr @click="aRecordClickListener('shop', aStore.id)" v-for="aStore in shopList.slice((listRendering.baseIndex - 1) * listRendering.rawCapacity, listRendering.baseIndex * listRendering.rawCapacity)">
+                        <tr @click="aRecordClickListener('shop', aStore.id)" v-for="aStore in shopList">
                             <td class="mdl-data-table__cell--non-numeric" v-html="listMatchCtx(aStore.storeName)"></td>
                             <td>{{aStore.toUsedAmount | numberWithCommas}}</td>
                             <td>{{aStore.todayAmount | numberWithCommas}}</td>
@@ -266,7 +266,7 @@
                             </tr>
                         </tbody>
                         <tbody v-else>
-                            <tr v-for="(aRecord, index) in shopDetailHistory.slice((listRendering.baseIndex - 1) * listRendering.rawCapacity, listRendering.baseIndex * listRendering.rawCapacity)">
+                            <tr v-for="(aRecord, index) in shopDetailHistory">
                                 <td class="mdl-data-table__cell--non-numeric">{{aRecord.time | dateToString}}</td>
                                 <td class="mdl-data-table__cell--non-numeric">{{aRecord.action}}</td>
                                 <td class="mdl-data-table__cell--non-numeric has-tooltip">
@@ -314,7 +314,7 @@
                         </tr>
                     </tbody>
                     <tbody v-else>
-                        <tr @click="aRecordClickListener('user', aUser.id)" v-for="aUser in userList.slice((listRendering.baseIndex - 1) * listRendering.rawCapacity, listRendering.baseIndex * listRendering.rawCapacity)">
+                        <tr @click="aRecordClickListener('user', aUser.id)" v-for="aUser in userList">
                             <td class="mdl-data-table__cell--non-numeric" v-html="listMatchCtx(aUser.phone)"></td>
                             <td>{{aUser.usingAmount}}</td>
                             <td :class="{warning:aUser.lostAmount>0}">{{aUser.lostAmount}}</td>
@@ -388,7 +388,7 @@
                             </tr>
                         </tbody>
                         <tbody v-else>
-                            <tr v-for="aRecord in userDetailHistory.slice((listRendering.baseIndex - 1) * listRendering.rawCapacity, listRendering.baseIndex * listRendering.rawCapacity)">
+                            <tr v-for="aRecord in userDetailHistory">
                                 <td class="mdl-data-table__cell--non-numeric">{{aRecord.containerType}}<br>{{aRecord.containerID}}</td>
                                 <td class="mdl-data-table__cell--non-numeric">{{aRecord.rentTime | dateToString("with_day")}}<br>{{aRecord.rentPlace}}</td>
                                 <td :class="{warning:aRecord.returnTime=='尚未歸還'}" class="mdl-data-table__cell--non-numeric">{{aRecord.returnTime | dateToString("with_day")}}<br v-if="aRecord.returnPlace">{{aRecord.returnPlace}}</td>
@@ -419,11 +419,11 @@
                     </thead>
                     <tbody v-if="containerList.length === 0">
                         <tr>
-                            <td colspan="9" class="table-no-data">尚無資料</td>
+                            <td colspan="10" class="table-no-data">尚無資料</td>
                         </tr>
                     </tbody>
                     <tbody v-else>
-                        <tr v-for="(aContainerType, index) in containerList.slice((listRendering.baseIndex - 1) * listRendering.rawCapacity, listRendering.baseIndex * listRendering.rawCapacity)">
+                        <tr v-for="(aContainerType, index) in containerList">
                             <td class="mdl-data-table__cell--non-numeric">{{aContainerType.type}}</td>
                             <td>{{aContainerType.totalAmount | numberWithCommas}}</td>
                             <td>{{aContainerType.toUsedAmount | numberWithCommas}}</td>
@@ -488,7 +488,7 @@
                             </tr>
                         </tbody>
                         <tbody v-else>
-                            <tr v-for="aRecord in containerDetailHistory.slice((listRendering.baseIndex - 1) * listRendering.rawCapacity, listRendering.baseIndex * listRendering.rawCapacity)">
+                            <tr v-for="aRecord in containerDetailHistory">
                                 <td class="mdl-data-table__cell--non-numeric">{{aRecord.tradeTime | dateToString}}</td>
                                 <td class="mdl-data-table__cell--non-numeric">{{aRecord.action}}</td>
                                 <td class="mdl-data-table__cell--non-numeric">{{aRecord.newUser}}</td>
@@ -525,6 +525,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <tr v-for=""></tr>
                         <tr>
                             <td class="number-icon-container">
                                 <div class="number-icon"><span>4</span></div>
@@ -557,7 +558,6 @@
                             <td>-</td>
                             <td><i class="material-icons" role="presentation">expand_less</i></td>
                         </tr>
-                        <delivery-detail-component></delivery-detail-component>
                         <tr>
                             <td class="number-icon-container">
                                 <div class="number-icon"><span>4</span></div>

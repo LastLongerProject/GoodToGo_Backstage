@@ -99,13 +99,14 @@ function appInit(window) {
     };
     var getListRenderingDataLength = function () {
         if (Detail.showed !== null) {
-            if (Detail.showed === "shopDetail") return app.shopDetailHistory.length;
-            else if (Detail.showed === "userDetail") return app.userDetailHistory.length;
-            else if (Detail.showed === "containerDetail") return app.containerDetailHistory.length;
+            if (Detail.showed === "shopDetail") return app.shopDetail.data.history.length;
+            else if (Detail.showed === "userDetail") return app.userDetail.data.history.length;
+            else if (Detail.showed === "containerDetail") return app.containerDetail.data.history.length;
         } else {
-            if (Section.active === "shop") return app.shopList.length;
-            else if (Section.active === "user") return app.userList.length;
+            if (Section.active === "shop") return app.shop.data.list.length;
+            else if (Section.active === "user") return app.user.data.list.length;
             else if (Section.active === "container") return app.container.data.list.length;
+            else if (Section.active === "delivery") return app.delivery.data.list.length;
         }
         return -1;
     }
@@ -500,13 +501,7 @@ function appInit(window) {
                 return txt;
             },
             flipPage: function (to) {
-                var dataLength;
-                if (!this.detailIsOpen) {
-                    dataLength = this[Section.active + "List"].length;
-                } else {
-                    dataLength = this[Section.active + "Detail"].data.history.length;
-                }
-                var maxIndex = Math.ceil(dataLength / this.listRendering.rawCapacity);
+                var maxIndex = Math.ceil(this.listRendering.dataLength / this.listRendering.rawCapacity);
                 switch (to) {
                     case "next":
                         this.listRendering.baseIndex = Math.min((this.listRendering.baseIndex + 1), maxIndex);
@@ -564,53 +559,66 @@ function appInit(window) {
                 }
             },
             shopList: function () {
-                if (this.listRendering.keyToSort === null || this.detailIsOpen) {
-                    return this.shop.data.list.filter(dataFilter);
-                } else {
-                    return this.shop.data.list.filter(dataFilter).sort(dataSorter.get(sortType));
+                var oriList = this.shop.data.list.filter(dataFilter);
+                if (!(this.listRendering.keyToSort === null || this.detailIsOpen)) {
+                    oriList = oriList.sort(dataSorter.get(sortType));
                 }
+                return oriList.slice(this.listRendering_cpt.startIndex, this.listRendering_cpt.endIndex);
             },
             shopDetailHistory: function () {
-                if (this.listRendering.keyToSort === null || !this.detailIsOpen) {
-                    return this.shopDetail.data.history;
-                } else {
-                    return this.shopDetail.data.history.sort(dataSorter.get(sortType));
+                var oriList = this.shopDetail.data.history;
+                if (!(this.listRendering.keyToSort === null || !this.detailIsOpen)) {
+                    oriList = oriList.sort(dataSorter.get(sortType));
                 }
+                return oriList.slice(this.listRendering_cpt.startIndex, this.listRendering_cpt.endIndex);
             },
             userList: function () {
-                if (this.listRendering.keyToSort === null || this.detailIsOpen) {
-                    return this.user.data.list.filter(dataFilter);
-                } else {
-                    return this.user.data.list.filter(dataFilter).sort(dataSorter.get(sortType));
+                var oriList = this.user.data.list.filter(dataFilter);
+                if (!(this.listRendering.keyToSort === null || this.detailIsOpen)) {
+                    oriList = oriList.sort(dataSorter.get(sortType));
                 }
+                return oriList.slice(this.listRendering_cpt.startIndex, this.listRendering_cpt.endIndex);
             },
             userDetailHistory: function () {
-                if (this.listRendering.keyToSort === null || !this.detailIsOpen) {
-                    return this.userDetail.data.history;
-                } else {
-                    var lastIndex = this.userDetail.data.history.map(function (ele) {
+                var oriList = this.userDetail.data.history;
+                if (!(this.listRendering.keyToSort === null || !this.detailIsOpen)) {
+                    var lastIndex = oriList.map(function (ele) {
                         return ele.returnTime;
                     }).lastIndexOf("尚未歸還") + 1;
                     if (this.listRendering.keyToSort !== "returnTime")
-                        return this.userDetail.data.history.slice(0, lastIndex).sort(dataSorter.get(sortType))
-                            .concat(this.userDetail.data.history.slice(lastIndex).sort(dataSorter.get(sortType)));
+                        oriList = oriList.slice(0, lastIndex).sort(dataSorter.get(sortType))
+                        .concat(oriList.slice(lastIndex).sort(dataSorter.get(sortType)));
                     else
-                        return this.userDetail.data.history.slice(0, lastIndex).concat(this.userDetail.data.history.slice(lastIndex).sort(dataSorter.get(sortType)));
+                        oriList = oriList.slice(0, lastIndex).concat(oriList.slice(lastIndex).sort(dataSorter.get(sortType)));
                 }
+                return oriList.slice(this.listRendering_cpt.startIndex, this.listRendering_cpt.endIndex);
             },
             containerList: function () {
-                if (this.listRendering.keyToSort === null || this.detailIsOpen) {
-                    return this.container.data.list;
-                } else {
-                    return this.container.data.list.sort(dataSorter.get(sortType));
+                var oriList = this.container.data.list;
+                if (!(this.listRendering.keyToSort === null || this.detailIsOpen)) {
+                    oriList = oriList.sort(dataSorter.get(sortType));
                 }
+                return oriList.slice(this.listRendering_cpt.startIndex, this.listRendering_cpt.endIndex);
             },
             containerDetailHistory: function () {
-                if (this.listRendering.keyToSort === null || !this.detailIsOpen) {
-                    return this.containerDetail.data.history;
-                } else {
-                    return this.containerDetail.data.history.sort(dataSorter.get(sortType));
+                var oriList = this.containerDetail.data.history;
+                if (!(this.listRendering.keyToSort === null || !this.detailIsOpen)) {
+                    oriList = oriList.sort(dataSorter.get(sortType));
                 }
+                return oriList.slice(this.listRendering_cpt.startIndex, this.listRendering_cpt.endIndex);
+            },
+            deliveryList: function () {
+                var oriList = this.delivery.data.list;
+                if (!(this.listRendering.keyToSort === null || this.detailIsOpen)) {
+                    oriList = oriList.sort(dataSorter.get(sortType));
+                }
+                return oriList.slice(this.listRendering_cpt.startIndex, this.listRendering_cpt.endIndex);
+            },
+            listRendering_cpt: function () {
+                return {
+                    startIndex: (this.listRendering.baseIndex - 1) * this.listRendering.rawCapacity,
+                    endIndex: this.listRendering.baseIndex * this.listRendering.rawCapacity
+                };
             }
         },
         data: {
@@ -774,6 +782,7 @@ function appInit(window) {
                         toSign: 4,
                         signed: -2,
                         warning: -2,
+                        expand: false,
                         boxList: [{
                             boxName: "Box1",
                             contentList: [{
@@ -790,6 +799,7 @@ function appInit(window) {
                         toSign: 4,
                         signed: -2,
                         warning: -2,
+                        expand: true,
                         boxList: [{
                             boxName: "大密封箱",
                             contentList: [{
