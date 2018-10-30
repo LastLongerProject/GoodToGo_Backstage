@@ -93,7 +93,7 @@ app.use(async (ctx, next) => {
     return proxyMid(ctx, next);
 });
 app.use(static({
-    rootDir: 'assets',
+    rootDir: config.rootDir + '/assets',
     rootPath: '/manager/assets'
 }));
 router.use('/manager', router_manager.routes(), router_manager.allowedMethods());
