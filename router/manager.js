@@ -30,6 +30,8 @@ router.post('/login', async ctx => {
     const serverRes = await restAPI.login({
         phone: reqBody.user,
         password: reqBody.pass
+    }, {
+        cookie: `uid=${ctx.cookies.get("uid")}`
     });
     const decoded = JWT.decode(serverRes.headers.authorization);
     ctx.session.user = {
@@ -38,6 +40,7 @@ router.post('/login', async ctx => {
         ua: ctx.header['user-agent'],
         ip: ctx.ip
     };
+    ctx.set("set-cookie", serverRes.headers['set-cookie'])
     redirect(ctx);
 });
 

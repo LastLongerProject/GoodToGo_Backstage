@@ -7,9 +7,10 @@ const host = config.server_host;
 const jwtKey = config.jwtKey;
 
 module.exports = {
-    login: async function login(reqBody) {
+    login: async function login(reqBody, option) {
         return request(await reqWrapper('/users/login', 'POST', {
-            body: reqBody
+            body: reqBody,
+            cookie: option.cookie
         }));
     },
     data: async function data(uri, method, reqBody, userRole) {
@@ -27,6 +28,7 @@ async function reqWrapper(uri, method, options) {
     const body = options.body;
     const authType = options.authType;
     const userRole = options.userRole;
+    const cookie = options.cookie;
     switch (authType) {
         case 'JWT':
             if (!userRole.apiKey) throw new Error("Missing apiKey");
@@ -43,7 +45,8 @@ async function reqWrapper(uri, method, options) {
             headers = {
                 reqID: 'manager',
                 reqTime: Date.now(),
-                'User-Agent': "BackStage"
+                'User-Agent': "BackStage",
+                Cookie: cookie
             };
             break;
     }
