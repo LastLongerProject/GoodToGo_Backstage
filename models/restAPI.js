@@ -13,6 +13,13 @@ module.exports = {
             cookie: option.cookie
         }));
     },
+    logout: async function logout(userRole, option) {
+        return request(await reqWrapper('/users/logout', 'POST', {
+            authType: 'JWT',
+            userRole,
+            cookie: option.cookie
+        }));
+    },
     data: async function data(uri, method, reqBody, userRole) {
         return request(await reqWrapper('/manage/' + uri, method, {
             authType: 'JWT',
@@ -31,14 +38,15 @@ async function reqWrapper(uri, method, options) {
     const cookie = options.cookie;
     switch (authType) {
         case 'JWT':
-            if (!userRole.apiKey) throw new Error("Missing apiKey");
+            if (!userRole || !userRole.apiKey) throw new Error("Missing apiKey");
             headers = {
                 ApiKey: userRole.apiKey,
                 Authorization: await JWT.sign({
                     jti: 'manager',
                     iat: Date.now(),
                     exp: new Date().setDate(new Date().getDate() + 3)
-                }, userRole.secretKey)
+                }, userRole.secretKey),
+                Cookie: cookie
             };
             break;
         default:

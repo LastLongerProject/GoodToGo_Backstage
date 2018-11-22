@@ -31,7 +31,7 @@ router.post('/login', async ctx => {
         phone: reqBody.user,
         password: reqBody.pass
     }, {
-        cookie: `uid=${ctx.cookies.get("uid")}`
+        cookie: ctx.cookies.get("uid") ? `uid=${ctx.cookies.get("uid")}` : undefined
     });
     const decoded = JWT.decode(serverRes.headers.authorization);
     ctx.session.user = {
@@ -63,6 +63,11 @@ router.get('/demo', async ctx => {
 });
 
 router.get('/logout', async ctx => {
+    try {
+        restAPI.logout(ctx.session.user.roles.customer, {
+            cookie: ctx.cookies.get("uid") ? `uid=${ctx.cookies.get("uid")}` : undefined
+        });
+    } catch (err) {}
     ctx.session = null;
     ctx.redirect("/manager/login");
 });
