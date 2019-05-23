@@ -433,7 +433,7 @@
                             <td>{{aContainerType.toDeliveryAmount | numberWithCommas}}</td>
                             <td>{{aContainerType.toSignAmount | numberWithCommas}}</td>
                             <td>{{aContainerType.inStorageAmount | numberWithCommas}}</td>
-                            <td :class="{warning:aContainerType.lostAmount > 0}">{{aContainerType.lostAmount}}</td>
+                            <td :class="{warning:aContainerType.lostAmount > 0}">{{aContainerType.lostAmount | numberWithCommas}}</td>
                         </tr>
                     </tbody>
                 </table>
