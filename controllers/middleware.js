@@ -1,3 +1,6 @@
+const JWT = require('jsonwebtoken');
+const restAPI = require('../controllers/restAPI');
+
 module.exports = {
     checkIsLogin: async function checkIsLogin(ctx, next) {
         if (!ctx.session.user) return ctx.redirect("/manager/login");
@@ -13,6 +16,15 @@ module.exports = {
     checkIsAdmin: async function checkIsAdmin(ctx, next) {
         let user = ctx.session.user;
         if (user.adminRole === undefined) return ctx.redirect("/manager/demo");
+        if (user.loginAt === undefined || (Date.now() - user.loginAt) > 1000 * 60 * 60 * 2) {
+            const serverRes = await restAPI.fetchRole(user.adminRole, {
+                cookie: ctx.cookies.get("uid") ? `uid=${ctx.cookies.get("uid")}` : undefined
+            });
+            const decoded = JWT.decode(serverRes.headers.authorization);
+            user.adminRole = decoded.roleList.find(aRole => aRole.roleType === "admin");
+            user.loginAt = Date.now();
+            if (user.adminRole === undefined) return ctx.redirect("/manager/demo");
+        }
         await next();
     },
     getNavList: function getNavList(user) {

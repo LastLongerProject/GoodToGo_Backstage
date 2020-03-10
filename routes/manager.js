@@ -38,7 +38,8 @@ router.post('/login', async ctx => {
         phone: reqBody.user,
         adminRole: decoded.roleList.find(aRole => aRole.roleType === "admin"),
         ua: ctx.header['user-agent'],
-        ip: ctx.ip
+        ip: ctx.ip,
+        loginAt: Date.now()
     };
     ctx.set("set-cookie", serverRes.headers['set-cookie'])
     redirect(ctx);
@@ -63,11 +64,9 @@ router.get('/demo', async ctx => {
 });
 
 router.get('/logout', async ctx => {
-    try {
-        restAPI.logout(ctx.session.user.adminRole, {
-            cookie: ctx.cookies.get("uid") ? `uid=${ctx.cookies.get("uid")}` : undefined
-        });
-    } catch (err) {}
+    restAPI.logout(ctx.session.user.adminRole, {
+        cookie: ctx.cookies.get("uid") ? `uid=${ctx.cookies.get("uid")}` : undefined
+    });
     ctx.session = null;
     ctx.redirect("/manager/login");
 });

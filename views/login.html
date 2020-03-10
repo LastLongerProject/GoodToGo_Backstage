@@ -5,29 +5,24 @@
       <p>管　理　系　統</p>
    </div>
    <% if (error) { %>
-      <div class="err-msg">
-         <h1><%= error.status %></h1>
-         <p><%= error.message %></p>
-      </div>
-      <script>
-         setTimeout(function(){
-            window.location = "/manager/login";
-         }, 2000);
-      </script>
+   <div class="err-msg">
+      <h1><%= error.status %></h1>
+      <p><%= error.message %></p>
+   </div>
    <% } else { %>
-      <form action="/manager/login" method="POST">
-         <input type="hidden" name="_csrf" value="<%= csrf %>">
-         <div>
-            <label for="user">Username:</label>
-            <input type="tel" id="user" name="user" placeholder="請輸入手機號碼" pattern="^09[0-9]{8}" required>
-         </div>
-         <div>
-            <label for="pass">Password:</label>
-            <input type="password" id="pass" name="pass" placeholder="請輸入密碼">
-         </div>
-         <div>
-            <input type="submit" id="submit" value="登入">
-         </div>
-      </form>
+   <form action="/manager/login" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrf %>">
+      <div>
+         <label for="user">Username:</label>
+         <input type="tel" id="user" name="user" placeholder="請輸入手機號碼" pattern="^09[0-9]{8}" required>
+      </div>
+      <div>
+         <label for="pass">Password:</label>
+         <input type="password" id="pass" name="pass" placeholder="請輸入密碼">
+      </div>
+      <div>
+         <input type="submit" id="submit" value="登入">
+      </div>
+   </form>
    <% } %>
 </div>

@@ -134,20 +134,29 @@ function errHandler() {
             if (ctx.accepts('html')) {
                 if (error.hasOwnProperty("name") && error.name === "StatusCodeError") {
                     let response = error.error;
-                    if (response.code === "D006")
+                    if (typeof response === "object") {
+                        if (response.code === "D006")
+                            await ctx.render('login', {
+                                error: {
+                                    status: "密碼錯誤",
+                                    message: "請重新登入"
+                                }
+                            });
+                        else
+                            await ctx.render('login', {
+                                error: {
+                                    status: response.code,
+                                    message: response.message || "something wrong"
+                                }
+                            });
+                    } else {
                         await ctx.render('login', {
                             error: {
-                                status: "密碼錯誤",
-                                message: "請重新登入"
+                                status: error.statusCode,
+                                message: error.message || "something wrong"
                             }
                         });
-                    else
-                        await ctx.render('login', {
-                            error: {
-                                status: response.code,
-                                message: response.message || "something wrong"
-                            }
-                        });
+                    }
                 } else {
                     debugErr("Err [Response_html] | ", error);
                     await ctx.render('login', {

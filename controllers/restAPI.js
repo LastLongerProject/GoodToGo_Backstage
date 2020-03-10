@@ -20,6 +20,13 @@ module.exports = {
             cookie: option.cookie
         }));
     },
+    fetchRole: async function data(userRole, option) {
+        return request(await reqWrapper('/users/fetchRole', 'POST', {
+            authType: 'JWT',
+            userRole,
+            cookie: option.cookie
+        }));
+    },
     data: async function data(uri, method, reqBody, userRole) {
         return request(await reqWrapper('/manage/' + uri, method, {
             authType: 'JWT',
@@ -46,6 +53,7 @@ async function reqWrapper(uri, method, options) {
                     iat: Date.now(),
                     exp: new Date().setDate(new Date().getDate() + 3)
                 }, userRole.secretKey),
+                'User-Agent': "BackStage",
                 Cookie: cookie
             };
             break;
