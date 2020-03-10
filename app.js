@@ -49,7 +49,7 @@ const proxyMid = proxy('/manager/data', {
     logs: true,
     events: {
         proxyReq(proxyReq, req, res) {
-            const userRole = req.session.user.roles.admin;
+            const userRole = req.session.user.adminRole;
             proxyReq.setHeader('ApiKey', userRole.apiKey);
             proxyReq.setHeader('Authorization', JWT.sign({
                 jti: 'manager',

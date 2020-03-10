@@ -36,7 +36,7 @@ router.post('/login', async ctx => {
     const decoded = JWT.decode(serverRes.headers.authorization);
     ctx.session.user = {
         phone: reqBody.user,
-        roles: decoded.roles,
+        adminRole: decoded.roleList.find(aRole => aRole.roleType === "admin"),
         ua: ctx.header['user-agent'],
         ip: ctx.ip
     };
@@ -64,7 +64,7 @@ router.get('/demo', async ctx => {
 
 router.get('/logout', async ctx => {
     try {
-        restAPI.logout(ctx.session.user.roles.customer, {
+        restAPI.logout(ctx.session.user.adminRole, {
             cookie: ctx.cookies.get("uid") ? `uid=${ctx.cookies.get("uid")}` : undefined
         });
     } catch (err) {}
