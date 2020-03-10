@@ -63,6 +63,7 @@
         "gulp-rev-rewrite": "^1.1.1",
         "gulp-sourcemaps": "^2.6.5",
         "gulp-uglify": "^3.0.1",
+        "nodemon": "^2.0.2",
         "rimraf": "^2.6.2"
     }
 }

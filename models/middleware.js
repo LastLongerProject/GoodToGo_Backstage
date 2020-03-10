@@ -12,7 +12,7 @@ module.exports = {
     },
     checkIsAdmin: async function checkIsAdmin(ctx, next) {
         let user = ctx.session.user;
-        if (user.roles.typeList.indexOf("admin") === -1) return ctx.redirect("/manager/demo");
+        if (user.adminRole === undefined) return ctx.redirect("/manager/demo");
         await next();
     },
     getNavList: function getNavList(user) {
