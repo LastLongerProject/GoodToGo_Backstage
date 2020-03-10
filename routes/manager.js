@@ -64,7 +64,7 @@ router.get('/demo', async ctx => {
 });
 
 router.get('/logout', async ctx => {
-    restAPI.logout(ctx.session.user.adminRole, {
+    await restAPI.logout(ctx.session.user.adminRole, {
         cookie: ctx.cookies.get("uid") ? `uid=${ctx.cookies.get("uid")}` : undefined
     });
     ctx.session = null;
