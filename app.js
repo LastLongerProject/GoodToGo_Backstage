@@ -22,7 +22,7 @@ debug.log = console.log.bind(console);
 
 const config = require('./config/config');
 const JWT = require('jsonwebtoken');
-const router_manager = require('./router/manager');
+const router_manager = require('./routes/manager');
 
 const app = new Koa();
 const router = new Router();

@@ -1,9 +1,9 @@
 const Router = require('koa-router');
 const JWT = require('jsonwebtoken');
-const restAPI = require('../models/restAPI');
-const getNavList = require('../models/middleware').getNavList;
-const checkIsLogin = require('../models/middleware').checkIsLogin;
-const checkIsAdmin = require('../models/middleware').checkIsAdmin;
+const restAPI = require('../controllers/restAPI');
+const getNavList = require('../controllers/middleware').getNavList;
+const checkIsLogin = require('../controllers/middleware').checkIsLogin;
+const checkIsAdmin = require('../controllers/middleware').checkIsAdmin;
 
 const router = new Router();
 const LANDING_PAGE_URL_DEMO = "/manager/demo";
