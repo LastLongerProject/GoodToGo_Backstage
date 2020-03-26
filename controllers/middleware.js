@@ -32,11 +32,11 @@ module.exports = {
                 id: "index",
                 icon: "home",
                 txt: "首頁"
-                // },
-                // {
-                //     id: "shop",
-                //     icon: "store_mall_directory",
-                //     txt: "店鋪"
+            },
+            {
+                id: "shop",
+                icon: "store_mall_directory",
+                txt: "店鋪"
                 // }, {
                 //     id: "activity",
                 //     icon: "event",
