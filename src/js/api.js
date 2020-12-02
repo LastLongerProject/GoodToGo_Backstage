@@ -9,20 +9,22 @@
         if (!daemon) startLoading();
         var requestUrl = "/manager/data/" + page;
         pendingReq = $.ajax(requestUrl, {
-                headers: {
-                    Accept: "application/json; charset=utf-8",
-                },
-                dataType: "json",
-                method: method
-                // timeout: 30 * 1000
-            })
+            headers: {
+                Accept: "application/json; charset=utf-8",
+            },
+            dataType: "json",
+            method: method
+            // timeout: 30 * 1000
+        })
             .done(function (data, textStatus, jqXHR) {
                 if (!daemon) stopLoading();
                 cb(data);
             })
             .fail(function (jqXHR, textStatus, errorThrown) {
-                if (jqXHR.responseJSON && jqXHR.responseJSON.code === "B005") {
-                    return (window.location.href = $("#logout").attr("href"));
+                if (jqXHR.responseJSON &&
+                    (jqXHR.responseJSON.code === "B005" ||
+                        jqXHR.responseJSON.code === "B003")) {
+                    return window.location.href = "/manager/logout";
                 }
                 if (!daemon) stopLoading();
                 if (jqXHR.statusText !== "abort") {

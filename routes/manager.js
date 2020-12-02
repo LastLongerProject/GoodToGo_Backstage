@@ -64,9 +64,14 @@ router.get('/demo', async ctx => {
 });
 
 router.get('/logout', async ctx => {
-    await restAPI.logout(ctx.session.user.adminRole, {
-        cookie: ctx.cookies.get("uid") ? `uid=${ctx.cookies.get("uid")}` : undefined
-    });
+    try {
+        await restAPI.logout(ctx.session.user.adminRole, {
+            cookie: ctx.cookies.get("uid") ? `uid=${ctx.cookies.get("uid")}` : undefined
+        });
+    } catch (error) {
+        if (error.error.code !== "B003")
+            throw error;
+    }
     ctx.session = null;
     ctx.redirect("/manager/login");
 });

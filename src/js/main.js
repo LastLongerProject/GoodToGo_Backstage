@@ -112,10 +112,13 @@ function appInit(window) {
     }
     var dataFilter = function (aData) {
         if (app.searchRegExp) {
-            if (Section.active === "user")
+            if (Section.active === "user") {
+                if (!aData.id) return false;
                 return aData.id.match(app.searchRegExp);
-            else if (Section.active === "shop")
+            } else if (Section.active === "shop") {
+                if (!aData.storeName) return false;
                 return aData.storeName.match(app.searchRegExp);
+            }
         } else {
             return aData;
         }
@@ -587,7 +590,7 @@ function appInit(window) {
                     }).lastIndexOf("尚未歸還") + 1;
                     if (this.listRendering.keyToSort !== "returnTime")
                         oriList = oriList.slice(0, lastIndex).sort(dataSorter.get(sortType))
-                        .concat(oriList.slice(lastIndex).sort(dataSorter.get(sortType)));
+                            .concat(oriList.slice(lastIndex).sort(dataSorter.get(sortType)));
                     else
                         oriList = oriList.slice(0, lastIndex).concat(oriList.slice(lastIndex).sort(dataSorter.get(sortType)));
                 }
