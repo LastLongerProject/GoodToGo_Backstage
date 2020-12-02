@@ -29,39 +29,39 @@ module.exports = {
     },
     getNavList: function getNavList(user) {
         return [{
-                id: "index",
-                icon: "home",
-                txt: "首頁"
-            },
-            {
-                id: "shop",
-                icon: "store_mall_directory",
-                txt: "店鋪"
-                // }, {
-                //     id: "activity",
-                //     icon: "event",
-                // txt:"活動"
-            },
-            {
-                id: "user",
-                icon: "supervisor_account",
-                txt: "使用者"
-            },
-            {
-                id: "container",
-                icon: "local_drink",
-                txt: "容器"
-            },
-            {
-                id: "delivery",
-                icon: "local_shipping",
-                txt: "配送",
-            },
-            {
-                id: "console",
-                icon: "build",
-                txt: "中控台"
-            }
+            id: "index",
+            icon: "home",
+            txt: "首頁"
+        },
+        {
+            id: "shop",
+            icon: "store_mall_directory",
+            txt: "店鋪"
+            // }, {
+            //     id: "activity",
+            //     icon: "event",
+            // txt:"活動"
+        },
+        {
+            id: "user",
+            icon: "supervisor_account",
+            txt: "使用者"
+        },
+        {
+            id: "container",
+            icon: "local_drink",
+            txt: "容器"
+        },
+        // {
+        //     id: "delivery",
+        //     icon: "local_shipping",
+        //     txt: "配送",
+        // },
+        {
+            id: "console",
+            icon: "build",
+            txt: "中控台"
+        }
         ];
     },
 };

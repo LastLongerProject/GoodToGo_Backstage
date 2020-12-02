@@ -54,26 +54,26 @@ function watch() {
 }
 
 function revReplace() {
-    gulp.src(['assets/css/test.css', 'assets/js/app.min.js'], {
-            base: 'assets'
-        })
+    gulp.src(['assets/js/app.min.js'], {
+        base: 'assets'
+    })
         .pipe(rev())
         .pipe(gulp.dest('build/assets'))
         .pipe(rev.manifest())
         .pipe(gulp.dest('src'));
     gulp.src(['build/assets/js/*.js'], {
-            read: false
-        })
+        read: false
+    })
         .pipe(revDel(1))
         .pipe(cleaner());
     gulp.src(['build/assets/css/*.css'], {
-            read: false
-        })
+        read: false
+    })
         .pipe(revDel(1))
         .pipe(cleaner());
     gulp.src(['build/assets/js/**/*.js.map'], {
-            read: false
-        })
+        read: false
+    })
         .pipe(cleanerRevDel(1))
         .pipe(cleaner());
     let manifest = gulp.src('src/rev-manifest.json');
@@ -117,8 +117,8 @@ function cleanerRevDel(keepQuantity) {
     }, function (cb) {
         Object.keys(lists).forEach(function (identifier) {
             lists[identifier].sort(function (a, b) {
-                    return b.time - a.time;
-                })
+                return b.time - a.time;
+            })
                 .slice(keepQuantity)
                 .forEach(function (f) {
                     this.push(f.file);
