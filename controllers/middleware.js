@@ -20,7 +20,7 @@ module.exports = {
             const serverRes = await restAPI.fetchRole(user.adminRole, {
                 cookie: ctx.cookies.get("uid") ? `uid=${ctx.cookies.get("uid")}` : undefined
             });
-            const decoded = JWT.decode(serverRes.headers.authorization);
+            const decoded = serverRes.body;
             user.adminRole = decoded.roleList.find(aRole => aRole.roleType === "admin");
             user.loginAt = Date.now();
             if (user.adminRole === undefined) return ctx.redirect("/manager/demo");

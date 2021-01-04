@@ -33,7 +33,7 @@ router.post('/login', async ctx => {
     }, {
         cookie: ctx.cookies.get("uid") ? `uid=${ctx.cookies.get("uid")}` : undefined
     });
-    const decoded = JWT.decode(serverRes.headers.authorization);
+    const decoded = serverRes.body;
     ctx.session.user = {
         phone: reqBody.user,
         adminRole: decoded.roleList.find(aRole => aRole.roleType === "admin"),
