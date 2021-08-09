@@ -39,7 +39,7 @@
         "koa-helmet": "^4.0.0",
         "koa-logger": "^3.2.0",
         "koa-proxies": "^0.7.0",
-        "koa-redis": "^3.1.2",
+        "koa-redis": "^4.0.1",
         "koa-respond": "^1.0.1",
         "koa-router": "^7.4.0",
         "koa-session": "^5.8.2",
@@ -52,7 +52,7 @@
     },
     "homepage": "https://github.com/BenjaminChenTW/GoodToGo_Backstage#readme",
     "devDependencies": {
-        "browser-sync": "^2.26.13",
+        "browser-sync": "^2.27.5",
         "gulp": "^4.0.2",
         "gulp-autoprefixer": "^5.0.0",
         "gulp-concat": "^2.6.1",
