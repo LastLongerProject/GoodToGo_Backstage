@@ -1,79 +1,86 @@
-const Router = require('koa-router');
-const JWT = require('jsonwebtoken');
-const restAPI = require('../controllers/restAPI');
-const getNavList = require('../controllers/middleware').getNavList;
-const checkIsLogin = require('../controllers/middleware').checkIsLogin;
-const checkIsAdmin = require('../controllers/middleware').checkIsAdmin;
+const Router = require("koa-router");
+const JWT = require("jsonwebtoken");
+const restAPI = require("../controllers/restAPI");
+const getNavList = require("../controllers/middleware").getNavList;
+const checkIsLogin = require("../controllers/middleware").checkIsLogin;
+const checkIsAdmin = require("../controllers/middleware").checkIsAdmin;
 
 const router = new Router();
 const LANDING_PAGE_URL_DEMO = "/manager/demo";
 const LANDING_PAGE_URL_LIVE = "/manager/dashboard";
 
 function redirect(ctx) {
-    // var user = ctx.session.user;
-    // if (user && user.phone === "0911111111")
-    //     return ctx.redirect(LANDING_PAGE_URL_DEMO);
-    // else
-    return ctx.redirect(LANDING_PAGE_URL_LIVE);
+  // var user = ctx.session.user;
+  // if (user && user.phone === "0911111111")
+  //     return ctx.redirect(LANDING_PAGE_URL_DEMO);
+  // else
+  return ctx.redirect(LANDING_PAGE_URL_LIVE);
 }
 
-router.get('/login', async ctx => {
-    if (ctx.session.user) return redirect(ctx);
-    await ctx.render('login', {
-        csrf: ctx.csrf,
-        error: null
-    });
+router.get("/login", async (ctx) => {
+  if (ctx.session.user) return redirect(ctx);
+  await ctx.render("login", {
+    csrf: ctx.csrf,
+    error: null,
+  });
 });
 
-router.post('/login', async ctx => {
-    const reqBody = ctx.request.body;
-    const serverRes = await restAPI.login({
-        phone: reqBody.user,
-        password: reqBody.pass
-    }, {
-        cookie: ctx.cookies.get("uid") ? `uid=${ctx.cookies.get("uid")}` : undefined
-    });
-    const decoded = serverRes.body;
-    ctx.session.user = {
-        phone: reqBody.user,
-        adminRole: decoded.roleList.find(aRole => aRole.roleType === "admin"),
-        ua: ctx.header['user-agent'],
-        ip: ctx.ip,
-        loginAt: Date.now()
-    };
-    ctx.set("set-cookie", serverRes.headers['set-cookie'])
-    redirect(ctx);
+router.post("/login", async (ctx) => {
+  const reqBody = ctx.request.body;
+  const serverRes = await restAPI.login(
+    {
+      phone: reqBody.user,
+      password: reqBody.pass,
+    },
+    {
+      cookie: ctx.cookies.get("uid")
+        ? `uid=${ctx.cookies.get("uid")}`
+        : undefined,
+    }
+  );
+  const decoded = serverRes.body;
+  ctx.session.user = {
+    phone: reqBody.user,
+    adminRole: decoded.roleList.find((aRole) => aRole.roleType === "admin"),
+    ua: ctx.header["user-agent"],
+    ip: ctx.ip,
+    loginAt: Date.now(),
+  };
+  ctx.set("set-cookie", serverRes.headers["set-cookie"]);
+  redirect(ctx);
 });
 
 router.use(checkIsLogin);
 
-router.get('/', async ctx => {
-    redirect(ctx);
+router.get("/", async (ctx) => {
+  redirect(ctx);
 });
 
-router.get('/dashboard', checkIsAdmin, async ctx => {
-    await ctx.render('main', {
-        navList: getNavList(ctx.session.user)
-    });
+router.get("/dashboard", checkIsAdmin, async (ctx) => {
+  await ctx.render("main", {
+    navList: getNavList(ctx.session.user),
+  });
 });
 
-router.get('/demo', async ctx => {
-    await ctx.render('space4m', {
-        demo: true
-    });
+router.get("/demo", async (ctx) => {
+  await ctx.render("space4m", {
+    demo: true,
+  });
 });
 
-router.get('/logout', async ctx => {
-    try {
-        await restAPI.logout(ctx.session.user.adminRole, {
-            cookie: ctx.cookies.get("uid") ? `uid=${ctx.cookies.get("uid")}` : undefined
-        });
-    } catch (error) {
-        if (error.error.code !== "B003")
-            throw error;
-    }
-    ctx.session = null;
-    ctx.redirect("/manager/login");
+router.get("/logout", async (ctx) => {
+  try {
+    if (ctx.session.user.adminRole)
+      await restAPI.logout(ctx.session.user.adminRole, {
+        cookie: ctx.cookies.get("uid")
+          ? `uid=${ctx.cookies.get("uid")}`
+          : undefined,
+      });
+  } catch (error) {
+    console.log(error.error);
+  }
+  ctx.session = null;
+  ctx.redirect("/manager/login");
 });
 
 // router.all("/data/:uri", async ctx => {
